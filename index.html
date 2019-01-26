@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <title>ATF</title>
+</head>
+
+<body class="container">
+    <nav class="navbar sticky-top navbar-light bg-light">
+        <a class="navbar-brand">A third of the fantasy</a>
+        <div class="form-inline">
+            <input class="form-control" id="input_query" placeholder="pleace type query">
+            <button class="btn btn-light" onclick="query()">query</button>
+            <!-- <button class="btn btn-light" onclick="query_self()">query_self</button> -->
+        </div>
+    </nav>
+    <nav class="navbar fixed-bottom navbar-light bg-light">
+        <a class="navbar-brand" id="a"></a>
+        <div class="form-inline">
+            <a>object</a>
+            <input class="form-control" id="a_input" placeholder="pleace type object">
+            <a class="navbar-brand">belongs</a>
+            <input class="form-control" id="b" placeholder="pleace type belongs of object">
+            <button class="btn btn-light" onclick="insert()">insert</button>
+            <a></a>
+        </div>
+    </nav>
+    <ol id="ol_query"></ol>
+
+    <script>
+        var query = function () {
+            var a = document.getElementById("input_query").value;
+            var url = 'http://47.112.7.7/read.php' + (a == '' ? '' : '?a=' + a);
+            var callBack = function (str) {
+                try {
+                    func_query(JSON.parse(str));
+                }
+                catch (e) {
+                    console.log(str + '\n' + e)
+                }
+            }
+            HttpGet(url, callBack);
+        }
+        var insert = function () {
+            var url = 'http://47.112.7.7/create.php?a=' + document.getElementById("a_input").value + '&b=' + document.getElementById("b").value;
+            var callBack = function () { query(); }
+            HttpGet(url, callBack);
+        }
+        var func_query = function (json) {
+            var ol = document.getElementById("ol_query");
+            ol.innerHTML = '';
+            for (j in json) {
+                var li = document.createElement("li");
+                ol.appendChild(li);
+                li.innerHTML = json[j]['a_a'] + "&nbsp;&nbsp;&nbsp;--" + json[j]['user'];
+            }
+        }
+        var HttpGet = function (Url, CallBack) {
+            var xmlhttp;
+            if (window.XMLHttpRequest) {
+                xmlhttp = new XMLHttpRequest();
+            }
+            else {
+                xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+            }
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    CallBack(xmlhttp.responseText);
+                }
+            }
+            xmlhttp.open("GET", Url, true);
+            xmlhttp.send();
+        }
+        query();
+    </script>
+</body>
+
+</html>
