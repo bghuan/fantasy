@@ -4,32 +4,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
     <title>ATF</title>
 </head>
 
-<body class="container">
-    <nav class="navbar sticky-top navbar-light bg-light">
-        <a class="navbar-brand">A third of the fantasy</a>
-        <div class="form-inline">
-            <input class="form-control" id="input_query" placeholder="pleace type query">
-            <button class="btn btn-light" onclick="query()">query</button>
-            <!-- <button class="btn btn-light" onclick="query_self()">query_self</button> -->
+<body class="container-fluid">
+    <div class="pos-f-t fixed-top border-bottom bg-white">
+        <nav class="navbar navbar-light">
+            <a class="">A third of the fantasy</a>
+            <a href="#" class="btn-outline-light">self</a>
+            <button class="navbar-toggler btn btn-light" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent"
+                aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+            </button>
+        </nav>
+        <div class="collapse" id="navbarToggleExternalContent">
+            <div class="navbar input-group mb-3">
+                <input type="text" class="form-control">
+                <div class="input-group-append">
+                    <button id="input_query" class="btn btn-primary" type="button" onclick="query()">query</button>
+                </div>
+            </div>
+            <div class="navbar input-group mb-3">
+                <input type="text" class="form-control">
+                <div class="input-group-append">
+                    <button id="b" class="btn btn-primary" type="button" onclick="insert()">insert</button>
+                </div>
+            </div>
         </div>
-    </nav>
-    <nav class="navbar fixed-bottom navbar-light bg-light">
-        <a class="navbar-brand" id="a"></a>
-        <div class="form-inline">
-            <a>object</a>
-            <input class="form-control" id="a_input" placeholder="pleace type object">
-            <a class="navbar-brand">belongs</a>
-            <input class="form-control" id="b" placeholder="pleace type belongs of object">
-            <button class="btn btn-light" onclick="insert()">insert</button>
-            <a></a>
+    </div>
+    <div class="card bg-light" style="margin-top:42px">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-1">a</div>
+                <div class="col-6">b</div>
+                <div class="col-3">c</div>
+                <div class="col-2">d</div>
+            </div>
         </div>
-    </nav>
-    <ol id="ol_query"></ol>
-
+        <div class="row card-body" id="div_query"></div>
+    </div>
     <script>
         var query = function () {
             var a = document.getElementById("input_query").value;
@@ -50,12 +64,25 @@
             HttpGet(url, callBack);
         }
         var func_query = function (json) {
-            var ol = document.getElementById("ol_query");
-            ol.innerHTML = '';
+            var div = document.getElementById("div_query");
+            div.innerHTML = '';
             for (j in json) {
-                var li = document.createElement("li");
-                ol.appendChild(li);
-                li.innerHTML = json[j]['a_a'] + "&nbsp;&nbsp;&nbsp;--" + json[j]['user'];
+                var index = document.createElement("div");
+                index.className = "col-1";
+                index.innerHTML = j;
+                div.appendChild(index);
+                var a_a = document.createElement("div");
+                a_a.className = "col-6";
+                a_a.innerHTML = json[j]['a_a']==undefined?'': json[j]['a_a'];
+                div.appendChild(a_a);
+                var date = document.createElement("div");
+                date.className = "col-3";
+                date.innerHTML = json[j]['date']==undefined?'': json[j]['date'];
+                div.appendChild(date);
+                var user = document.createElement("div");
+                user.className = "col-2";
+                user.innerHTML = json[j]['user']==undefined?'': json[j]['user'];
+                div.appendChild(user);
             }
         }
         var HttpGet = function (Url, CallBack) {
@@ -76,6 +103,12 @@
         }
         query();
     </script>
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
 </body>
 
 </html>
