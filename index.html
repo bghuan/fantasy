@@ -10,32 +10,29 @@
 </head>
 
 <body class="container-fluid">
-    <div class="pos-f-t border-bottom bg-white">
+    <div class="pos-f-t bg-white">
         <nav class="navbar navbar-light">
-            <p class="navbar-brand"><a>A third of the</a>&nbsp;
-                <a class="text-primary">f</a>
-                <a class="text-warning">a</a>
-                <a class="text-success">n</a>
-                <a class="text-danger">t</a>
-                <a class="text-secondary">a</a>
-                <a class="text-dark">s</a>
-                <a class="text-info">y</a>
-            </p>
+            <a class="navbar-brand"> <span class="text-primary">A</span> <span class="text-primary">third</span> <span
+                    class="text-primary">of</span>
+                <span class="text-primary">the</span> <span class="text-primary">fantasy</span>
+            </a>
+            <a href="https://github.com/admnst/A-third-of-the-Fantasy.git" class="btn-outline-light">github</a>
             <a href="" class="btn-outline-light">self</a>
             <button class="navbar-toggler btn btn-light" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent"
                 aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
+                <span class="navbar-toggler-icon btn-sm"></span>
             </button>
         </nav>
-        <div class="collapse show" id="navbarToggleExternalContent">
+        <div class="collapse" id="navbarToggleExternalContent">
             <div class="navbar input-group mb-3">
-                <input type="text" class="form-control" id="input_query">
+                <input type="text" class="form-control" id="input_query" placeholder="object name">
                 <div class="input-group-append">
                     <button class="btn btn-primary" type="button" onclick="query()">query</button>
                 </div>
             </div>
             <div class="navbar input-group mb-3">
-                <input type="text" class="form-control" id="a">
+                <input type="text" class="form-control" id="a" placeholder="insert object">
+                <input type="text" class="form-control" id="b" placeholder="Array of slipt(',')">
                 <div class="input-group-append">
                     <button class="btn btn-primary" type="button" onclick="insert()">insert</button>
                 </div>
@@ -46,10 +43,11 @@
         <div class="card-header">
             <div class="row">
                 <div class="col-2">#</div>
-                <div class="col-10">a</div>
+                <div class="col-6">a</div>
+                <div class="col-4">b</div>
             </div>
         </div>
-        <div class="row card-body" id="div_query"></div>
+        <div class="row card-body" id="div_query" style="min-height:600px"></div>
     </div>
     <script>
         var query = function (obj) {
@@ -66,8 +64,10 @@
             HttpGet(url, callBack);
         }
         var insert = function () {
-            //var url = 'https://47.112.7.7/create.php?a=' + document.getElementById("a_input").value + '&b=' + document.getElementById("b").value;
-            var url = 'https://buguohwng.com/create.php?a=' + document.getElementById("a").value;
+            var a = document.getElementById("a").value;
+            if (a == '') { alert("please type a object") }
+            var b = JSON.stringify(document.getElementById("b").value.split(","));
+            var url = 'https://buguoheng.com/create.php?a=' + a + '&b=' + b;
             var callBack = function () { query(); }
             HttpGet(url, callBack);
         }
@@ -82,11 +82,25 @@
                 }
                 index.innerHTML = j;
                 div.appendChild(index);
-                var a = document.createElement("div");
-                a.className = "col-10";
+                var a_div = document.createElement("div");
+                var a = document.createElement("a");
+                var a_edit = document.createElement("button");
+                a_div.className = "col-6";
+                a_edit.className = "btn btn-outline-light";
                 a.onclick = function () { query(this) };
+                a_edit.onclick = function () {
+                    document.getElementById("a").value = this.innerHTML;
+                    $('.collapse').collapse('show');
+                };
                 a.innerHTML = json[j]['a'] == undefined ? '' : json[j]['a'];
-                div.appendChild(a);
+                a_edit.innerHTML = "edit";
+                a_div.appendChild(a);
+                a_div.appendChild(a_edit);
+                div.appendChild(a_div);
+                var b = document.createElement("div");
+                b.className = "col-4";
+                b.innerHTML = json[j]['b'] == undefined ? '' : JSON.stringify(json[j]['b']);
+                div.appendChild(b);
             }
         }
         var HttpGet = function (Url, CallBack) {
