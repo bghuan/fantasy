@@ -8,7 +8,9 @@ $manager = new MongoDB\Driver\Manager("mongodb://localhost:27017");
 $pageSize = 100;
 
 if (empty($a)) {
-    $filter = [];
+    $filter = [
+        'a' => ['$type' => 2]
+    ];
 } else {
     $filter = ['a' => $a];
     //$filter = ['a' => ['$regex' => $a,'$options' => '$i']];
@@ -22,10 +24,9 @@ $options = [
     'projection' => [
         '_id' => 1,
         'a' => 1,
-        'b' => 1,
-        'a_a' => 1    ,    'user' => 1
-
+        'b' => 1
     ],
+    'sort' => ['_id' => -1],
     'limit' => $pageSize
 ];
 // $filter  = ['_id' => $id];

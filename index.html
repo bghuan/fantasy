@@ -10,36 +10,44 @@
 </head>
 
 <body class="container-fluid">
-    <div class="pos-f-t fixed-top border-bottom bg-white">
+    <div class="pos-f-t border-bottom bg-white">
         <nav class="navbar navbar-light">
-            <a class="">A third of the fantasy</a>
+            <p class="navbar-brand"><a>A third of the</a>&nbsp;
+                <a class="text-primary">f</a>
+                <a class="text-secondary">a</a>
+                <a class="text-success">n</a>
+                <a class="text-danger">t</a>
+                <a class="text-info">a</a>
+                <a class="text-dark">s</a>
+                <a class="text-warning">y</a>
+            </p>
             <a href="#" class="btn-outline-light">self</a>
             <button class="navbar-toggler btn btn-light" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent"
                 aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+
             </button>
         </nav>
         <div class="collapse" id="navbarToggleExternalContent">
             <div class="navbar input-group mb-3">
-                <input type="text" class="form-control">
+                <input type="text" class="form-control" id="input_query">
                 <div class="input-group-append">
-                    <button id="input_query" class="btn btn-primary" type="button" onclick="query()">query</button>
+                    <button class="btn btn-primary" type="button" onclick="query()">query</button>
                 </div>
             </div>
             <div class="navbar input-group mb-3">
-                <input type="text" class="form-control">
+                <input type="text" class="form-control" id="a">
                 <div class="input-group-append">
-                    <button id="b" class="btn btn-primary" type="button" onclick="insert()">insert</button>
+                    <button class="btn btn-primary" type="button" onclick="insert()">insert</button>
                 </div>
             </div>
         </div>
     </div>
-    <div class="card bg-light" style="margin-top:42px">
+    <div class="card bg-light">
         <div class="card-header">
             <div class="row">
-                <div class="col-1">a</div>
-                <div class="col-6">b</div>
-                <div class="col-3">c</div>
-                <div class="col-2">d</div>
+                <div class="col-2">#</div>
+                <div class="col-10">a</div>
             </div>
         </div>
         <div class="row card-body" id="div_query"></div>
@@ -59,7 +67,8 @@
             HttpGet(url, callBack);
         }
         var insert = function () {
-            var url = 'http://47.112.7.7/create.php?a=' + document.getElementById("a_input").value + '&b=' + document.getElementById("b").value;
+            //var url = 'http://47.112.7.7/create.php?a=' + document.getElementById("a_input").value + '&b=' + document.getElementById("b").value;
+            var url = 'http://47.112.7.7/create.php?a=' + document.getElementById("a").value;
             var callBack = function () { query(); }
             HttpGet(url, callBack);
         }
@@ -68,21 +77,16 @@
             div.innerHTML = '';
             for (j in json) {
                 var index = document.createElement("div");
-                index.className = "col-1";
+                index.className = "col-2";
+                if (j % 10 == 0) {
+                    index.className = "col-2 text-primary";
+                }
                 index.innerHTML = j;
                 div.appendChild(index);
-                var a_a = document.createElement("div");
-                a_a.className = "col-6";
-                a_a.innerHTML = json[j]['a_a']==undefined?'': json[j]['a_a'];
-                div.appendChild(a_a);
                 var date = document.createElement("div");
-                date.className = "col-3";
-                date.innerHTML = json[j]['date']==undefined?'': json[j]['date'];
+                date.className = "col-10";
+                date.innerHTML = json[j]['a'] == undefined ? '' : json[j]['a'];
                 div.appendChild(date);
-                var user = document.createElement("div");
-                user.className = "col-2";
-                user.innerHTML = json[j]['user']==undefined?'': json[j]['user'];
-                div.appendChild(user);
             }
         }
         var HttpGet = function (Url, CallBack) {
