@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
         crossorigin="anonymous">
-    <title>ATF</title>
+    <title>A third of the fantasy</title>
 </head>
 
 <body class="container-fluid">
@@ -14,21 +14,20 @@
         <nav class="navbar navbar-light">
             <p class="navbar-brand"><a>A third of the</a>&nbsp;
                 <a class="text-primary">f</a>
-                <a class="text-secondary">a</a>
+                <a class="text-warning">a</a>
                 <a class="text-success">n</a>
                 <a class="text-danger">t</a>
-                <a class="text-info">a</a>
+                <a class="text-secondary">a</a>
                 <a class="text-dark">s</a>
-                <a class="text-warning">y</a>
+                <a class="text-info">y</a>
             </p>
-            <a href="#" class="btn-outline-light">self</a>
+            <a href="" class="btn-outline-light">self</a>
             <button class="navbar-toggler btn btn-light" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent"
                 aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
-
             </button>
         </nav>
-        <div class="collapse" id="navbarToggleExternalContent">
+        <div class="collapse show" id="navbarToggleExternalContent">
             <div class="navbar input-group mb-3">
                 <input type="text" class="form-control" id="input_query">
                 <div class="input-group-append">
@@ -53,9 +52,9 @@
         <div class="row card-body" id="div_query"></div>
     </div>
     <script>
-        var query = function () {
-            var a = document.getElementById("input_query").value;
-            var url = 'http://47.112.7.7/read.php' + (a == '' ? '' : '?a=' + a);
+        var query = function (obj) {
+            var a = (obj != undefined ? obj.innerHTML : document.getElementById("input_query").value);
+            var url = 'https://www.buguoheng.com/read.php' + (a == '' ? '' : '?a=' + a);
             var callBack = function (str) {
                 try {
                     func_query(JSON.parse(str));
@@ -67,8 +66,8 @@
             HttpGet(url, callBack);
         }
         var insert = function () {
-            //var url = 'http://47.112.7.7/create.php?a=' + document.getElementById("a_input").value + '&b=' + document.getElementById("b").value;
-            var url = 'http://47.112.7.7/create.php?a=' + document.getElementById("a").value;
+            //var url = 'https://47.112.7.7/create.php?a=' + document.getElementById("a_input").value + '&b=' + document.getElementById("b").value;
+            var url = 'https://buguohwng.com/create.php?a=' + document.getElementById("a").value;
             var callBack = function () { query(); }
             HttpGet(url, callBack);
         }
@@ -83,10 +82,11 @@
                 }
                 index.innerHTML = j;
                 div.appendChild(index);
-                var date = document.createElement("div");
-                date.className = "col-10";
-                date.innerHTML = json[j]['a'] == undefined ? '' : json[j]['a'];
-                div.appendChild(date);
+                var a = document.createElement("div");
+                a.className = "col-10";
+                a.onclick = function () { query(this) };
+                a.innerHTML = json[j]['a'] == undefined ? '' : json[j]['a'];
+                div.appendChild(a);
             }
         }
         var HttpGet = function (Url, CallBack) {

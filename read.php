@@ -2,7 +2,7 @@
 header('Access-Control-Allow-Origin:*');
 
 $a = $_GET["a"];
-$a = $_GET["b"];
+$b = $_GET["b"];
 
 $manager = new MongoDB\Driver\Manager("mongodb://localhost:27017");
 $pageSize = 100;
@@ -11,24 +11,32 @@ if (empty($a)) {
     $filter = [
         'a' => ['$type' => 2]
     ];
+    $options = [
+        'projection' => [
+            '_id' => 1,
+            'a' => 1
+        ],
+        'sort' => ['_id' => -1],
+        'limit' => $pageSize
+    ];
 } else {
     $filter = ['a' => $a];
+    $options = [
+        'projection' => [
+            '_id' => 1,
+            'a' => 1,
+            'b' => 1
+        ],
+        'sort' => ['_id' => -1],
+        'limit' => $pageSize
+    ];
     //$filter = ['a' => ['$regex' => $a,'$options' => '$i']];
 }
-if (empty($b)) {
-    $filter = [];
-} else {
-    $filter = ['_id' => ['$in' => [$b]]];
-}
-$options = [
-    'projection' => [
-        '_id' => 1,
-        'a' => 1,
-        'b' => 1
-    ],
-    'sort' => ['_id' => -1],
-    'limit' => $pageSize
-];
+// if (empty($b)) {
+//     $filter = [];
+// } else {
+//     $filter = ['_id' => ['$in' => [$b]]];
+// }
 // $filter  = ['_id' => $id];
 // $options = [];
 $query = new MongoDB\Driver\Query($filter, $options);
