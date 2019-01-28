@@ -11,20 +11,19 @@
 
 <body class="container-fluid">
     <div class="pos-f-t bg-white">
-        <nav class="navbar navbar-light">
-            <a class="navbar-brand"> <span class="text-primary">A</span> <span class="text-primary">third</span> <span
-                    class="text-primary">of</span>
-                <span class="text-primary">the</span> <span class="text-primary">fantasy</span>
-            </a>
-            <a href="https://github.com/admnst/A-third-of-the-Fantasy.git" class="btn-outline-light">github</a>
-            <a href="" class="btn-outline-light">self</a>
-            <button class="navbar-toggler btn btn-light" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent"
-                aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon btn-sm"></span>
-            </button>
+        <nav class="navbar fixed-top navbar-light bg-white border-bottom">
+            <a class="navbar-brand text-primary text-truncate col-8" id="a_top"></a>
+            <div class="form-inline my-0">
+                <a href="" class="btn-outline-primary btn-sm">S</a>
+                <a href="" class="btn-outline-primary btn-sm md-2">S</a>
+                <button class="navbar-toggler btn btn-light" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent"
+                    aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon btn-sm"></span>
+                </button>
+            </div>
         </nav>
         <div class="collapse" id="navbarToggleExternalContent">
-            <div class="navbar input-group mb-3">
+            <div class="navbar input-group mb-3" style="margin-top:100px">
                 <input type="text" class="form-control" id="input_query" placeholder="object name">
                 <div class="input-group-append">
                     <button class="btn btn-primary" type="button" onclick="query()">query</button>
@@ -34,20 +33,20 @@
                 <input type="text" class="form-control" id="a" placeholder="insert object">
                 <input type="text" class="form-control" id="b" placeholder="Array of slipt(',')">
                 <div class="input-group-append">
-                    <button class="btn btn-primary" type="button" onclick="insert()">insert</button>
+                    <button class="btn btn-primary" type="button" onclick="create()">create</button>
                 </div>
             </div>
         </div>
     </div>
+    <nav class="navbar sticky-top navbar-light bg-white">&nbsp;
+    </nav>
     <div class="card bg-light">
-        <div class="card-header">
-            <div class="row">
-                <div class="col-10">object</div>
-                <!-- <div class="col-3">related</div> -->
-                <!-- <div class="">count</div> -->
-            </div>
-        </div>
         <div class="row card-body" id="div_query" style="min-height:700px"></div>
+    </div>
+    <div class="footer">
+        <ion-icon name="logo-github"> </ion-icon>
+        <a href="https://github.com/admnst/A-third-of-the-Fantasy.git" class="btn btn-outline-primary">github</a>
+        <ion-icon src="static/_ionicons_svg_logo-github.svg"></ion-icon>
     </div>
     <script>
         var query = function (obj) {
@@ -55,6 +54,7 @@
             var url = 'https://www.buguoheng.com/read.php' + (a == '' ? '' : '?a=' + a);
             var callBack = function (str) {
                 try {
+                    document.getElementById("a_top").innerHTML = (a == '' ? 'fantasy' : a);
                     func_query(JSON.parse(str));
                 }
                 catch (e) {
@@ -63,7 +63,7 @@
             }
             HttpGet(url, callBack);
         }
-        var insert = function () {
+        var create = function () {
             var a = document.getElementById("a").value;
             if (a == '') { alert("please type a object") }
             var b = JSON.stringify(document.getElementById("b").value.split(","));
@@ -77,9 +77,9 @@
             for (j in json) {
                 var a_div = document.createElement("div");
                 var a = document.createElement("a");
-                var a_edit = document.createElement("a");
-                a_div.className = "col-12 text-truncate";
-                a_edit.className = "text-right";
+                var a_edit = document.createElement("span");
+                a_div.className = "col-12";
+                a_edit.className = "btn-outline-primary float-right";
                 a.onclick = function () { query(this) };
                 a_edit.onclick = function () {
                     document.getElementById("a").value = this.parentElement.childNodes[0].innerHTML;
@@ -88,14 +88,23 @@
                 a.innerHTML = json[j]['a'] == undefined ? '' : json[j]['a'];
                 a_edit.innerHTML = "edit";
                 a_div.appendChild(a);
+                var a_detail = document.createElement("span");
+                a_detail.className = "btn-outline-primary float-right mr-2";
+                a_detail.onclick = function () {
+                    document.getElementById("a").value = this.parentElement.childNodes[0].innerHTML;
+                    $('.collapse').collapse('show');
+                };
+                a_detail.innerHTML = "detail";
+                // a_div.appendChild(a_edit);
+                // a_div.appendChild(a_detail);
+
                 div.appendChild(a_div);
-                //div.appendChild(a_edit);
                 var b = document.createElement("div");
                 b.className = "col-4 text-truncate";
                 b.innerHTML = json[j]['b'] == undefined ? '' : JSON.stringify(json[j]['b']);
                 //div.appendChild(b);
                 var index = document.createElement("div");
-                index.className = "col-2";
+                index.className = "float-right          ";
                 if (j % 10 == 0) {
                     index.className = "text-primary";
                 }
@@ -127,6 +136,7 @@
         crossorigin="anonymous"></script>
     <script src="https://cdn.bootcss.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/ionicons@4.5.5/dist/ionicons.js"> </script>
 </body>
 
 </html>
