@@ -89,7 +89,7 @@
                 a_edit.className = "btn btn-outline-light";
                 a.onclick = function () { query(this) };
                 a_edit.onclick = function () {
-                    document.getElementById("a").value = this.innerHTML;
+                    document.getElementById("a").value = this.parentElement.childNodes[0].innerHTML;
                     $('.collapse').collapse('show');
                 };
                 a.innerHTML = json[j]['a'] == undefined ? '' : json[j]['a'];
