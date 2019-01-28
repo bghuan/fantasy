@@ -42,12 +42,12 @@
     <div class="card bg-light">
         <div class="card-header">
             <div class="row">
-                <div class="col-2">#</div>
-                <div class="col-6">a</div>
-                <div class="col-4">b</div>
+                <div class="col-10">object</div>
+                <!-- <div class="col-3">related</div> -->
+                <!-- <div class="">count</div> -->
             </div>
         </div>
-        <div class="row card-body" id="div_query" style="min-height:600px"></div>
+        <div class="row card-body" id="div_query" style="min-height:700px"></div>
     </div>
     <script>
         var query = function (obj) {
@@ -75,18 +75,11 @@
             var div = document.getElementById("div_query");
             div.innerHTML = '';
             for (j in json) {
-                var index = document.createElement("div");
-                index.className = "col-2";
-                if (j % 10 == 0) {
-                    index.className = "col-2 text-primary";
-                }
-                index.innerHTML = j;
-                div.appendChild(index);
                 var a_div = document.createElement("div");
                 var a = document.createElement("a");
-                var a_edit = document.createElement("button");
-                a_div.className = "col-6";
-                a_edit.className = "btn btn-outline-light";
+                var a_edit = document.createElement("a");
+                a_div.className = "col-12 text-truncate";
+                a_edit.className = "text-right";
                 a.onclick = function () { query(this) };
                 a_edit.onclick = function () {
                     document.getElementById("a").value = this.parentElement.childNodes[0].innerHTML;
@@ -95,12 +88,19 @@
                 a.innerHTML = json[j]['a'] == undefined ? '' : json[j]['a'];
                 a_edit.innerHTML = "edit";
                 a_div.appendChild(a);
-                a_div.appendChild(a_edit);
                 div.appendChild(a_div);
+                //div.appendChild(a_edit);
                 var b = document.createElement("div");
-                b.className = "col-4";
+                b.className = "col-4 text-truncate";
                 b.innerHTML = json[j]['b'] == undefined ? '' : JSON.stringify(json[j]['b']);
-                div.appendChild(b);
+                //div.appendChild(b);
+                var index = document.createElement("div");
+                index.className = "col-2";
+                if (j % 10 == 0) {
+                    index.className = "text-primary";
+                }
+                index.innerHTML = json[j]['count'] == undefined ? '' : json[j]['count'];
+                //div.appendChild(index);
             }
         }
         var HttpGet = function (Url, CallBack) {
