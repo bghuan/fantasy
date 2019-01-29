@@ -11,7 +11,8 @@ $cmd = new MongoDB\Driver\Command(
             ],
             [
                 '$group' => [
-                    '_id' => '$a',
+                    '_id' => ['a' => '$a'],
+                    'b' => ['$addToSet' => '$b'],
                     'count' => ['$sum' => 1]
                 ]
             ],
@@ -30,14 +31,15 @@ $cmd = new MongoDB\Driver\Command(
 );
 try {
     $cursor = $manager->executeCommand('adb', $cmd)->toArray();
-    $arr = [];
-    foreach ($cursor as $document) {
-        $bson = MongoDB\BSON\fromPHP($document);
-        $arr[] = json_decode(MongoDB\BSON\toJSON($bson));
-    }
-    echo json_encode($arr);
+
 } catch (MongoDB\Driver\Exception $e) {
     echo $e->getMessage(), "\n";
     exit;
 }
+$arr = [];
+foreach ($cursor as $document) {
+    $bson = MongoDB\BSON\fromPHP($document);
+    $arr[] = json_decode(MongoDB\BSON\toJSON($bson));
+}
+echo json_encode($arr);
 ?>
