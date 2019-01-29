@@ -4,8 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-        crossorigin="anonymous">
+    <link rel="stylesheet" href="static/css/bootstrap.min.css">
     <title>A third of the fantasy</title>
 </head>
 
@@ -23,19 +22,17 @@
             </div>
         </nav>
         <div class="collapse" id="navbarToggleExternalContent">
-            <div class="navbar input-group mb-3" style="margin-top:100px">
+            <div class="navbar input-group mb-3">
                 <input type="text" class="form-control" id="input_query" placeholder="object name">
                 <div class="input-group-append">
                     <button class="btn btn-primary" type="button" onclick="query()">query</button>
                 </div>
             </div>
             <div class="navbar input-group mb-3">
-                <input type="text" class="form-control" id="a" placeholder="insert object">
-                <input type="text" class="form-control" id="b" placeholder="Array of slipt(',')">
-                <div class="input-group-append">
-                    <button class="btn btn-primary" type="button" onclick="create()">create</button>
-                </div>
-            </div>
+                <input type="text" class="form-control" id="a" placeholder="insert object"></div>
+            <div class="navbar input-group mb-3">
+                <input type="text" class="form-control" id="b" placeholder="Array of slipt(',')"></div>
+            <button class="btn btn-primary float-right" type="button" onclick="create()">create</button>
         </div>
     </div>
     <nav class="navbar sticky-top navbar-light bg-white">&nbsp;
@@ -44,22 +41,24 @@
         <div class="row card-body" id="div_query" style="min-height:700px"></div>
     </div>
     <div class="footer">
-        <ion-icon name="logo-github"> </ion-icon>
-        <a href="https://github.com/admnst/A-third-of-the-Fantasy.git" class="btn btn-outline-primary">github</a>
-        <ion-icon src="static/_ionicons_svg_logo-github.svg"></ion-icon>
+        <a href="https://github.com/admnst/A-third-of-the-Fantasy.git">
+            <svg version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 700 800" enable-background="new 0 0 36 36" xml:space="preserve">
+                <path fill-rule="evenodd" clip-rule="evenodd" fill="#191717" d="M18,1.4C9,1.4,1.7,8.7,1.7,17.7c0,7.2,4.7,13.3,11.1,15.5
+       c0.8,0.1,1.1-0.4,1.1-0.8c0-0.4,0-1.4,0-2.8c-4.5,1-5.5-2.2-5.5-2.2c-0.7-1.9-1.8-2.4-1.8-2.4c-1.5-1,0.1-1,0.1-1
+       c1.6,0.1,2.5,1.7,2.5,1.7c1.5,2.5,3.8,1.8,4.7,1.4c0.1-1.1,0.6-1.8,1-2.2c-3.6-0.4-7.4-1.8-7.4-8.1c0-1.8,0.6-3.2,1.7-4.4
+       c-0.2-0.4-0.7-2.1,0.2-4.3c0,0,1.4-0.4,4.5,1.7c1.3-0.4,2.7-0.5,4.1-0.5c1.4,0,2.8,0.2,4.1,0.5c3.1-2.1,4.5-1.7,4.5-1.7
+       c0.9,2.2,0.3,3.9,0.2,4.3c1,1.1,1.7,2.6,1.7,4.4c0,6.3-3.8,7.6-7.4,8c0.6,0.5,1.1,1.5,1.1,3c0,2.2,0,3.9,0,4.5
+       c0,0.4,0.3,0.9,1.1,0.8c6.5-2.2,11.1-8.3,11.1-15.5C34.3,8.7,27,1.4,18,1.4z" />
+            </svg></a>
+
     </div>
     <script>
         var query = function (obj) {
             var a = (obj != undefined ? obj.innerHTML : document.getElementById("input_query").value);
             var url = 'https://www.buguoheng.com/read.php' + (a == '' ? '' : '?a=' + a);
-            var callBack = function (str) {
-                try {
-                    document.getElementById("a_top").innerHTML = (a == '' ? 'fantasy' : a);
-                    func_query(JSON.parse(str));
-                }
-                catch (e) {
-                    console.log(str + '\n' + e)
-                }
+            var callBack = function (json) {
+                document.getElementById("a_top").innerHTML = (a == '' ? 'fantasy' : a);
+                func_query(json);
             }
             HttpGet(url, callBack);
         }
@@ -77,39 +76,16 @@
             for (j in json) {
                 var a_div = document.createElement("div");
                 var a = document.createElement("a");
-                var a_edit = document.createElement("span");
                 a_div.className = "col-12";
-                a_edit.className = "btn-outline-primary float-right";
                 a.onclick = function () { query(this) };
-                a_edit.onclick = function () {
-                    document.getElementById("a").value = this.parentElement.childNodes[0].innerHTML;
-                    $('.collapse').collapse('show');
-                };
                 a.innerHTML = json[j]['a'] == undefined ? '' : json[j]['a'];
-                a_edit.innerHTML = "edit";
                 a_div.appendChild(a);
-                var a_detail = document.createElement("span");
-                a_detail.className = "btn-outline-primary float-right mr-2";
-                a_detail.onclick = function () {
-                    document.getElementById("a").value = this.parentElement.childNodes[0].innerHTML;
-                    $('.collapse').collapse('show');
-                };
-                a_detail.innerHTML = "detail";
-                // a_div.appendChild(a_edit);
-                // a_div.appendChild(a_detail);
-
-                div.appendChild(a_div);
-                var b = document.createElement("div");
-                b.className = "col-4 text-truncate";
-                b.innerHTML = json[j]['b'] == undefined ? '' : JSON.stringify(json[j]['b']);
-                //div.appendChild(b);
                 var index = document.createElement("div");
                 index.className = "float-right          ";
                 if (j % 10 == 0) {
                     index.className = "text-primary";
                 }
                 index.innerHTML = json[j]['count'] == undefined ? '' : json[j]['count'];
-                //div.appendChild(index);
             }
         }
         var HttpGet = function (Url, CallBack) {
@@ -122,7 +98,13 @@
             }
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                    CallBack(xmlhttp.responseText);
+                    try {
+                        document.getElementById("a_top").innerHTML = (a == '' ? 'fantasy' : a);
+                        CallBack(JSON.parse(xmlhttp.responseText));
+                    }
+                    catch (e) {
+                        console.log(xmlhttp.responseText + '\n' + e)
+                    }
                 }
             }
             xmlhttp.open("GET", Url, true);
@@ -130,13 +112,9 @@
         }
         query();
     </script>
-    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.bootcss.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-        crossorigin="anonymous"></script>
-    <script src="https://unpkg.com/ionicons@4.5.5/dist/ionicons.js"> </script>
+    <script src="static/js/jquery.slim.min.js"></script>
+    <script src="static/js//popper.min.js"></script>
+    <script src="static/js//bootstrap.min.js"></script>
 </body>
 
 </html>
