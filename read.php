@@ -1,54 +1,27 @@
 <?php
 header('Access-Control-Allow-Origin:*');
-
 $a = $_GET["a"];
-$b = $_GET["b"];
-
 $manager = new MongoDB\Driver\Manager("mongodb://localhost:27017");
-$pageSize = 100;
-
 if (empty($a)) {
-    $filter = [
-        'a' => ['$type' => 2]
-    ];
-    $options = [
-        'projection' => [
-            '_id' => 1,
-            'a' => 1
+    $cmd = new MongoDB\Driver\Command([
+        'aggregate' => 'a',
+        'pipeline' => [
+            ['$match' => ['a' => ['$type' => 2]]],
+            ['$group' => ['_id' => '$a', 'id' => ['$min' => '$_id'], 'b' => ['$addToSet' => '$b'], 'count' => ['$sum' => 1]]],
+            ['$sort' => ['count' => -1, '_id' => -1]],
+            ['$limit' => 100]
         ],
-        'sort' => ['_id' => -1],
-        'limit' => $pageSize
-    ];
+        'cursor' => new stdClass,
+    ]);
+    try {
+        echo json_encode($manager->executeCommand('adb', $cmd)->toArray());
+    } catch (MongoDB\Driver\Exception $e) {
+        echo $e->getMessage(), "\n";
+    }
 } else {
     $filter = ['a' => $a];
-    $options = [
-        'projection' => [
-            '_id' => 1,
-            'a' => 1,
-            'b' => 1
-        ],
-        'sort' => ['_id' => -1],
-        'limit' => $pageSize
-    ];
-    //$filter = ['a' => ['$regex' => $a,'$options' => '$i']];
+    $options = ['projection' => ['a' => 1, 'b' => 1], 'sort' => ['_id' => -1], 'limit' => 100];
+    $query = new MongoDB\Driver\Query($filter, $options);
+    echo json_encode($manager->executeQuery('adb.a', $query)->toArray());
 }
-// if (empty($b)) {
-//     $filter = [];
-// } else {
-//     $filter = ['_id' => ['$in' => [$b]]];
-// }
-// $filter  = ['_id' => $id];
-// $options = [];
-$query = new MongoDB\Driver\Query($filter, $options);
-$cursor = $manager->executeQuery('adb.a', $query);
-$arr = [];
-foreach ($cursor as $document) {
-    $bson = MongoDB\BSON\fromPHP($document);
-    $arr[] = json_decode(MongoDB\BSON\toJSON($bson));
-}
-//$document = json_decode(json_encode($document),true);
-// // echo $document[name];
-// $scents = current($cursor->toArray())->values; // get the distinct values as an array
-
-echo json_encode($arr);
 ?>
