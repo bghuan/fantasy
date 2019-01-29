@@ -30,7 +30,7 @@ if (!empty($_id)) {
         'pipeline' => [
             ['$match' => ['a' => ['$exists' => true]]],
             ['$group' => ['_id' => '$a', 'id' => ['$first' => '$_id'], 'a' => ['$first' => '$a'], 'b' => ['$addToSet' => '$b'], 'count' => ['$sum' => 1]]],
-            ['$sort' => ['count' => -1, '_id' => -1]],
+            ['$sort' => ['count' => -1, 'id' => -1]],
             ['$limit' => $limit],
             ['$skip' => $limit * $skip]
         ],
