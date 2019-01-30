@@ -19,19 +19,15 @@ if (!empty($_id)) {
     echo json_encode($manager->executeQuery('adb.a', $query)->toArray());
     exit;
 } else if (!empty($a)) {
-    // $filter = ['a' => $a];
-    // $options = ['projection' => [ 'b' => 1], 'sort' => ['_id' => -1], 'limit' => $limit, 'skip' => $limit * $skip];
-    // $query = new MongoDB\Driver\Query($filter, $options);
-    // echo json_encode($manager->executeQuery('adb.a', $query)->toArray());
-    // exit;
     $cmd = new MongoDB\Driver\Command([
         'aggregate' => 'a',
         'pipeline' => [
             ['$match' => ['a' => $a]],
-            ['$group' => ['_id' => '$b', 'id' => ['$first' => '$_id'], 'a' => ['$first' => '$b'], 'count' => ['$sum' => 1]]],
+            ['$group' => ['_id' => '$b', 'id' => ['$first' => '$_id'], 'count' => ['$sum' => 1]]],
             ['$sort' => ['count' => -1, 'id' => -1]],
             ['$limit' => $limit],
-            ['$skip' => $limit * $skip]
+            ['$skip' => $limit * $skip],
+            ['$project' => ['_id' => '$id', 'a' => '$_id', 'count' => '$count']]
         ],
         'cursor' => new stdClass,
     ]);
@@ -47,10 +43,11 @@ if (!empty($_id)) {
         'aggregate' => 'a',
         'pipeline' => [
             ['$match' => ['a' => ['$exists' => true]]],
-            ['$group' => ['_id' => '$a', 'id' => ['$first' => '$_id'], 'a' => ['$first' => '$a'], 'count' => ['$sum' => 1]]],
+            ['$group' => ['_id' => '$a', 'id' => ['$first' => '$_id'], 'b' => ['$addToSet' => '$b'], 'count' => ['$sum' => 1]]],
             ['$sort' => ['count' => -1, 'id' => -1]],
             ['$limit' => $limit],
-            ['$skip' => $limit * $skip]
+            ['$skip' => $limit * $skip],
+            ['$project' => ['_id' => '$id', 'a' => '$_id', 'b' => '$b', 'count' => '$count']]
         ],
         'cursor' => new stdClass,
     ]);
