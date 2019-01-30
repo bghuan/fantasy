@@ -11,12 +11,13 @@
 <body class="container-fluid">
     <div class="pos-f-t bg-white" id="accordion">
         <nav class="navbar navbar-light bg-white">
-            <a class="navbar-brand text-primary text-truncate col-8" data-toggle="collapse" href="#collapsea" role="button" aria-expanded="false"
-                aria-controls="collapsea" id="a_top" style="margin-left:-30px;"></a>
+            <a class="navbar-brand text-primary text-truncate col-8" data-toggle="collapse" href="#collapsea" role="button"
+                aria-expanded="false" aria-controls="collapsea" id="a_top" style="margin-left:-30px;"></a>
             <div class="form-inline my-0" style="margin-right:-15px;">
-                <a href="" class="btn-outline-primary btn-sm">S</a>
-                <a href="" class="btn-outline-primary btn-sm md-2">S</a>
-                <button class="navbar-toggler btn btn-light" data-toggle="collapse" data-target="#collapseb" aria-expanded="false" aria-controls="collapseb">
+                <span onclick="query([])" class="btn-outline-primary btn-sm">self</span>
+                <span onclick="query()" class="btn-outline-primary btn-sm md-2">query</span>
+                <button class="navbar-toggler btn btn-light" data-toggle="collapse" data-target="#collapseb"
+                    aria-expanded="false" aria-controls="collapseb">
                     <span class="navbar-toggler-icon btn-sm"></span>
                 </button>
             </div>
@@ -45,13 +46,23 @@
             <div class="row card-body" id="div_query" style="margin-top:-15px;margin-bottom: 15px;"></div>
         </div>
     </div>
-    <div class="footer text-right">
-        <a href="https://github.com/admnst/A-third-of-the-Fantasy.git">github</a>
+    <div class="footer text-right margin-right:20px;">
+        <a href="https://github.com/admnst/A-third-of-the-Fantasy.git"><img src="static/svg/github.svg" alt="" width="30"
+                height="40"></a>
     </div>
     <script>
+        var a;
+        var b;
+        var id = ['0', '1'];
+        var collecte = function (obj) {
+            id.push(obj.parentNode.id);
+        }
         var query = function (str) {
-            var a = (str != undefined ? str : document.getElementById("input_query").value);
+            a = (str != undefined ? str : document.getElementById("input_query").value);
             var url = 'https://www.buguoheng.com/read.php' + (a == '' ? '' : '?a=' + a);
+            if (typeof str == 'object') {
+                url = 'https://www.buguoheng.com/read.php' + (id == '' ? '' : '?id=' + id);
+            }
             var callBack = function (json) {
                 document.getElementById("a_top").innerHTML = (a == '' ? 'fantasy' : a);
                 document.getElementById("a").value = (a == '' ? 'fantasy' : a);
@@ -66,28 +77,30 @@
             HttpGet(url, callBack);
         }
         var create = function () {
-            var a = document.getElementById("a").value;
+            a = document.getElementById("a").value;
             if (a == '') { alert("please type a object") }
-            var b = JSON.stringify(document.getElementById("b").value.split(","));
+            b = JSON.stringify(document.getElementById("b").value.split(","));
             var url = 'https://www.buguoheng.com/create.php?a=' + a + '&b=' + b;
             var callBack = function () { query(a); }
             HttpGet(url, callBack);
         }
         var func_query = function (json) {
-            var div = document.getElementById("div_query");
-            div.innerHTML = '';
+            var div_query = document.getElementById("div_query");
+            div_query.innerHTML = '';
             for (j in json) {
-                var a_div = document.createElement("div");
+                var div = document.createElement("div");
                 var a = document.createElement("a");
-                a_div.className = "navbar-brand col-12 text-truncate border-bottom";
+                div.className = "navbar-brand col-12 text-truncate border-bottom";
                 a.onclick = function () { query(this.innerHTML) };
                 a.innerHTML = json[j]['a'] == undefined ? '' : json[j]['a'];
-                a_div.appendChild(a);
+                div.id = json[j]['_id']['$oid'];
+                div.appendChild(a);
                 var sum = document.createElement("a");
                 sum.className = "float-right";
                 sum.innerHTML = json[j]['count'] == undefined ? '' : json[j]['count'];
-                a_div.appendChild(sum);
-                div.appendChild(a_div);
+                div.appendChild(sum);
+                // div.innerHTML += "<img class='float-right' onclick='collecte(this)'src='static/svg/star.svg'></img>";
+                div_query.appendChild(div);
             }
         }
         var HttpGet = function (Url, CallBack) {
