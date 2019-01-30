@@ -9,18 +9,20 @@
 </head>
 
 <body class="container-fluid">
-    <div class="pos-f-t bg-white">
-        <nav class="navbar fixed-top navbar-light bg-white border-bottom">
-            <a class="navbar-brand text-primary text-truncate col-8" id="a_top"></a>
-            <div class="form-inline my-0">
+    <div class="pos-f-t bg-white" id="accordion">
+        <nav class="navbar navbar-light bg-white">
+            <a class="navbar-brand text-primary text-truncate col-8" data-toggle="collapse" href="#collapsea"
+                role="button" aria-expanded="false" aria-controls="collapsea" id="a_top" style="margin-left:-30px;"></a>
+            <div class="form-inline my-0" style="margin-right:-15px;">
                 <a href="" class="btn-outline-primary btn-sm">S</a>
                 <a href="" class="btn-outline-primary btn-sm md-2">S</a>
-                <button class="navbar-toggler btn btn-light" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent"
-                    aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler btn btn-light" data-toggle="collapse" data-target="#collapseb"
+                    aria-expanded="false" aria-controls="collapseb">
                     <span class="navbar-toggler-icon btn-sm"></span>
                 </button>
             </div>
         </nav>
+<<<<<<< HEAD
         <div class="collapse" id="navbarToggleExternalContent">
             <div class="navbar input-group mb-3">
                 <input type="text" class="form-control" id="input_query" placeholder="object name">
@@ -33,13 +35,31 @@
             <div class="navbar input-group mb-3">
                 <input type="text" class="form-control" id="b" placeholder="Array of slipt(',')"></div>
             <button class="btn btn-primary float-right" type="button" onclick="create()">create</button>
+=======
+        <div class="collapse container text-right" data-parent="#accordion" id="collapseb">
+            <div class="form-group">
+                <input type="text" class="form-control" id="a" placeholder="insert object">
+            </div>
+            <div class="form-group">
+                <textarea class="form-control" id="b" rows="3" placeholder="Array of slipt(',')"></textarea>
+            </div>
+            <button class="btn btn-primary" type="button" onclick="create()">create</button>
+        </div>
+        <div class="collapse container text-right" data-parent="#accordion" id="collapsea">
+            <div class="form-group">
+                <input type="text" class="form-control" id="input_query" placeholder="object name">
+            </div>
+            <button class="btn btn-primary" type="button" onclick="query()">query</button>
+>>>>>>> 1a92cd80ecd6bfb8cfa40def91b871c6a26b3d39
         </div>
     </div>
-    <nav class="navbar sticky-top navbar-light bg-white">&nbsp;
-    </nav>
-    <div class="card bg-light">
-        <div class="row card-body" id="div_query" style="min-height:700px"></div>
+    <div style="min-height:700px;">
+        <div class="card bg-light">
+            <div class="card-header"><a class="h5"></a><a class="float-right">2019-1-30</a></div>
+            <div class="row card-body" id="div_query" style="margin-top:-15px;margin-bottom: 15px;"></div>
+        </div>
     </div>
+<<<<<<< HEAD
     <div class="footer">
         <a href="https://github.com/admnst/A-third-of-the-Fantasy.git">
             <svg version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 700 800" enable-background="new 0 0 36 36" xml:space="preserve">
@@ -51,6 +71,10 @@
        c0,0.4,0.3,0.9,1.1,0.8c6.5-2.2,11.1-8.3,11.1-15.5C34.3,8.7,27,1.4,18,1.4z" />
             </svg></a>
 
+=======
+    <div class="footer text-right">
+        <a href="https://github.com/admnst/A-third-of-the-Fantasy.git">github</a>
+>>>>>>> 1a92cd80ecd6bfb8cfa40def91b871c6a26b3d39
     </div>
     <script>
         var query = function (obj) {
@@ -58,6 +82,10 @@
             var url = 'https://www.buguoheng.com/read.php' + (a == '' ? '' : '?a=' + a);
             var callBack = function (json) {
                 document.getElementById("a_top").innerHTML = (a == '' ? 'fantasy' : a);
+<<<<<<< HEAD
+=======
+                document.getElementById("a").value = (a == '' ? 'fantasy' : a);
+>>>>>>> 1a92cd80ecd6bfb8cfa40def91b871c6a26b3d39
                 func_query(json);
             }
             HttpGet(url, callBack);
@@ -76,6 +104,7 @@
             for (j in json) {
                 var a_div = document.createElement("div");
                 var a = document.createElement("a");
+<<<<<<< HEAD
                 a_div.className = "col-12";
                 a.onclick = function () { query(this) };
                 a.innerHTML = json[j]['a'] == undefined ? '' : json[j]['a'];
@@ -86,6 +115,17 @@
                     index.className = "text-primary";
                 }
                 index.innerHTML = json[j]['count'] == undefined ? '' : json[j]['count'];
+=======
+                a_div.className = "navbar-brand col-12 text-truncate border-bottom";
+                a.onclick = function () { query(this) };
+                a.innerHTML = json[j]['a'] == undefined ? '' : json[j]['a'];
+                a_div.appendChild(a);
+                var sum = document.createElement("a");
+                sum.className = "float-right";
+                sum.innerHTML = json[j]['count'] == undefined ? '' : json[j]['count'];
+                a_div.appendChild(sum);
+                div.appendChild(a_div);
+>>>>>>> 1a92cd80ecd6bfb8cfa40def91b871c6a26b3d39
             }
         }
         var HttpGet = function (Url, CallBack) {
@@ -98,6 +138,7 @@
             }
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+<<<<<<< HEAD
                     try {
                         document.getElementById("a_top").innerHTML = (a == '' ? 'fantasy' : a);
                         CallBack(JSON.parse(xmlhttp.responseText));
@@ -105,6 +146,16 @@
                     catch (e) {
                         console.log(xmlhttp.responseText + '\n' + e)
                     }
+=======
+                    var json;
+                    try {
+                        json = JSON.parse(xmlhttp.responseText);
+                    }
+                    catch (e) {
+                        console.log(xmlhttp.responseText + '\n' + e)
+                    } console.log(json)
+                    CallBack(json);
+>>>>>>> 1a92cd80ecd6bfb8cfa40def91b871c6a26b3d39
                 }
             }
             xmlhttp.open("GET", Url, true);

@@ -29,8 +29,13 @@ if (!empty($_id)) {
         'aggregate' => 'a',
         'pipeline' => [
             ['$match' => ['a' => ['$exists' => true]]],
+<<<<<<< HEAD
             ['$group' => ['_id' => '$a', 'id' => ['$first' => '$_id'], 'b' => ['$addToSet' => '$b'], 'count' => ['$sum' => 1]]],
             ['$sort' => ['count' => -1, '_id' => -1]],
+=======
+            ['$group' => ['_id' => '$a', 'id' => ['$first' => '$_id'], 'a' => ['$first' => '$a'], 'b' => ['$addToSet' => '$b'], 'count' => ['$sum' => 1]]],
+            ['$sort' => ['count' => -1, 'id' => -1]],
+>>>>>>> 1a92cd80ecd6bfb8cfa40def91b871c6a26b3d39
             ['$limit' => $limit],
             ['$skip' => $limit * $skip]
         ],
