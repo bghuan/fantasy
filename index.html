@@ -14,11 +14,13 @@
             <a class="navbar-brand text-primary text-truncate col-8" data-toggle="collapse" href="#collapsea" role="button" aria-expanded="false"
                 aria-controls="collapsea" id="a_top" style="margin-left:-30px;"></a>
             <div class="form-inline my-0" style="margin-right:-15px;">
-                <span onclick="query([])" class="btn-outline-primary btn-sm">self</span>
-                <span onclick="query()" class="btn-outline-primary btn-sm md-2">query</span>
-                <button class="navbar-toggler btn btn-light" data-toggle="collapse" data-target="#collapseb" aria-expanded="false" aria-controls="collapseb">
-                    <span class="navbar-toggler-icon btn-sm"></span>
-                </button>
+                <a href="https://buguoheng.com" onclick="id=[]" class="btn-light btn-sm">remove id</a>
+                <span onclick="query([])" class="btn-light btn-sm"><img src="static/svg/user.svg"></span>
+                <span onclick="query()" class="btn-light btn-sm"><img src="static/svg/home.svg"></span>
+                <span onclick="query(a)" class="btn-light btn-sm"><img src="static/svg/refresh-cw.svg"></span>
+                <span class="navbar-toggler btn btn-light" data-toggle="collapse" data-target="#collapseb" aria-expanded="false" aria-controls="collapseb">
+                    <img src="static/svg/feather.svg">
+                </span>
             </div>
         </nav>
         <div class="collapse container-fluid text-right" data-parent="#accordion" id="collapseb">
@@ -28,102 +30,26 @@
             <div class="form-group">
                 <textarea class="form-control" id="b" rows="3" placeholder="Array of slipt(',')"></textarea>
             </div>
-            <button class="btn btn-primary" type="button" onclick="create()">create</button>
+            <button class="btn btn-primary" onclick="create()">create</button>
         </div>
         <div class="collapse container-fluid text-right" data-parent="#accordion" id="collapsea">
             <div class="form-group">
                 <input type="text" class="form-control" id="input_query" placeholder="object name">
             </div>
-            <button class="btn btn-primary" type="button" onclick="query()">query</button>
+            <button class="btn btn-primary" onclick="query()">query</button>
         </div>
     </div>
     <div style="min-height:700px;">
         <div class="card bg-light">
-            <div class="card-header text-primary" id="as">
-                <a onclick="query()" style="margin-left:-15px;">&nbsp;&nbsp;&nbsp;</a>
-                <a class="float-right text-dark">2019-1-30</a></div>
+            <div class="card-header text-primary" id="as"></div>
             <div class="row card-body" id="div_query" style="margin-top:-15px;margin-bottom: 15px;"></div>
         </div>
     </div>
-    <div class="footer text-right">
-        <a href="https://github.com/admnst/A-third-of-the-Fantasy.git">github</a>
+    <div class="footer text-right margin-right:20px;">
+        <a href="https://github.com/admnst/A-third-of-the-Fantasy.git"><img src="static/svg/github.svg" width="30" height="40"></a>
     </div>
-    <script>
-        var a;
-        var b;
-        var id = ['0','1'];
-        var query = function (str) {
-            a = (str != undefined ? str : document.getElementById("input_query").value);
-            var url = 'https://www.buguoheng.com/read.php' + (a == '' ? '' : '?a=' + a);
-            if (typeof str == 'object') {
-                url = 'https://www.buguoheng.com/read.php' + (id == '' ? '' : '?id=' + id);
-            }
-            var callBack = function (json) {
-                document.getElementById("a_top").innerHTML = (a == '' ? 'fantasy' : a);
-                document.getElementById("a").value = (a == '' ? 'fantasy' : a);
-                if (a != '') {
-                    var str = '/&nbsp;<a onclick="query(\'' + a + '\');">' + a.substring(0, 5) + '</a>&nbsp;';
-                    var str_as = document.getElementById("as").innerHTML;
-                    document.getElementById("as").innerHTML = str_as.substring(0, str_as.indexOf(str) >= 0 ? str_as.indexOf(str) : 999);
-                    document.getElementById("as").innerHTML += str;
-                }
-                func_query(json);
-            }
-            HttpGet(url, callBack);
-        }
-        var create = function () {
-            a = document.getElementById("a").value;
-            if (a == '') { alert("please type a object") }
-            b = JSON.stringify(document.getElementById("b").value.split(","));
-            var url = 'https://www.buguoheng.com/create.php?a=' + a + '&b=' + b;
-            var callBack = function () { query(a); }
-            HttpGet(url, callBack);
-        }
-        var func_query = function (json) {
-            var div_query = document.getElementById("div_query");
-            div_query.innerHTML = '';
-            for (j in json) {
-                var div = document.createElement("div");
-                var aa = document.createElement("a");
-                div.className = "navbar-brand col-12 text-truncate border-bottom";
-                aa.onclick = function () { query(this.innerHTML) };
-                aa.innerHTML = json[j]['a'] == undefined ? '' : json[j]['a'];
-                div.appendChild(aa);
-                var sum = document.createElement("a");
-                sum.className = "float-right";
-                sum.innerHTML = json[j]['count'] == undefined ? '' : json[j]['count'];
-                div.appendChild(sum);
-                div_query.appendChild(div);
-            }
-        }
-        var HttpGet = function (Url, CallBack) {
-            var xmlhttp;
-            if (window.XMLHttpRequest) {
-                xmlhttp = new XMLHttpRequest();
-            }
-            else {
-                xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-            }
-            xmlhttp.onreadystatechange = function () {
-                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                    var json;
-                    try {
-                        json = JSON.parse(xmlhttp.responseText);
-                        console.log(json);
-                    }
-                    catch (e) {
-                        console.log(xmlhttp.responseText + '\n' + e)
-                    }
-                    CallBack(json);
-                }
-            }
-            xmlhttp.open("GET", Url, true);
-            xmlhttp.send();
-        }
-        query();
-    </script>
+    <script src="my.js"></script>
     <script src="static/js/jquery.slim.min.js"></script>
-    <script src="static/js//popper.min.js"></script>
     <script src="static/js//bootstrap.min.js"></script>
 </body>
 
