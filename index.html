@@ -11,14 +11,15 @@
 <body class="container-fluid">
     <div class="pos-f-t bg-white" id="accordion">
         <nav class="navbar navbar-light bg-white">
-            <a class="navbar-brand text-primary text-truncate col-8" data-toggle="collapse" href="#collapsea" role="button" aria-expanded="false"
-                aria-controls="collapsea" id="a_top" style="margin-left:-30px;"></a>
+            <a class="navbar-brand text-primary text-truncate col-8" data-toggle="collapse" href="#collapsea" role="button"
+                aria-expanded="false" aria-controls="collapsea" id="a_top" style="margin-left:-30px;"></a>
             <div class="form-inline my-0" style="margin-right:-15px;">
-                <a href="https://buguoheng.com" onclick="id=[]" class="btn-light btn-sm">remove id</a>
+                <span onclick="id=[];qs.set('id', id);query()" class="btn-light btn-sm">rm id</span>
                 <span onclick="query([])" class="btn-light btn-sm"><img src="static/svg/user.svg"></span>
                 <span onclick="query()" class="btn-light btn-sm"><img src="static/svg/home.svg"></span>
                 <span onclick="query(a)" class="btn-light btn-sm"><img src="static/svg/refresh-cw.svg"></span>
-                <span class="navbar-toggler btn btn-light" data-toggle="collapse" data-target="#collapseb" aria-expanded="false" aria-controls="collapseb">
+                <span class="navbar-toggler btn-light" data-toggle="collapse" data-target="#collapseb" aria-expanded="false"
+                    aria-controls="collapseb">
                     <img src="static/svg/feather.svg">
                 </span>
             </div>
@@ -46,7 +47,8 @@
         </div>
     </div>
     <div class="footer text-right margin-right:20px;">
-        <a href="https://github.com/admnst/A-third-of-the-Fantasy.git"><img src="static/svg/github.svg" width="30" height="40"></a>
+        <a href="https://github.com/admnst/A-third-of-the-Fantasy.git"><img src="static/svg/github.svg" width="30"
+                height="40"></a>
     </div>
     <script src="my.js"></script>
     <script src="static/js/jquery.slim.min.js"></script>

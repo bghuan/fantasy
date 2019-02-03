@@ -1,8 +1,8 @@
+var a, b, id = [], qs = {};
 window.onload = function () {
     id = qs.get('id') == null ? [] : qs.get('id').split(',');
     query();
 }
-var a, b, id = [], qs = {};
 var getMyDate = function () {
     var date = new Date();
     return (date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()).toString();
@@ -27,52 +27,30 @@ qs.set = function (name, value) {
     }
     history.replaceState && history.replaceState(null, null, url)
 }
-var collecte = function (obj) {
-    for (j in id) {
-        if (obj.parentNode.id != undefined && obj.parentNode.id == id[j]) {
-            obj.src = "static/svg/s.svg";
-            id[j] = null;
-            var arr = [];
-            for (j in id) { if (id[j] != null && id[j] != '') { arr.push(id[j]); } }
-            id = arr;
-            qs.set('id', id);
-            return;
+var HttpGet = function (Url, CallBack) {
+    var xmlhttp;
+    if (window.XMLHttpRequest) {
+        xmlhttp = new XMLHttpRequest();
+    }
+    else {
+        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            var json;
+            try {
+                json = JSON.parse(xmlhttp.responseText);
+                console.log(json);
+                CallBack(json);
+            }
+            catch (e) {
+                CallBack(xmlhttp.responseText);
+                console.log(xmlhttp.responseText + '\n' + e)
+            }
         }
     }
-    obj.src = "static/svg/star.svg";
-    id.push(obj.parentNode.id);
-    qs.set('id', id);
-}
-var query = function (str) {
-    a = (str != undefined ? str : document.getElementById("input_query").value);
-    var url = 'https://buguoheng.com/read.php' + (a == '' ? '' : '?a=' + a);
-    if (typeof str == 'object') {
-        url = 'https://buguoheng.com/read.php' + (id == '' ? '' : '?id=' + id);
-    }
-    var callBack = function (json) {
-        document.getElementById("a_top").innerHTML = (a == '' ? 'fantasy' : a);
-        document.getElementById("a").value = (a == '' ? 'fantasy' : a);
-        if (a != '') {
-            var str = '/&nbsp;<a onclick="query(\'' + a + '\');">' + a.substring(0, 5) + '</a>&nbsp;';
-            var str_as = document.getElementById("as").innerHTML;
-            document.getElementById("as").innerHTML = str_as.substring(0, str_as.indexOf(str) >= 0 ? str_as.indexOf(str) : 999);
-            document.getElementById("as").innerHTML += str;
-        }
-        else {
-            document.getElementById("as").innerHTML = '<a onclick="query()" style="margin-left:-15px;">&nbsp;&nbsp;&nbsp;</a><a class="float-right text-dark">' + getMyDate() + '</a></div>';
-        }
-        func_query(json);
-        document.getElementById("input_query").value = '';
-    }
-    HttpGet(url, callBack);
-}
-var create = function () {
-    a = document.getElementById("a").value;
-    if (a == '') { alert("please type a object") }
-    b = JSON.stringify(document.getElementById("b").value.split(","));
-    var url = 'https://www.buguoheng.com/create.php?a=' + a + '&b=' + b;
-    var callBack = function () { query(a); }
-    HttpGet(url, callBack);
+    xmlhttp.open("GET", Url, true);
+    xmlhttp.send();
 }
 var func_query = function (json) {
     var div_query = document.getElementById("div_query");
@@ -98,7 +76,7 @@ var func_query = function (json) {
         star.src = 'static/svg/s.svg';
         star.width = "15";
         star.style = "margin:10px 5px;"
-        star.onclick = function () { collecte(this) };
+        star.onclick = function () { create(this) };
         div.appendChild(star);
         div_query.appendChild(div);
     }
@@ -111,27 +89,56 @@ var func_query = function (json) {
         }
     }
 }
-var HttpGet = function (Url, CallBack) {
-    var xmlhttp;
-    if (window.XMLHttpRequest) {
-        xmlhttp = new XMLHttpRequest();
+var query = function (str) {
+    a = (str != undefined ? str : document.getElementById("input_query").value);
+    var url = 'https://buguoheng.com/read.php' + (a == '' ? '' : '?a=' + a);
+    if (typeof str == 'object') {
+        url = 'https://buguoheng.com/read.php' + (id == '' ? '' : '?id=' + id);
+    }
+    var callBack = function (json) {
+        document.getElementById("a_top").innerHTML = (a == '' ? 'fantasy' : a);
+        document.getElementById("a").value = (a == '' ? 'fantasy' : a);
+        if (a != '') {
+            var str = '/&nbsp;<a onclick="query(\'' + a + '\');">' + a.substring(0, 5) + '</a>&nbsp;';
+            var str_as = document.getElementById("as").innerHTML;
+            document.getElementById("as").innerHTML = str_as.substring(0, str_as.indexOf(str) >= 0 ? str_as.indexOf(str) : 999);
+            document.getElementById("as").innerHTML += str;
+        }
+        else {
+            document.getElementById("as").innerHTML = '<a onclick="query()" style="margin-left:-15px;">&nbsp;&nbsp;&nbsp;</a><a class="float-right text-dark">' + getMyDate() + '</a></div>';
+        }
+        func_query(json);
+        document.getElementById("input_query").value = '';
+    }
+    HttpGet(url, callBack);
+}
+var create = function (obj) {
+    if (obj != undefined && obj.parentNode.id != undefined) {
+        for (j in id) {
+            if (obj.parentNode.id == id[j]) {
+                obj.src = "static/svg/s.svg";
+                id[j] = null;
+                var arr = [];
+                for (j in id) { if (id[j] != null && id[j] != '') { arr.push(id[j]); } }
+                id = arr;
+                qs.set('id', id);
+                return;
+            }
+        }
+        obj.src = "static/svg/star.svg";
+        a = obj.parentNode.childNodes[0].innerHTML;
+        b = [];
     }
     else {
-        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        a = document.getElementById("a").value;
+        b = JSON.stringify(document.getElementById("b").value.split(","));
     }
-    xmlhttp.onreadystatechange = function () {
-        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-            var json;
-            try {
-                json = JSON.parse(xmlhttp.responseText);
-                console.log(json);
-            }
-            catch (e) {
-                console.log(xmlhttp.responseText + '\n' + e)
-            }
-            CallBack(json);
-        }
+    if (a == '') { alert("please type a object") }
+    var url = 'https://www.buguoheng.com/create.php?a=' + a + '&b=' + b;
+    var callBack = function (create_id) {
+        id.push(create_id);
+        qs.set('id', id);
+        query(a);
     }
-    xmlhttp.open("GET", Url, true);
-    xmlhttp.send();
+    HttpGet(url, callBack);
 }

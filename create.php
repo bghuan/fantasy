@@ -25,7 +25,7 @@ $_id = $bulk->insert($document);
 $writeConcern = new MongoDB\Driver\WriteConcern(MongoDB\Driver\WriteConcern::MAJORITY, 1000);
 $result = $manager->executeBulkWrite('adb.a', $bulk, $writeConcern);
 if ($result) {
-    echo "insert success";
+    echo $document["_id"];
     exit;
 } else {
     echo "insert failed";
