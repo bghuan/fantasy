@@ -142,3 +142,6 @@ var create = function (obj) {
     }
     HttpGet(url, callBack);
 }
+document.getElementsByClassName("create")[0].addEventListener("keyup",function(event){if(event.keyCode==13){create()}})
+document.getElementsByClassName("create")[1].addEventListener("keyup",function(event){if(event.keyCode==13){create()}})
+document.getElementsByClassName("create")[1].addEventListener("keydown",function(event){if(event.keyCode==13){event.preventDefault();}})
