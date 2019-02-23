@@ -136,12 +136,14 @@ var create = function (obj) {
     if (a == '') { alert("please type a object") }
     var url = 'https://www.buguoheng.com/create.php?a=' + a + '&b=' + b;
     var callBack = function (create_id) {
-        id.push(create_id);
-        qs.set('id', id);
-        query(a);
+        if (create_id.length == 24) {
+            id.push(create_id);
+            qs.set('id', id);
+            query(a); 
+        }
     }
     HttpGet(url, callBack);
 }
-document.getElementsByClassName("create")[0].addEventListener("keyup",function(event){if(event.keyCode==13){create()}})
-document.getElementsByClassName("create")[1].addEventListener("keyup",function(event){if(event.keyCode==13){create()}})
-document.getElementsByClassName("create")[1].addEventListener("keydown",function(event){if(event.keyCode==13){event.preventDefault();}})
+document.getElementsByClassName("create")[0].addEventListener("keyup", function (event) { if (event.keyCode == 13) { create() } })
+document.getElementsByClassName("create")[1].addEventListener("keyup", function (event) { if (event.keyCode == 13) { create() } })
+document.getElementsByClassName("create")[1].addEventListener("keydown", function (event) { if (event.keyCode == 13) { event.preventDefault(); } })
