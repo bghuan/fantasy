@@ -5,20 +5,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>A third of the fantasy</title>
+    <link rel="stylesheet" href="static/css/bootstrap.min.css">
 </head>
 
-<body class="container-fluid">
-    <p id="output"></p>
-    <script src="static/js//showdown.min.js"></script>
-    <script src="static/js//jquery-3.3.1.min.js"></script>
+<body class="container">
+    <script src="static/js/showdown.min.js"></script>
+    <script src="static/js/jquery-3.3.1.min.js"></script>
     <script>
         var readme = document.createElement("div");
-        var aaaaaa = document.createElement("div");
-        $(readme).load("README.md",function(){console.log(3)});
-        $(aaaaaa).append(readme);
-        document.body.appendChild(aaaaaa);
-        console.log($(aaaaaa)[0].innerHTML);
-        setTimeout(function(){console.log($(aaaaaa)[0].innerHTML) }, 1000);
+        $(readme).load("README.md", function () {
+            var converter = new showdown.Converter();
+            var html = document.createElement("div");
+            html.innerHTML = converter.makeHtml($(readme)[0].innerHTML);
+            document.body.appendChild(html);
+        });
     </script>
 </body>
 
