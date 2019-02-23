@@ -1,6 +1,6 @@
 # A-third-of-the-Fantasy
 
-## put a third of oneself fantasy,watch how many times it's occur.
+    put a third of oneself fantasy,watch how many times it's occur.
 ### config
     https://buguoheng.com
     php7.3/mongodb4.0.5/nginx1.14.2/bt.cn/
