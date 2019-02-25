@@ -148,13 +148,11 @@ document.getElementsByClassName("create")[0].addEventListener("keyup", function 
 document.getElementsByClassName("create")[1].addEventListener("keyup", function (event) { if (event.keyCode == 13) { create() } })
 document.getElementsByClassName("create")[1].addEventListener("keydown", function (event) { if (event.keyCode == 13) { event.preventDefault(); } })
 $('#exampleModalLong').on('show.bs.modal', function () {
-    console.log(1498)
     var readme = document.createElement("div");
     $(readme).load("README.md", function () {
         var converter = new showdown.Converter();
         var html = document.createElement("div");
         html.innerHTML = converter.makeHtml($(readme)[0].innerHTML);
-        console.log(html.innerHTML)
         $(".modal-body").append(html);
     });
 })
