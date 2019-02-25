@@ -10,7 +10,7 @@
 </head>
 
 <body class="container-fluid">
-    <div class="pos-f-t bg-white" id="accordion">
+    <div class="pos-f-t fixed-top bg-white border-bottom" id="accordion">
         <nav class="navbar navbar-light bg-white">
             <a class="navbar-brand text-primary text-truncate col-5" data-toggle="collapse" href="#collapsea" role="button" aria-expanded="false"
                 aria-controls="collapsea" id="a_top" style="margin-left:-30px;"></a>
@@ -40,7 +40,7 @@
             <button class="btn btn-primary" onclick="query()">query</button>
         </div>
     </div>
-    <div style="min-height:700px;">
+    <div style="min-height:700px;margin-top:60px">
         <div class="card bg-light">
             <div class="card-header text-primary" id="as"></div>
             <div class="row card-body" id="div_query" style="margin-top:-15px;margin-bottom: 15px;"></div>
@@ -48,19 +48,19 @@
     </div>
     <div class="footer text-right margin-right:20px;">
         <a class="btn mr-3" data-toggle="modal" data-target="#exampleModalLong">关于</a>
-        <a href="https://github.com/admnst/A-third-of-the-Fantasy.git"><img src="static/svg/github.svg" width="30" height="40"></a>
-    </div>
-    <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-body"></div>
+        <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-body"></div>
+                </div>
             </div>
         </div>
+        <a href="https://github.com/admnst/A-third-of-the-Fantasy.git"><img src="static/svg/github.svg" width="30" height="40"></a>
     </div>
     <script src="static/js/jquery-3.3.1.min.js"></script>
     <script src="my.js"></script>
-    <script src="static/js/showdown.min.js"></script>
     <script src="static/js/bootstrap.min.js"></script>
+    <script src="static/js/showdown.min.js"></script>
 </body>
 
 </html>

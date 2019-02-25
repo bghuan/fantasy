@@ -156,3 +156,25 @@ $('#exampleModalLong').on('show.bs.modal', function () {
         $(".modal-body").append(html);
     });
 })
+var rmcollapseb = function (e) {
+    $('#collapseb').collapse('hide')
+}
+$('#collapseb').on('show.bs.collapse', function () {
+    document.getElementById('collapseb').addEventListener('click', function (e) { e.stopPropagation(); }, false);
+    document.addEventListener('click', rmcollapseb, false);
+})
+$('#collapseb').on('hide.bs.collapse', function () {
+    document.getElementById('collapseb').removeEventListener('click', function (e) { e.stopPropagation(); }, false);
+    document.removeEventListener('click', rmcollapseb, false);
+})
+var rmcollapsea = function () {
+    $('#collapsea').collapse('hide')
+}
+$('#collapsea').on('show.bs.collapse', function () {
+    document.getElementById('collapsea').addEventListener('click', function (e) { e.stopPropagation(); }, false);
+    document.addEventListener('click', rmcollapsea, false);
+})
+$('#collapsea').on('hide.bs.collapse', function () {
+    document.getElementById('collapsea').removeEventListener('click', function (e) { e.stopPropagation(); }, false);
+    document.removeEventListener('click', rmcollapsea, false);
+})
