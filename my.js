@@ -156,7 +156,7 @@ $('#exampleModalLong').on('show.bs.modal', function () {
         $(".modal-body").append(html);
     });
 })
-var rmcollapseb = function (e) {
+var rmcollapseb = function () {
     $('#collapseb').collapse('hide')
 }
 $('#collapseb').on('show.bs.collapse', function () {
