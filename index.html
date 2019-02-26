@@ -10,8 +10,8 @@
 </head>
 
 <body class="container-fluid">
-    <div class="pos-f-t fixed-top bg-white border-bottom" id="accordion">
-        <nav class="navbar navbar-light bg-white">
+    <div class="pos-f-t fixed-top bg-white border-bottom container-fluid" id="accordion">
+        <nav class="navbar navbar-light bg-white" style="padding:0.1rem 1rem 0.1rem 1rem">
             <a class="navbar-brand text-primary text-truncate col-5" data-toggle="collapse" href="#collapsea" role="button" aria-expanded="false"
                 aria-controls="collapsea" id="a_top" style="margin-left:-30px;"></a>
             <div class="form-inline my-0" style="margin-right:-15px;">
@@ -19,7 +19,7 @@
                 <span onclick="query([])" class="btn-light btn-sm"><img src="static/svg/user.svg"></span>
                 <span onclick="query()" class="btn-light btn-sm"><img src="static/svg/home.svg"></span>
                 <span onclick="query(a)" class="btn-light btn-sm"><img src="static/svg/refresh-cw.svg"></span>
-                <button class="navbar-toggler btn-light" data-toggle="collapse" data-target="#collapseb" aria-expanded="false" aria-controls="collapseb">
+                <button class="btn btn-light navbar-toggler" data-toggle="collapse" data-target="#collapseb" aria-expanded="false" aria-controls="collapseb">
                     <img src="static/svg/feather.svg">
                 </button>
             </div>
@@ -40,7 +40,7 @@
             <button class="btn btn-primary" onclick="query()">query</button>
         </div>
     </div>
-    <div style="min-height:700px;margin-top:60px">
+    <div style="min-height:700px;margin-top:47px">
         <div class="card bg-light">
             <div class="card-header text-primary" id="as"></div>
             <div class="row card-body" id="div_query" style="margin-top:-15px;margin-bottom: 15px;"></div>

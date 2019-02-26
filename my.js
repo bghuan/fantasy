@@ -90,6 +90,7 @@ var func_query = function (json) {
     }
 }
 var query = function (str) {
+    $('#collapsea').collapse('hide');
     a = (str != undefined ? str : document.getElementById("input_query").value);
     var url = 'https://buguoheng.com/read.php' + (a == '' ? '' : '?a=' + a);
     if (typeof str == 'object') {
@@ -113,6 +114,7 @@ var query = function (str) {
     HttpGet(url, callBack);
 }
 var create = function (obj) {
+    $('#collapseb').collapse('hide');
     if (obj != undefined && obj.parentNode.id != undefined) {
         for (j in id) {
             if (obj.parentNode.id == id[j]) {
@@ -126,15 +128,15 @@ var create = function (obj) {
             }
         }
         obj.src = "static/svg/star.svg";
-        a = obj.parentNode.childNodes[0].innerHTML;
-        b = [];
+        a = a;
+        b = obj.parentNode.childNodes[0].innerHTML;
     }
     else {
         a = document.getElementById("a").value;
-        b = JSON.stringify(document.getElementById("b").value.split(","));
+        b = document.getElementById("b").value;
     }
     if (a == '') { alert("please type a object") }
-    var url = 'https://www.buguoheng.com/create.php?a=' + a + '&b=' + b;
+    var url = 'https://www.buguoheng.com/create.php?a=' + a + '&b=' + JSON.stringify(b.split(","));
     var callBack = function (create_id) {
         if (create_id.length == 24) {
             id.push(create_id);
@@ -163,7 +165,7 @@ $('#collapseb').on('show.bs.collapse', function () {
     document.getElementById('collapseb').addEventListener('click', function (e) { e.stopPropagation(); }, false);
     document.addEventListener('click', rmcollapseb, false);
 })
-$('#collapseb').on('hide.bs.collapse', function () {
+$('#collapseb').on('hidden.bs.collapse', function () {
     document.getElementById('collapseb').removeEventListener('click', function (e) { e.stopPropagation(); }, false);
     document.removeEventListener('click', rmcollapseb, false);
 })
@@ -174,7 +176,7 @@ $('#collapsea').on('show.bs.collapse', function () {
     document.getElementById('collapsea').addEventListener('click', function (e) { e.stopPropagation(); }, false);
     document.addEventListener('click', rmcollapsea, false);
 })
-$('#collapsea').on('hide.bs.collapse', function () {
+$('#collapsea').on('hidden.bs.collapse', function () {
     document.getElementById('collapsea').removeEventListener('click', function (e) { e.stopPropagation(); }, false);
     document.removeEventListener('click', rmcollapsea, false);
 })
