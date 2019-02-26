@@ -42,11 +42,10 @@ var HttpGet = function (Url, CallBack) {
                 json = JSON.parse(xmlhttp.responseText);
                 console.log(json);
                 CallBack(json);
-            }
-            catch (e) {
+            } catch (e) {
                 CallBack(xmlhttp.responseText);
                 console.log(xmlhttp.responseText + '\n' + e)
-            }
+            } finally { totop() }
         }
     }
     xmlhttp.open("GET", Url, true);
@@ -149,6 +148,9 @@ var create = function (obj) {
 document.getElementsByClassName("create")[0].addEventListener("keyup", function (event) { if (event.keyCode == 13) { create() } })
 document.getElementsByClassName("create")[1].addEventListener("keyup", function (event) { if (event.keyCode == 13) { create() } })
 document.getElementsByClassName("create")[1].addEventListener("keydown", function (event) { if (event.keyCode == 13) { event.preventDefault(); } })
+
+// $(".create").keyup(function (event) { if (event.keyCode == 13) {console.log(2) } });
+
 $('#exampleModalLong').on('show.bs.modal', function () {
     var readme = document.createElement("div");
     $(readme).load("README.md", function () {
@@ -158,25 +160,25 @@ $('#exampleModalLong').on('show.bs.modal', function () {
         $(".modal-body").append(html);
     });
 })
-var rmcollapseb = function () {
-    $('#collapseb').collapse('hide')
-}
+var rmcollapseb = function () { $('#collapseb').collapse('hide') }
 $('#collapseb').on('show.bs.collapse', function () {
-    document.getElementById('collapseb').addEventListener('click', function (e) { e.stopPropagation(); }, false);
+    document.getElementById('collapseb').addEventListener('click', function (e) { e.stopPropagation(); });
     document.addEventListener('click', rmcollapseb, false);
 })
 $('#collapseb').on('hidden.bs.collapse', function () {
-    document.getElementById('collapseb').removeEventListener('click', function (e) { e.stopPropagation(); }, false);
+    document.getElementById('collapseb').removeEventListener('click', function (e) { e.stopPropagation(); });
     document.removeEventListener('click', rmcollapseb, false);
 })
-var rmcollapsea = function () {
-    $('#collapsea').collapse('hide')
-}
+var rmcollapsea = function () { $('#collapsea').collapse('hide') }
 $('#collapsea').on('show.bs.collapse', function () {
-    document.getElementById('collapsea').addEventListener('click', function (e) { e.stopPropagation(); }, false);
+    document.getElementById('collapsea').addEventListener('click', function (e) { e.stopPropagation(); });
     document.addEventListener('click', rmcollapsea, false);
 })
 $('#collapsea').on('hidden.bs.collapse', function () {
-    document.getElementById('collapsea').removeEventListener('click', function (e) { e.stopPropagation(); }, false);
+    document.getElementById('collapsea').removeEventListener('click', function (e) { e.stopPropagation(); });
     document.removeEventListener('click', rmcollapsea, false);
 })
+
+
+var totop = function () { $('body,html').animate({ scrollTop: '0px' }); }
+var tobottom = function () { $('body,html').animate({ scrollTop: $(".footer").offset().top }); }
