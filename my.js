@@ -36,6 +36,8 @@ var func_query = function (json) {
         div.className = "navbar-brand col-12 text-truncate border-bottom";
         a.onclick = function () { query(this.innerHTML) };
         a.innerHTML = json[j]['a'] == null ? '' : json[j]['a'];
+        a.href="#/"+a.innerHTML;
+        a.className = "text-dark";
         div.id = json[j]['_id']['$oid'];
         div.appendChild(a);
         var b = document.createElement("a");
@@ -131,7 +133,7 @@ $('#exampleModalLong').on('show.bs.modal', function () {
         var converter = new showdown.Converter();
         var html = document.createElement("div");
         html.innerHTML = converter.makeHtml($(readme)[0].innerHTML);
-        $(".modal-body").innerHTML=html;
+        $(".modal-body").innerHTML = html;
     });
 })
 var rmcollapseb = function () { $('#collapseb').collapse('hide') }
@@ -159,6 +161,4 @@ var tobottom = function () { $('body,html').animate({ scrollTop: $(".footer").of
 
 
 
-window.onload = function () {
-    query();
-}
+$(document).ready(function(){query()});

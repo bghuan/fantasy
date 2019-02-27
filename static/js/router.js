@@ -10,20 +10,12 @@ Router.prototype.refresh = function () {
     this.routes[this.currentURL]();
 }
 Router.prototype.init = function () {
-    //window.addEventListener('load', this.refresh.bind(this), false);
+    window.addEventListener('load', this.refresh.bind(this), false);
     window.addEventListener('hashchange', this.refresh.bind(this), false);
 }
-function display_page(id) {
-    $(".content").eq(id).show().siblings().hide();
-}
 window.Router = new Router();
-Router.route('/index', function () {
-    display_page(0);
+Router.route('/dollarlink', function () {
+    alert('only bind english')
 })
-Router.route('/news', function () {
-    display_page(1);
-})
-Router.route('/about', function () {
-    display_page(2);
-})
+Router.route('/index')
 window.Router.init();
