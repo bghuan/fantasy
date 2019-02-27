@@ -156,7 +156,4 @@ var totop = function () { $('body,html').animate({ scrollTop: '0px' }); }
 var tobottom = function () { $('body,html').animate({ scrollTop: $(".footer").offset().top }); }
 
 
-
-window.onload = function () {
-    query();
-}
+$(document).ready(function(){query()});
