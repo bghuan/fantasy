@@ -10,7 +10,7 @@ Router.prototype.refresh = function () {
     this.routes[this.currentURL]();
 }
 Router.prototype.init = function () {
-    window.addEventListener('load', this.refresh.bind(this), false);
+    //window.addEventListener('load', this.refresh.bind(this), false);
     window.addEventListener('hashchange', this.refresh.bind(this), false);
 }
 window.Router = new Router();

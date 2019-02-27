@@ -36,8 +36,6 @@ var func_query = function (json) {
         div.className = "navbar-brand col-12 text-truncate border-bottom";
         a.onclick = function () { query(this.innerHTML) };
         a.innerHTML = json[j]['a'] == null ? '' : json[j]['a'];
-        a.href="#/"+a.innerHTML;
-        a.className = "text-dark";
         div.id = json[j]['_id']['$oid'];
         div.appendChild(a);
         var b = document.createElement("a");
@@ -131,13 +129,7 @@ $('#exampleModalLong').on('show.bs.modal', function () {
     var readme = document.createElement("div");
     $(readme).load("README.md", function () {
         var converter = new showdown.Converter();
-<<<<<<< HEAD
-        var html = document.createElement("div");
-        html.innerHTML = converter.makeHtml($(readme)[0].innerHTML);
-        $(".modal-body").innerHTML = html;
-=======
         $(".modal-body")[0].innerHTML = converter.makeHtml($(readme)[0].innerHTML);
->>>>>>> 497c6acdf5054039e3e172867e11efe3143f78e9
     });
 })
 var rmcollapseb = function () { $('#collapseb').collapse('hide') }
@@ -164,9 +156,5 @@ var totop = function () { $('body,html').animate({ scrollTop: '0px' }); }
 var tobottom = function () { $('body,html').animate({ scrollTop: $(".footer").offset().top }); }
 
 
-<<<<<<< HEAD
 
 $(document).ready(function(){query()});
-=======
-$(document).ready(function(){query()});
->>>>>>> 497c6acdf5054039e3e172867e11efe3143f78e9
