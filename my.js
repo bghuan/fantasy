@@ -129,9 +129,7 @@ $('#exampleModalLong').on('show.bs.modal', function () {
     var readme = document.createElement("div");
     $(readme).load("README.md", function () {
         var converter = new showdown.Converter();
-        var html = document.createElement("div");
-        html.innerHTML = converter.makeHtml($(readme)[0].innerHTML);
-        $(".modal-body").innerHTML=html;
+        $(".modal-body")[0].innerHTML = converter.makeHtml($(readme)[0].innerHTML);
     });
 })
 var rmcollapseb = function () { $('#collapseb').collapse('hide') }
