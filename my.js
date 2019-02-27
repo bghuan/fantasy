@@ -1,31 +1,7 @@
-var a, b, id = [], qs = {};
-window.onload = function () {
-    id = qs.get('id') == null ? [] : qs.get('id').split(',');
-    query();
-}
+var a, b;
 var getMyDate = function () {
     var date = new Date();
     return (date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()).toString();
-}
-qs.get = function (name) {
-    var reg = new RegExp("[?&#]" + name + "=[^$&]*");
-    var parameter = location.href.match(reg)
-    if (!parameter) {
-        return;
-    }
-    return decodeURIComponent(parameter[0].substr(name.length + 2));
-}
-qs.set = function (name, value) {
-    var reg = new RegExp("([?&#]" + name + "=)[^$&]*")
-    var url = location.href
-    var parameter = url.match(reg)
-    if (parameter) {
-        url = url.replace(reg, '$1' + value)
-    } else {
-        var first = url.indexOf('#') > 0 ? '' : '#'
-        url += (url.indexOf('=') > 0 ? '&' : first) + name + '=' + value
-    }
-    history.replaceState && history.replaceState(null, null, url)
 }
 var HttpGet = function (Url, CallBack) {
     var xmlhttp;
@@ -80,11 +56,10 @@ var func_query = function (json) {
         div_query.appendChild(div);
     }
     var ida = document.getElementsByTagName("img");
+    var str_id = localStorage.getItem('id');
     for (i in ida) {
-        for (j in id) {
-            if (ida[i].parentNode != undefined && ida[i].parentNode.id != undefined && ida[i].parentNode.id != '' && ida[i].parentNode.id == id[j]) {
-                ida[i].src = "static/svg/star.svg";
-            }
+        if (ida[i].parentNode != undefined && ida[i].parentNode.id != undefined && ida[i].parentNode.id != '' && str_id.indexOf(ida[i].parentNode.id) >= 0) {
+            ida[i].src = "static/svg/star.svg";
         }
     }
 }
@@ -93,7 +68,7 @@ var query = function (str) {
     a = (str != undefined ? str : document.getElementById("input_query").value);
     var url = 'https://buguoheng.com/read.php' + (a == '' ? '' : '?a=' + a);
     if (typeof str == 'object') {
-        url = 'https://buguoheng.com/read.php' + (id == '' ? '' : '?id=' + id);
+        url = 'https://buguoheng.com/read.php' + (localStorage.getItem('id') == '' ? '' : '?id=' + localStorage.getItem('id'));
     }
     var callBack = function (json) {
         document.getElementById("a_top").innerHTML = (a == '' ? 'fantasy' : a);
@@ -115,20 +90,20 @@ var query = function (str) {
 var create = function (obj) {
     $('#collapseb').collapse('hide');
     if (obj != undefined && obj.parentNode.id != undefined) {
-        for (j in id) {
-            if (obj.parentNode.id == id[j]) {
-                obj.src = "static/svg/s.svg";
-                id[j] = null;
-                var arr = [];
-                for (j in id) { if (id[j] != null && id[j] != '') { arr.push(id[j]); } }
-                id = arr;
-                qs.set('id', id);
-                return;
-            }
+        var str_id = localStorage.getItem('id');
+        var i = str_id.indexOf(obj.parentNode.id);
+        if (i >= 0) {
+            localStorage.id = str_id.substring(0, i) + str_id.substring(i + obj.parentNode.id.length);
+            query([]);
+            return;
         }
-        obj.src = "static/svg/star.svg";
-        a = a;
-        b = obj.parentNode.childNodes[0].innerHTML;
+        if (a == '') {
+            a = obj.parentNode.childNodes[0].innerHTML;
+            b = '';
+        }
+        else {
+            b = obj.parentNode.childNodes[0].innerHTML;
+        }
     }
     else {
         a = document.getElementById("a").value;
@@ -138,8 +113,7 @@ var create = function (obj) {
     var url = 'https://www.buguoheng.com/create.php?a=' + a + '&b=' + JSON.stringify(b.split(","));
     var callBack = function (create_id) {
         if (create_id.length == 24) {
-            id.push(create_id);
-            qs.set('id', id);
+            localStorage.id += (',' + create_id);
             query(a);
         }
     }
@@ -182,3 +156,9 @@ $('#collapsea').on('hidden.bs.collapse', function () {
 
 var totop = function () { $('body,html').animate({ scrollTop: '0px' }); }
 var tobottom = function () { $('body,html').animate({ scrollTop: $(".footer").offset().top }); }
+
+
+
+window.onload = function () {
+    query();
+}
