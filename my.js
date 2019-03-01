@@ -11,6 +11,7 @@ var HttpGet = function (Url, CallBack) {
     else {
         xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
     }
+    console.log(Url)
     xmlhttp.onreadystatechange = function () {
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
             var json;
@@ -54,9 +55,10 @@ var func_query = function (json) {
         star.onclick = function () { create(this) };
         div.appendChild(star);
         div_query.appendChild(div);
+
     }
     var ida = document.getElementsByTagName("img");
-    var str_id = localStorage.getItem('id');
+    var str_id = localStorage.getItem('id') || '';
     for (i in ida) {
         if (ida[i].parentNode != undefined && ida[i].parentNode.id != undefined && ida[i].parentNode.id != '' && str_id.indexOf(ida[i].parentNode.id) >= 0) {
             ida[i].src = "static/svg/star.svg";
@@ -90,7 +92,7 @@ var query = function (str) {
 var create = function (obj) {
     $('#collapseb').collapse('hide');
     if (obj != undefined && obj.parentNode.id != undefined) {
-        var str_id = localStorage.getItem('id');
+        var str_id = localStorage.getItem('id') || '';
         var i = str_id.indexOf(obj.parentNode.id);
         if (i >= 0) {
             localStorage.id = str_id.substring(0, i) + str_id.substring(i + obj.parentNode.id.length);
@@ -115,6 +117,10 @@ var create = function (obj) {
         if (create_id.length == 24) {
             localStorage.id += (',' + create_id);
             query(a);
+            if (a == 'id') {
+                $('#exampleModalLong').modal('show');
+                $(".modal-body")[0].innerHTML = create_id;
+            }
         }
     }
     HttpGet(url, callBack);
@@ -157,4 +163,4 @@ var tobottom = function () { $('body,html').animate({ scrollTop: $(".footer").of
 
 
 
-$(document).ready(function(){query()});
+$(document).ready(function () { query() });
