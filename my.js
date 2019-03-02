@@ -1,3 +1,5 @@
+$(document).ready(function () { query() });
+
 var a, b;
 var getMyDate = function () {
     var date = new Date();
@@ -11,7 +13,6 @@ var HttpGet = function (Url, CallBack) {
     else {
         xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
     }
-    console.log(Url)
     xmlhttp.onreadystatechange = function () {
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
             var json;
@@ -36,16 +37,16 @@ var func_query = function (json) {
         var a = document.createElement("a");
         div.className = "navbar-brand col-12 text-truncate border-bottom";
         a.onclick = function () { query(this.innerHTML) };
-        a.innerHTML = json[j]['a'] == null ? '' : json[j]['a'];
+        a.innerHTML = json[j]['a'] || '';
         div.id = json[j]['_id']['$oid'];
         div.appendChild(a);
         var b = document.createElement("a");
         b.style = "font-size:80%";
-        b.innerHTML = json[j]['b'] == null || json[j]['b'] == '' ? '' : ' - ' + json[j]['b'];
+        b.innerHTML = json[j]['b'] == null ? '' : ' - ' + json[j]['b'];
         div.appendChild(b);
         var sum = document.createElement("a");
         sum.className = "float-right";
-        sum.innerHTML = json[j]['count'] == null ? '' : json[j]['count'];
+        sum.innerHTML = json[j]['count'] || '';
         div.appendChild(sum);
         var star = document.createElement("img");
         star.className = "float-right";
@@ -55,7 +56,6 @@ var func_query = function (json) {
         star.onclick = function () { create(this) };
         div.appendChild(star);
         div_query.appendChild(div);
-
     }
     var ida = document.getElementsByTagName("img");
     var str_id = localStorage.getItem('id') || '';
@@ -67,14 +67,14 @@ var func_query = function (json) {
 }
 var query = function (str) {
     $('#collapsea').collapse('hide');
-    a = (str != undefined ? str : document.getElementById("input_query").value);
+    a = str || document.getElementById("input_query").value;
     var url = 'https://buguoheng.com/read.php' + (a == '' ? '' : '?a=' + a);
     if (typeof str == 'object') {
-        url = 'https://buguoheng.com/read.php' + (localStorage.getItem('id') == '' ? '' : '?id=' + localStorage.getItem('id'));
+        url = 'https://buguoheng.com/read.php' + '?id=' + localStorage.getItem('id') || '';
     }
     var callBack = function (json) {
-        document.getElementById("a_top").innerHTML = (a == '' ? 'fantasy' : a);
-        document.getElementById("a").value = (a == '' ? 'fantasy' : a);
+        document.getElementById("a_top").innerHTML = a || 'fantasy';
+        document.getElementById("a").value = a || 'fantasy';
         if (a != '') {
             var str = '/&nbsp;<a onclick="query(\'' + a + '\');">' + a.substring(0, 5) + '</a>&nbsp;';
             var str_as = document.getElementById("as").innerHTML;
@@ -101,7 +101,7 @@ var create = function (obj) {
         }
         if (a == '') {
             a = obj.parentNode.childNodes[0].innerHTML;
-            b = '';
+            b = [];
         }
         else {
             b = obj.parentNode.childNodes[0].innerHTML;
@@ -129,7 +129,6 @@ document.getElementsByClassName("create")[0].addEventListener("keyup", function 
 document.getElementsByClassName("create")[1].addEventListener("keyup", function (event) { if (event.keyCode == 13) { create() } })
 document.getElementsByClassName("create")[1].addEventListener("keydown", function (event) { if (event.keyCode == 13) { event.preventDefault(); } })
 
-// $(".create").keyup(function (event) { if (event.keyCode == 13) {console.log(2) } });
 
 $('#exampleModalLong').on('show.bs.modal', function () {
     var readme = document.createElement("div");
@@ -160,7 +159,3 @@ $('#collapsea').on('hidden.bs.collapse', function () {
 
 var totop = function () { $('body,html').animate({ scrollTop: '0px' }); }
 var tobottom = function () { $('body,html').animate({ scrollTop: $(".footer").offset().top }); }
-
-
-
-$(document).ready(function () { query() });
