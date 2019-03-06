@@ -44,12 +44,12 @@ var func_query = function (json) {
         div_query.innerHTML = '';
         for (j in json) {
             var div = document.createElement("div");
-            var a = document.createElement("a");
+            var aa = document.createElement("a");
             div.className = "navbar-brand col-12 text-truncate border-bottom";
-            a.onclick = function () { query(this.innerHTML) };
-            a.innerHTML = json[j]['a'] || '';
+            aa.onclick = function () { query(this.innerHTML) };
+            aa.innerHTML = json[j]['a'] || '';
             div.id = json[j]['_id']['$oid'];
-            div.appendChild(a);
+            div.appendChild(aa);
             var b = document.createElement("a");
             b.style = "font-size:80%";
             b.innerHTML = json[j]['b'] == null ? '' : ' - ' + json[j]['b'];
@@ -81,26 +81,23 @@ var func_query = function (json) {
     }
 }
 var query = function (str) {
-    window.history.pushState(null, null, window.url);
     $('#collapsea').collapse('hide');
     a = str || document.getElementById("input_query").value;
     var url = 'https://buguoheng.com/read.php' + (a == '' ? '' : '?a=' + a);
     if (typeof str == 'object') {
         url = 'https://buguoheng.com/read.php' + '?id=' + localStorage.getItem('id') || '';
     }
-    var callBack = function (json) { func_query(json); }
+    //var callBack = function (json) { func_query(json); }
     //HttpGet(url, callBack);
-    //window.history.replaceState(null, null, '/#/'+a);
-    window.location.hash = (url || '');
-    console.log('a' + a)
+    //window.history.replaceState(null, null, '/#'+a);
+    window.location.hash = url; 
 }
-var query_onhashchange = function () { HttpGet(location.hash.slice(1), function (json) { func_query(json); }); }
+var query_onhashchange = function () {a=decodeURI(location.href).split('a=')[1]||''; HttpGet(location.hash.slice(1), function (json) { func_query(json); }); }
 $(document).ready(function () {
-    window.history.replaceState(null, null, '/#/');
+    window.history.replaceState(null, null, '/#https://buguoheng.com/read.php');
+    query_onhashchange();
     window.addEventListener('hashchange', query_onhashchange, false);
-    query();
 });
-
 var create = function (obj) {
     $('#collapseb').collapse('hide');
     if (obj != undefined && obj.parentNode.id != undefined) {
@@ -124,7 +121,7 @@ var create = function (obj) {
         b = document.getElementById("b").value;
     }
     if (a == '') { alert("please type a object") }
-    var url = 'https://www.buguoheng.com/create.php?a=' + a + '&b=' + JSON.stringify(b.split(","));
+    var url = 'https://buguoheng.com/create.php?a=' + a + '&b=' + JSON.stringify(b.split(","));
     var callBack = function (create_id) {
         if (create_id.length == 24) {
             localStorage.id += (',' + create_id);
