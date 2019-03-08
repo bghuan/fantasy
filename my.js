@@ -94,6 +94,7 @@ var query = function (str) {
 }
 var query_onhashchange = function () {a=decodeURI(location.href).split('a=')[1]||''; HttpGet(location.hash.slice(1), function (json) { func_query(json); }); }
 $(document).ready(function () {
+    console.log(location.hash.slice(1))
     window.history.replaceState(null, null, '/#https://buguoheng.com/read.php');
     query_onhashchange();
     window.addEventListener('hashchange', query_onhashchange, false);
