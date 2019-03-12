@@ -124,7 +124,7 @@ const create = obj => {
         b = document.getElementById("b").value;
     }
     if (a == '') { alert("please type a object") }
-    let url = 'create.php?a=' + a + '&b=' + JSON.stringify(b.split(","));
+    let url = '/create.php?a=' + a + '&b=' + JSON.stringify(b.split(","));
     let callBack = create_id => {
         if (create_id.length == 24) {
             localStorage.id += (',' + create_id);
