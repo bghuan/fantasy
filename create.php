@@ -24,4 +24,3 @@ if ($result) {
     echo $document["_id"];
     exit;
 }
- 
