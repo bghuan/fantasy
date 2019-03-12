@@ -4,7 +4,7 @@ $manager = new MongoDB\Driver\Manager("mongodb://localhost:27017");
 function FormitDollor($str)
 {
     if (is_array($str)) {
-        $str = implode(' ',$str)
+        $str = implode(' ',$str);
     }
     if (is_object($str)) {
         $str = '\''.$str.'\'';
