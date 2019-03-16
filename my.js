@@ -125,7 +125,7 @@ const create = obj => {
         b = document.getElementById("b").value;
     }
     if (a == '') { alert("please type a object") }
-    let url = '/create.php?a=' + a + '&b=' + JSON.stringify(b.split(","));
+    let url = '/create.php?a=' + a + '&b=' + JSON.stringify(typeof b == "string" ? b.split(",") : []);
     let callBack = create_id => {
         if (create_id.length == 24) {
             localStorage.id += (',' + create_id);
@@ -141,6 +141,27 @@ const create = obj => {
         }
     }
     HttpGet(url, callBack);
+}
+const show_id_edit = () => { order_id(); tobottom(); document.getElementById('addid').style.display = 'block'; document.getElementById('af').value = localStorage.id }
+const update_id = () => { localStorage.setItem(new Date().toLocaleString(), localStorage.id); localStorage.id = document.getElementById('af').value; query([]); }
+const query_id = () => {
+    document.body.innerText = "";
+    for (i in localStorage) {
+        if (i > '2019' && i < '2030' || i == "id") {
+            document.body.innerHTML += "<h6>" + i + "</h6><p>" + localStorage[i] + "</p>";
+        }
+    }
+    document.body.innerHTML += "<br />";
+}
+const order_id = () => {
+    let ids = localStorage.getItem("id").split(',');
+    let new_ids = "";
+    for (let i = 0; i < ids.length; i++) {
+        if (ids.toString().length == 24) {
+            new_ids += ids[i] + ',';
+        }
+    }
+    localStorage.setItem("id", new_ids.substr(0, new_ids.length - 1));
 }
 document.getElementById("input_query").addEventListener("keyup", event => { if (event.keyCode == 13) { query(document.getElementById("input_query").value) } })
 document.getElementsByClassName("create")[0].addEventListener("keyup", event => { if (event.keyCode == 13) { create() } })
