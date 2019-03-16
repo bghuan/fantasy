@@ -157,7 +157,7 @@ const order_id = () => {
     let ids = localStorage.getItem("id").split(',');
     let new_ids = "";
     for (let i = 0; i < ids.length; i++) {
-        if (ids.toString().length == 24) {
+        if (ids[i].toString().length == 24) {
             new_ids += ids[i] + ',';
         }
     }
