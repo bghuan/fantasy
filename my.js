@@ -142,10 +142,18 @@ const create = obj => {
     }
     HttpGet(url, callBack);
 }
-const show_id_edit = () => { order_id(); tobottom(); document.getElementById('addid').style.display = 'block'; document.getElementById('af').value = localStorage.id }
-const update_id = () => { localStorage.setItem(new Date().toLocaleString(), localStorage.id); localStorage.id = document.getElementById('af').value; query([]); }
+const show_id_edit = () => {
+    tobottom();
+    document.getElementById('addid').style.display = 'block';
+    document.getElementById('af').value = localStorage.id;
+    setTimeout(function () { order_id(); }, 2000);
+}
+const update_id = () => {
+    localStorage.setItem(new Date().toLocaleString(), localStorage.id);
+    localStorage.id = document.getElementById('af').value; query([]);
+}
 const query_id = () => {
-    document.body.innerText = "";
+    document.body.innerHTML = "<button class='btn btn-primary' onclick='location.replace(location.href)'>刷新</a>";
     for (i in localStorage) {
         if (i > '2019' && i < '2030' || i == "id") {
             document.body.innerHTML += "<h6>" + i + "</h6><p>" + localStorage[i] + "</p>";
@@ -161,7 +169,7 @@ const order_id = () => {
             new_ids += ids[i] + ',';
         }
     }
-    localStorage.setItem("id", new_ids.substr(0, new_ids.length - 1));
+    document.getElementById('af').value = new_ids.substr(0, new_ids.length - 1);
 }
 document.getElementById("input_query").addEventListener("keyup", event => { if (event.keyCode == 13) { query(document.getElementById("input_query").value) } })
 document.getElementsByClassName("create")[0].addEventListener("keyup", event => { if (event.keyCode == 13) { create() } })
