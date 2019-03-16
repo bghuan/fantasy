@@ -2,6 +2,7 @@ var a, b;
 const getMyDate = (date = new Date()) => (date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()).toString();
 
 const HttpGet = (str, CallBack) => {
+    console.log(str);
     let xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
     xmlhttp.onreadystatechange = () => {
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
@@ -124,15 +125,19 @@ const create = obj => {
         b = document.getElementById("b").value;
     }
     if (a == '') { alert("please type a object") }
-    let url = 'create.php?a=' + a + '&b=' + JSON.stringify(b.split(","));
+    let url = '/create.php?a=' + a + '&b=' + JSON.stringify(b.split(","));
     let callBack = create_id => {
         if (create_id.length == 24) {
             localStorage.id += (',' + create_id);
+            query(a);
             query2(a);
             if (a == 'id') {
                 $('#exampleModalLong').modal('show');
                 $(".modal-body")[0].innerHTML = create_id;
             }
+        }
+        else {
+            console.log('not right id,' + create_id)
         }
     }
     HttpGet(url, callBack);
@@ -141,6 +146,20 @@ document.getElementById("input_query").addEventListener("keyup", event => { if (
 document.getElementsByClassName("create")[0].addEventListener("keyup", event => { if (event.keyCode == 13) { create() } })
 document.getElementsByClassName("create")[1].addEventListener("keyup", event => { if (event.keyCode == 13) { create() } })
 document.getElementsByClassName("create")[1].addEventListener("keydown", event => { if (event.keyCode == 13) { event.preventDefault(); } })
+
+let i = 0;
+let enter_keycode = [69, 78, 84, 69, 82];
+document.addEventListener('keyup', event => {
+    if (event.keyCode == enter_keycode[i]) {
+        if (i++ == 4) {
+            $('#collapseb').collapse('show');
+            i = 0;
+        }
+    }
+    else {
+        i = 0;
+    }
+}, true);
 
 
 $('#exampleModalLong').on('show.bs.modal', function () {

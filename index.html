@@ -15,7 +15,6 @@
             <a class="navbar-brand text-primary text-truncate col-5" data-toggle="collapse" href="#collapsea" role="button" aria-expanded="false"
                 aria-controls="collapsea" id="a_top" style="margin-left:-30px;"></a>
             <div class="form-inline my-0" style="margin-right:-15px;">
-                <!-- <span onclick="id=[];qs.set('id', id);query()" class="btn-light btn-sm">rm id</span> -->
                 <button class="btn btn-sm btn-link bg-white" onclick="totop()">&nbsp;</button>
                 <button class="btn btn-sm btn-link bg-white" onclick="tobottom()">&nbsp;</button>
                 <span onclick="query([])" class="btn-light btn-sm"><img src="static/svg/user.svg"></span>
@@ -39,7 +38,7 @@
             <div class="form-group">
                 <input type="text" class="form-control" id="input_query" placeholder="object name">
             </div>
-            <button class="btn btn-primary" onclick="query()">query</button>
+            <button class="btn btn-primary" onclick="query(document.getElementById('input_query').value)">query</button>
         </div>
     </div>
     <div style="min-height:700px;margin-top:47px">
