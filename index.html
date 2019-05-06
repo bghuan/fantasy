@@ -12,15 +12,16 @@
 <body class="container-fluid">
     <div class="pos-f-t fixed-top bg-white border-bottom container-fluid" id="accordion">
         <nav class="navbar navbar-light bg-white" style="padding:0.1rem 1rem 0.1rem 1rem">
-            <a class="navbar-brand text-primary text-truncate col-5" data-toggle="collapse" href="#collapsea" role="button" aria-expanded="false"
-                aria-controls="collapsea" id="a_top" style="margin-left:-30px;"></a>
+            <a class="navbar-brand text-primary text-truncate col-5" data-toggle="collapse" href="#collapsea"
+                role="button" aria-expanded="false" aria-controls="collapsea" id="a_top" style="margin-left:-30px;"></a>
             <div class="form-inline my-0" style="margin-right:-15px;">
                 <button class="btn btn-sm btn-link bg-white" onclick="totop()">&nbsp;</button>
                 <button class="btn btn-sm btn-link bg-white" onclick="tobottom()">&nbsp;</button>
                 <span onclick="query([])" class="btn-light btn-sm"><img src="static/svg/user.svg"></span>
                 <span onclick="query()" class="btn-light btn-sm"><img src="static/svg/home.svg"></span>
                 <span onclick="query2(a)" class="btn-light btn-sm"><img src="static/svg/refresh-cw.svg"></span>
-                <button class="btn btn-light navbar-toggler" data-toggle="collapse" data-target="#collapseb" aria-expanded="false" aria-controls="collapseb">
+                <button class="btn btn-light navbar-toggler" data-toggle="collapse" data-target="#collapseb"
+                    aria-expanded="false" aria-controls="collapseb">
                     <img src="static/svg/feather.svg">
                 </button>
             </div>
@@ -49,10 +50,13 @@
     </div>
     <div class="footer text-right margin-right:20px;">
         <a class="btn mr-3" onclick="show_id_edit()"> </a>
+        <a class="btn mr-3" href="ataf.apk"> </a>
         <a class="btn mr-3" data-toggle="modal" data-target="#exampleModalLong">关于</a>
-        <a href="https://github.com/admnst/A-third-of-the-Fantasy.git" target="_blank"><img src="static/svg/github.svg" width="30" height="40"></a>
+        <a href="https://github.com/admnst/A-third-of-the-Fantasy.git" target="_blank"><img src="static/svg/github.svg"
+                width="30" height="40"></a>
     </div>
-    <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+        aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-body"></div>
@@ -63,6 +67,7 @@
         <textarea class="form-control" name="" id="af" cols="10" rows="10" placeholder=""></textarea>
         <button class="btn btn-primary" onclick="query_id()">查看历史id</button>
         <button class="btn btn-primary" onclick="update_id()">保存并更新个人拥有id</button>
+        <a href="ataf.apk">app</a>
     </div>
     <script src="static/js/jquery-3.3.1.min.js"></script>
     <script src="my.js"></script>

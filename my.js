@@ -55,7 +55,7 @@ const func_query = (json) => {
             div.appendChild(sum);
             let star = document.createElement("img");
             star.className = "float-right";
-            star.src = 'static/svg/s.svg';
+            star.src = 'src/svg/s.svg';
             star.width = "15";
             star.style = "margin:10px 5px;";
             star.onclick = function () { create(this) };
@@ -66,7 +66,7 @@ const func_query = (json) => {
         let str_id = localStorage.getItem('id') || '';
         for (let i in ida) {
             if (ida[i].parentNode != undefined && ida[i].parentNode.id != undefined && ida[i].parentNode.id != '' && str_id.indexOf(ida[i].parentNode.id) >= 0) {
-                ida[i].src = "static/svg/star.svg";
+                ida[i].src = "src/svg/star.svg";
             }
         }
         document.getElementById("input_query").value = '';
@@ -182,6 +182,7 @@ document.addEventListener('keyup', event => {
     if (event.keyCode == enter_keycode[i]) {
         if (i++ == 4) {
             $('#collapseb').collapse('show');
+            $('#b').focus();
             i = 0;
         }
     }

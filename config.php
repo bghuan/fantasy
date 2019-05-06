@@ -21,3 +21,4 @@ function FormitDollor($str)
     return str_replace('$', '\$', $str);
     exit;
 } 
+?>
