@@ -15,7 +15,7 @@ const HttpGet = (str, CallBack) => {
                 CallBack(xmlhttp.responseText);
                 console.log(xmlhttp.responseText + '\n' + e)
             } finally {
-                totop()
+                if (totop != undefined) { totop(); }
             }
         }
     }
@@ -55,7 +55,7 @@ const func_query = (json) => {
             div.appendChild(sum);
             let star = document.createElement("img");
             star.className = "float-right";
-            star.src = 'src/svg/s.svg';
+            star.src = 'static/svg/s.svg';
             star.width = "15";
             star.style = "margin:10px 5px;";
             star.onclick = function () { create(this) };
@@ -66,7 +66,7 @@ const func_query = (json) => {
         let str_id = localStorage.getItem('id') || '';
         for (let i in ida) {
             if (ida[i].parentNode != undefined && ida[i].parentNode.id != undefined && ida[i].parentNode.id != '' && str_id.indexOf(ida[i].parentNode.id) >= 0) {
-                ida[i].src = "src/svg/star.svg";
+                ida[i].src = "static/svg/star.svg";
             }
         }
         document.getElementById("input_query").value = '';
@@ -175,6 +175,7 @@ document.getElementById("input_query").addEventListener("keyup", event => { if (
 document.getElementsByClassName("create")[0].addEventListener("keyup", event => { if (event.keyCode == 13) { create() } })
 document.getElementsByClassName("create")[1].addEventListener("keyup", event => { if (event.keyCode == 13) { create() } })
 document.getElementsByClassName("create")[1].addEventListener("keydown", event => { if (event.keyCode == 13) { event.preventDefault(); } })
+document.getElementById("div_card").style.minHeight = window.innerHeight-90+'px';
 
 let i = 0;
 let enter_keycode = [69, 78, 84, 69, 82];
@@ -219,5 +220,5 @@ $('#collapsea').on('hidden.bs.collapse', function () {
 })
 
 
-const totop = () => $('body,html').animate({ scrollTop: '0px' });
+var totop = () => $('body,html').animate({ scrollTop: '0px' });
 const tobottom = () => $('body,html').animate({ scrollTop: $(".footer").offset().top }); 
