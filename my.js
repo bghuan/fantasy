@@ -89,12 +89,20 @@ const query = str => {
     $('#collapsea').collapse('hide');
     a = str || '';
     let url = (a == '' ? '' : '/read.php?a=' + a);
-    console.log(typeof str);
     if (typeof str == 'object') {
         url = "/read.php" + '?id=' + localStorage.getItem('id') || '';
     }
     window.location.hash = url;
     if (a == '' && typeof str != 'object') { window.history.replaceState(null, null, 'https://buguoheng.com'); }
+}
+const limit = num => {
+    let url = (a == '' ? '/read.php' : '/read.php?a=' + a);
+    let skip = '&skip=' + num;
+    if (url.indexOf('?') < 0) {
+        skip = '?skip=' + num;
+    }
+    console.log(url + skip);
+    window.location.hash = url + skip;
 }
 const query_onhashchange = () => { a = decodeURI(location.href).split('a=')[1] || ''; HttpGet(location.hash.slice(1), json => func_query(json)); }
 $(document).ready(function () {
@@ -175,7 +183,7 @@ document.getElementById("input_query").addEventListener("keyup", event => { if (
 document.getElementsByClassName("create")[0].addEventListener("keyup", event => { if (event.keyCode == 13) { create() } })
 document.getElementsByClassName("create")[1].addEventListener("keyup", event => { if (event.keyCode == 13) { create() } })
 document.getElementsByClassName("create")[1].addEventListener("keydown", event => { if (event.keyCode == 13) { event.preventDefault(); } })
-document.getElementById("div_card").style.minHeight = window.innerHeight-90+'px';
+document.getElementById("div_card").style.minHeight = window.innerHeight - 90 + 'px';
 
 let i = 0;
 let enter_keycode = [69, 78, 84, 69, 82];
