@@ -95,7 +95,7 @@ const query = str => {
     window.location.hash = url;
     if (a == '' && typeof str != 'object') { window.history.replaceState(null, null, 'https://buguoheng.com'); }
 }
-const limit = num => {
+const skip = num => {
     let url = (a == '' ? '/read.php' : '/read.php?a=' + a);
     let skip = '&skip=' + num;
     if (url.indexOf('?') < 0) {

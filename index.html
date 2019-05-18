@@ -47,19 +47,17 @@
             <div class="card-header text-primary" id="as"></div>
             <div class="row card-body" id="div_query" style="margin-top:-15px;margin-bottom: 15px;"></div>
         </div>
-        <div class="card-footer text-muted text-right">
-            <a class="btn btn-sm" onclick="limit(0)">1</a>
-            <a class="btn btn-sm" onclick="limit(1)">2</a>
-            <a class="btn btn-sm" onclick="limit(2)">3</a>
-            <a class="btn btn-sm" onclick="limit(3)">4</a>
-            <a class="btn btn-sm" onclick="limit(4)">5</a>
-            <a class="btn btn-sm" onclick="limit(5)">6</a>
-            <a class="btn btn-sm" onclick="limit(6)">7</a>
-            <a class="btn btn-sm" onclick="limit(7)">8</a>
-            <a class="btn btn-sm" onclick="limit(8)">9</a>
-            <a class="btn btn-sm" onclick="limit(9)">10</a>
-            <input class="btn border" border-radius="5px" type="text" id="limit" size="2">
-            <button class="btn btn-light btn-sm" onclick="limit(document.getElementById('limit').value)">skip</button>
+        <div class="card-footer text-muted text-right" style="height:50px;margin-top:-8px">
+             <button class="btn btn-light btn-sm" onclick="skip(0)">1</button>
+             <button class="btn btn-light btn-sm" onclick="skip(1)">2</button>
+             <button class="btn btn-light btn-sm" onclick="skip(2)">3</button>
+             <button class="btn btn-light btn-sm" onclick="skip(3)">4</button>
+             <button class="btn btn-light btn-sm" onclick="skip(4)">5</button>
+             <button class="btn btn-light btn-sm" onclick="skip(5)">6</button>
+             <button class="btn btn-light btn-sm" onclick="skip(6)">7</button>
+             <button class="btn btn-light btn-sm" onclick="skip(7)">8</button>
+            <input class="btn btn-sm border" border-radius="5px" type="text" id="skip" size="2">
+            <button class="btn btn-light btn-sm" onclick="skip(document.getElementById('skip').value)">skip</button>
         </div>
     </div>
     <div class="footer text-right margin-right:20px;">
