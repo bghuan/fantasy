@@ -1,20 +1,16 @@
 <?php
 header('Access-Control-Allow-Origin:*');
-$a = $_GET["a"];
-$b = empty($_GET["b"]) ? [] : json_decode($_GET["b"]);
+include 'config.php';
+$a = FormitDollor($_GET["a"]);
+$b = FormitDollor($_GET["b"]);
+if(empty($b)){
+    $b=[];
+}else{
+    $b=json_decode($b);
+}
 if (empty($a)) {
-    echo "empty";
     exit;
 }
-if (!is_array($b)) {
-    echo "b should be an Array";
-    exit;
-}
-if (strstr($a, '$') || strstr(json_encode($b), '$')) {
-    echo "pleace not type $";
-    exit;
-}
-$manager = new MongoDB\Driver\Manager("mongodb://localhost:27017");
 $bulk = new MongoDB\Driver\BulkWrite;
 $document = [
     '_id' => new MongoDB\BSON\ObjectID,
@@ -26,9 +22,6 @@ $writeConcern = new MongoDB\Driver\WriteConcern(MongoDB\Driver\WriteConcern::MAJ
 $result = $manager->executeBulkWrite('adb.a', $bulk, $writeConcern);
 if ($result) {
     echo $document["_id"];
-    exit;
-} else {
-    echo "insert failed";
     exit;
 }
 ?>
