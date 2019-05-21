@@ -16,8 +16,8 @@
                 aria-controls="collapsea" id="a_top" style="margin-left:-30px;"></a>
             <div class="form-inline my-0" style="margin-right:-15px;">
                 <!-- <span onclick="id=[];qs.set('id', id);query()" class="btn-light btn-sm">rm id</span> -->
-                <button class="btn btn-light" onclick="totop()">&nbsp;</button>
-                <button class="btn btn-light" onclick="tobottom()">&nbsp;</button>
+                <button class="btn btn-sm btn-link bg-white" onclick="totop()">&nbsp;</button>
+                <button class="btn btn-sm btn-link bg-white" onclick="tobottom()">&nbsp;</button>
                 <span onclick="query([])" class="btn-light btn-sm"><img src="static/svg/user.svg"></span>
                 <span onclick="query()" class="btn-light btn-sm"><img src="static/svg/home.svg"></span>
                 <span onclick="query(a)" class="btn-light btn-sm"><img src="static/svg/refresh-cw.svg"></span>
@@ -49,6 +49,7 @@
         </div>
     </div>
     <div class="footer text-right margin-right:20px;">
+        <a class="btn mr-3" onclick="document.getElementById('addid').style.display='block';tobottom()"> </a>
         <a class="btn mr-3" data-toggle="modal" data-target="#exampleModalLong">关于</a>
         <a href="https://github.com/admnst/A-third-of-the-Fantasy.git"><img src="static/svg/github.svg" width="30" height="40"></a>
     </div>
@@ -58,6 +59,10 @@
                 <div class="modal-body"></div>
             </div>
         </div>
+    </div>
+    <div style="display:none;" id="addid" class="text-right">
+        <textarea class="form-control" name="" id="af" cols="10" rows="3" placeholder="点击add添加文本框内容为个人拥有id"></textarea>
+        <button class="btn btn-primary" onclick="localStorage.id=localStorage.id+','+document.getElementById('af').value;alert('当前id为:'+localStorage.id)">添加查看当前id(个人拥有记录)</button>
     </div>
     <script src="static/js/jquery-3.3.1.min.js"></script>
     <script src="my.js"></script>

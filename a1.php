@@ -14,10 +14,13 @@ function get($url)
 }
 $read_url = 'https://buguoheng.com/read.php?a=';
 $a = 'attitude';
-$_id = get($read_url . $a)[0];
-var_dump($_id);
-foreach($_id as $key)
-{
-    echo $key;
+$records = get($read_url . $a);
+foreach ($records as $record) {
+    $_id = $record->_id;
+    $b = $record->a;
+    foreach ($_id as $value) {
+        $id = $value;
+    }
+    echo $id . ' ' . $a . ' ' . json_encode($b).'<br />';
 }
 ?>
