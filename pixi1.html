@@ -21,7 +21,9 @@
     <script type="text/javascript">
         var pixi_div = document.getElementById('pixi_div');
         var app = new PIXI.Application(window.innerWidth, window.innerHeight - 4, {
-            backgroundColor: 0x1099bb
+            backgroundColor: 0x1099bb,
+            antialias: true,
+            resolution: 1
         });
         pixi_div.appendChild(app.view);
         var stage = new PIXI.Container();
@@ -42,6 +44,21 @@
         graphics.drawCircle(_width / 2, _width / 2, r - 20);
         graphics.endFill();
 
+        // graphics.lineStyle(2, 0x0000FF);
+        // graphics.beginFill(0xFF700B, 1);
+        // graphics.drawRect(_width - 10, _width - 10, 20, 10);
+
+        var style = {
+            fontSize: '24px',
+            fill: '#fff',
+            stroke: '#4a1850',
+        };
+        var basicText = new PIXI.Text('刷新', style);
+        basicText.x = _width - 10;
+        basicText.y = 10;
+        app.stage.addChild(basicText);
+        basicText.on('click', function () { });
+
         graphics.beginFill(0x1099bb); //填充色，如不设填充色，则为透明
         graphics.lineStyle(20, 0xffd900); //边框色
 
@@ -53,8 +70,8 @@
         graphics.lineTo(_width / 6, _width / 6 + _width);
         graphics.endFill();
 
-        graphics.beginFill(0x1099bb); //填充色，如不设填充色，则为透明
-        graphics.lineStyle(20, 0xeeeeee); //边框色
+        graphics.beginFill(); //填充色，如不设填充色，则为透明
+        graphics.lineStyle(5, 0x3A5FCD); //边框色
 
         app.stage.addChild(graphics);
 
