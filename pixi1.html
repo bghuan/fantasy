@@ -44,10 +44,11 @@
         graphics.drawCircle(_width / 2, _width / 2, r - 20);
         graphics.endFill();
 
-        // graphics.lineStyle(2, 0x0000FF);
-        // graphics.beginFill(0xFF700B, 1);
-        // graphics.drawRect(_width - 10, _width - 10, 20, 10);
-
+        var refresh = new PIXI.Graphics();
+        refresh.lineStyle(0);
+        refresh.beginFill(0x0d90b0);
+        refresh.drawRect(_width - 10, 10, 100, 24);
+        refresh.on('click', onClick);
         var style = {
             fontSize: '24px',
             fill: '#fff',
@@ -56,8 +57,11 @@
         var basicText = new PIXI.Text('刷新', style);
         basicText.x = _width - 10;
         basicText.y = 10;
-        app.stage.addChild(basicText);
-        basicText.on('click', function () { });
+        refresh.addChild(basicText);
+        app.stage.addChild(refresh);
+        function onClick() {
+            alert(2);
+        }
 
         graphics.beginFill(0x1099bb); //填充色，如不设填充色，则为透明
         graphics.lineStyle(20, 0xffd900); //边框色
