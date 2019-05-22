@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no,user-scalable=no">
+    <link rel="icon" href="favicon.ico" sizes="32x32">
+    <title>方圆</title>
+</head>
+
+<body>
+    <div id="pixi_div"></div>
+    <pre id="log" style="border: 1px solid #ccc;display:none;"></pre>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+    <script src="static/js/pixi.min.js"></script>
+    <script type="text/javascript">
+        var pixi_div = document.getElementById('pixi_div');
+        var app = new PIXI.Application(window.innerWidth, window.innerHeight - 4, {
+            backgroundColor: 0x1099bb
+        });
+        pixi_div.appendChild(app.view);
+        var stage = new PIXI.Container();
+        app.stage.interactive = true;
+
+        var graphics = new PIXI.Graphics();
+        var _width = (window.innerWidth >= (window.innerHeight / 2) ? window.innerHeight / 2 : window.innerWidth);
+
+        // 画圆
+        var r = _width * 18 / 24 / 2;
+        graphics.lineStyle(0);
+        graphics.beginFill(0xffd900);
+        graphics.drawCircle(_width / 2, _width / 2, r);
+        graphics.endFill();
+
+        graphics.lineStyle(0);
+        graphics.beginFill(0x1099bb);
+        graphics.drawCircle(_width / 2, _width / 2, r - 20);
+        graphics.endFill();
+
+        graphics.beginFill(0x1099bb); //填充色，如不设填充色，则为透明
+        graphics.lineStyle(20, 0xffd900); //边框色
+
+        // 画方
+        graphics.moveTo(_width / 6, _width / 6 + _width);
+        graphics.lineTo(_width * 5 / 6, _width / 6 + _width);
+        graphics.lineTo(_width * 5 / 6, _width * 5 / 6 + _width);
+        graphics.lineTo(_width / 6, _width * 5 / 6 + _width);
+        graphics.lineTo(_width / 6, _width / 6 + _width);
+        graphics.endFill();
+
+        graphics.beginFill(0x1099bb); //填充色，如不设填充色，则为透明
+        graphics.lineStyle(20, 0xeeeeee); //边框色
+
+        app.stage.addChild(graphics);
+
+        var ongoingTouches = new Array(); //用来保存跟踪正在发送的触摸事件
+        var mark = ['+', '-', '*', '/'];
+        //设置事件处理程序
+        pixi_div.addEventListener("touchstart", handleStart, false);
+        pixi_div.addEventListener("touchend", handleEnd, false);
+        pixi_div.addEventListener("touchcancel", handleCancel, false);
+        pixi_div.addEventListener("touchleave", handleEnd, false);
+        pixi_div.addEventListener("touchmove", handleMove, false);
+        log("\ninitialized.");
+        //处理触摸开始事件
+        function handleStart(evt) {
+            evt.preventDefault(); //阻止事件的默认行为
+            var touches = evt.changedTouches;
+            for (var i = 0; i < touches.length; i++) {
+                log("\ntouchstart:" + mark[i] + "...");
+                ongoingTouches.push(copyTouch(touches[i]));
+            }
+        }
+        //处理触摸移动事件
+        function handleMove(evt) {
+            evt.preventDefault();
+            var touches = evt.changedTouches;
+            for (var i = 0; i < touches.length; i++) {
+                var idx = ongoingTouchIndexById(touches[i].identifier);
+                if (idx >= 0) {
+                    log(mark[idx], 1);
+                    graphics.moveTo(ongoingTouches[idx].pageX, ongoingTouches[idx].pageY);
+                    graphics.lineTo(touches[i].pageX, touches[i].pageY);
+                    ongoingTouches.splice(idx, 1, copyTouch(touches[i]));  // swap in the new touch record
+                } else {
+                    log("can't figure out which touch to continue");
+                }
+            }
+        }
+        //处理触摸结束事件
+        function handleEnd(evt) {
+            evt.preventDefault();
+            log("\ntouchend/touchleave.");
+            var touches = evt.changedTouches;
+            for (var i = 0; i < touches.length; i++) {
+                var idx = ongoingTouchIndexById(touches[i].identifier);
+                if (idx >= 0) {
+                    // graphics.endFill();
+                    ongoingTouches.splice(idx, 1);  // remove it; we're done
+                } else {
+                }
+            }
+        }
+        //处理触摸对出事件
+        function handleCancel(evt) {
+            evt.preventDefault();
+            log("\ntouchcancel.");
+            var touches = evt.changedTouches;
+            for (var i = 0; i < touches.length; i++) {
+                ongoingTouches.splice(i, 1);  // remove it; we're done
+            }
+        }
+        //拷贝一个触摸对象
+        function copyTouch(touch) {
+            return { identifier: touch.identifier, pageX: touch.pageX, pageY: touch.pageY };
+        }
+        //找出正在进行的触摸
+        function ongoingTouchIndexById(idToFind) {
+            for (var i = 0; i < ongoingTouches.length; i++) {
+                var id = ongoingTouches[i].identifier;
+                if (id == idToFind) {
+                    return i;
+                }
+            }
+            return -1;    // not found
+        }
+        //记录日志
+        function log(msg, i = 0) {
+            var p = document.getElementById('log');
+            if (p.innerHTML.indexOf('\n') == 0 || (i && p.innerHTML.indexOf('\n') <= 50)) {
+                p.innerHTML = msg + p.innerHTML;
+            }
+            else {
+                p.innerHTML = msg + "\n" + p.innerHTML;
+            }
+        }
+    </script>
+</body>
+
+</html>
