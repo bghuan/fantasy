@@ -9,9 +9,7 @@
 </head>
 
 <body>
-    <!-- <div id="pixi_div"></div> -->
     <canvas id="pixi_canvas"></canvas>
-    <pre id="log" style="border: 1px solid #ccc;display:none;"></pre>
     <style>
         * {
             margin: 0;
@@ -20,168 +18,135 @@
     </style>
     <script src="static/js/pixi.min.js"></script>
     <script type="text/javascript">
-        var pixi_div = document.getElementById('pixi_canvas');
-        var app = new PIXI.Application(window.innerWidth, window.innerHeight - 4, {
-            backgroundColor: 0x1099bb,
-            antialias: true,
-            resolution: 1,
-            view: pixi_div
-        });
-        // pixi_div.appendChild(app.view);
-        var stage = new PIXI.Container();
+        let pixi_canvas = document.getElementById('pixi_canvas');
+        let color_bg = 0x1099bb;
+        let color_inline = 0xffd900;
+        let color_line = 0x3A5FCD;
+        let color1 = 0x0d90b0;
+        let _width = (window.innerWidth >= (window.innerHeight / 2) ? window.innerHeight / 2 : window.innerWidth);
+        let is_mousedown = 0;
+        let option = { backgroundColor: color_bg, transparent: true, antialias: true, resolution: 1, view: pixi_canvas }
+        let circle1 = { x: _width / 2, y: _width / 2, r: _width * 18 / 24 / 2 }
+        let circle2 = { x: _width / 2, y: _width / 2, r: _width * 18 / 24 / 2 - 30 }
+        let rectangle1 = { x: _width / 6, y: _width / 6 + _width, width: _width * 4 / 6, height: _width * 4 / 6 }
+        let rectangle2 = { x: _width / 6 + 30, y: _width / 6 + _width + 30, width: _width * 4 / 6 - 60, height: _width * 4 / 6 - 60 }
+        let rectangle3 = { x: _width - 10, y: 10, width: 24, height: 24 }
+        let ongoingTouches = new Array();
+
+        let app = new PIXI.Application(window.innerWidth, window.innerHeight - 4, option);
+        // pixi_canvas.appendChild(app.view);
+        let stage = new PIXI.Container();
         app.stage.interactive = true;
 
-        var graphics = new PIXI.Graphics();
-        var _width = (window.innerWidth >= (window.innerHeight / 2) ? window.innerHeight / 2 : window.innerWidth);
+        let graphics;
+        let graphics_bg;
+        let graphics_line;
+        let graphics_refresh;
+        PIXI.loader
+            .add("static/image/stripe.jpg")
+            .add("static/svg/refresh-cw.svg")
+            .load(setup);
+        let stripe;
+        let refresh;
+        function setup() {
+            graphics = new PIXI.Graphics();
+            graphics_bg = new PIXI.Graphics();
+            graphics_refresh = new PIXI.Graphics();
+            graphics_line = new PIXI.Graphics();
+            graphics.lineStyle(0);
+            graphics.drawCircle2 = function (circle) { graphics.drawCircle(circle.x, circle.y, circle.r); }
+            graphics.drawRect2 = function (rectangle) { graphics.drawRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height); }
 
-        // 画圆1
-        var circle_site1 = {
-            x: _width / 2,
-            y: _width / 2,
-            r: _width * 18 / 24 / 2,
+            graphics.beginFill(color_inline);
+            graphics.drawCircle2(circle1);
+            graphics.drawRect2(rectangle1);
+            graphics.beginFill(color_bg);
+            graphics.drawCircle2(circle2);
+            graphics.drawRect2(rectangle2);
+            graphics.beginFill(color1);
+            graphics.drawRect2(rectangle3);
+            graphics_bg.beginFill(color_bg);
+            graphics_bg.drawRect(0, 0, window.innerWidth, window.innerHeight);
+            graphics_refresh.beginFill(color_bg + 010101);
+            graphics_refresh.drawRect(window.innerWidth - 36, 12, 24, 24);
+            graphics_line.beginFill();
+            graphics_line.lineStyle(5, color_line);
+            // stripe = new PIXI.extras.TilingSprite(
+            //     PIXI.loader.resources['static/image/stripe.jpg'].texture, 2000, 2000
+            // );
+            // stripe.x = 0;
+            // stripe.y = 0;
+            refresh = new PIXI.Sprite(PIXI.loader.resources["static/svg/refresh-cw.svg"].texture)
+            refresh.x = window.innerWidth - 36;
+            refresh.y = 12;
+            refresh.on('click', function () {alert('click') });
+            graphics_refresh.addChild(refresh);
+            // app.stage.addChild(stripe);
+            // app.ticker.add(delta => gameLoop(delta));
+            app.stage.addChild(graphics_bg);
+            app.stage.addChild(graphics_refresh);
+            app.stage.addChild(graphics);
+            app.stage.addChild(graphics_line);
         }
-        // 画圆2
-        var circle_site2 = {
-            x: _width / 2,
-            y: _width / 2,
-            r: _width * 18 / 24 / 2 - 30,
-        }
-        var r = _width * 18 / 24 / 2;
-        graphics.lineStyle(0);
-        graphics.beginFill(0xffd900);
-        graphics.drawCircle(circle_site1.x, circle_site1.y, circle_site1.r);
-        graphics.endFill();
+        // function gameLoop(delta) {
+        //     stripe.x -= 1;
+        // }
 
-        graphics.lineStyle(0);
-        graphics.beginFill(0x1099bb);
-        graphics.drawCircle(circle_site2.x, circle_site2.y, circle_site2.r);
-        graphics.endFill();
-
-        var refresh = new PIXI.Graphics();
-        refresh.lineStyle(0);
-        refresh.beginFill(0x0d90b0);
-        refresh.drawRect(_width - 10, 10, 24, 24);
-        refresh.endFill();
-        refresh.on('click', onClick);
-        var style = {
-            fontSize: '24px',
-            fill: '#fff',
-            stroke: '#4a1850',
-        };
-        var basicText = new PIXI.Text('刷新', style);
-        basicText.x = _width - 10;
-        basicText.y = 10;
-        // refresh.addChild(basicText);
-        app.stage.addChild(refresh);
-        function onClick() {
-            alert(2);
-        }
-
-        var spuare_site1 = {
-            x1: _width / 6,
-            x2: _width * 5 / 6,
-            y1: _width / 6 + _width,
-            y2: _width * 5 / 6 + _width,
-        }
-        var spuare_site2 = {
-            x1: _width / 6 + 30,
-            x2: _width * 5 / 6 - 30,
-            y1: _width / 6 + _width + 30,
-            y2: _width * 5 / 6 + _width - 30,
-        }
-
-        graphics.beginFill(0xffd900);
-        graphics.lineStyle(0);
-        // 画方1
-        graphics.moveTo(spuare_site1.x1, spuare_site1.y1);
-        graphics.lineTo(spuare_site1.x2, spuare_site1.y1);
-        graphics.lineTo(spuare_site1.x2, spuare_site1.y2);
-        graphics.lineTo(spuare_site1.x1, spuare_site1.y2);
-        graphics.lineTo(spuare_site1.x1, spuare_site1.y1);
-        graphics.endFill();
-        // 画方2
-        graphics.lineStyle(0);
-        graphics.beginFill(0x1099bb);
-        graphics.moveTo(spuare_site2.x1, spuare_site2.y1);
-        graphics.lineTo(spuare_site2.x2, spuare_site2.y1);
-        graphics.lineTo(spuare_site2.x2, spuare_site2.y2);
-        graphics.lineTo(spuare_site2.x1, spuare_site2.y2);
-        graphics.lineTo(spuare_site2.x1, spuare_site2.y1);
-        graphics.endFill();
-
-        var color = 0x3A5FCD;
-
-        graphics.beginFill();
-        graphics.lineStyle(5, color);
-
-        app.stage.addChild(graphics);
-
-        var ongoingTouches = new Array(); //用来保存跟踪正在发送的触摸事件
-        var mark = ['+', '-', '*', '/'];
         //设置事件处理程序
-        var is_mousedown = 0;
-        pixi_div.addEventListener("mousedown", function () { is_mousedown = 1; }, false);
-        pixi_div.addEventListener("mousemove", function (e) {
+        pixi_canvas.addEventListener("mousedown", handleMousedown, false);
+        pixi_canvas.addEventListener("mousemove", handleMousemove, false);
+        pixi_canvas.addEventListener("mouseup", handleMouseup, false);
+        pixi_canvas.addEventListener("touchstart", handleStart, false);
+        pixi_canvas.addEventListener("touchend", handleEnd, false);
+        pixi_canvas.addEventListener("touchmove", handleMove, false);
+
+        function handleMousedown() {
+            is_mousedown = 1;
+        }
+        function handleMousemove(evt) {
+            evt.preventDefault();
             if (is_mousedown) {
-                graphics.moveTo(e.clientX, e.clientY);
-                graphics.lineTo(e.clientX + 1, e.clientY + 1);
-                inline_function(touches[i].pageX, touches[i].pageY)
+                graphics_line.moveTo(evt.clientX, evt.clientY);
+                graphics_line.lineTo(evt.clientX + 1, evt.clientY + 1);
+                inline_function(evt.clientX, evt.clientY)
             }
-        }, false);
-        pixi_div.addEventListener("mouseup", function () { is_mousedown = 0; }, false);
-        pixi_div.addEventListener("touchstart", handleStart, false);
-        pixi_div.addEventListener("touchend", handleEnd, false);
-        pixi_div.addEventListener("touchcancel", handleCancel, false);
-        pixi_div.addEventListener("touchleave", handleEnd, false);
-        pixi_div.addEventListener("touchmove", handleMove, false);
-        log("\ninitialized.");
-        //处理触摸开始事件
+        }
+        function handleMouseup() {
+            is_mousedown = 0;
+        }
         function handleStart(evt) {
-            evt.preventDefault(); //阻止事件的默认行为
-            var touches = evt.changedTouches;
-            for (var i = 0; i < touches.length; i++) {
-                log("\ntouchstart:" + mark[i] + "...");
+            evt.preventDefault();
+            let touches = evt.changedTouches;
+            for (let i = 0; i < touches.length; i++) {
                 ongoingTouches.push(copyTouch(touches[i]));
             }
         }
-        //处理触摸移动事件
         function handleMove(evt) {
             evt.preventDefault();
-            var touches = evt.changedTouches;
-            for (var i = 0; i < touches.length; i++) {
-                var idx = ongoingTouchIndexById(touches[i].identifier);
+            let touches = evt.changedTouches;
+            for (let i = 0; i < touches.length; i++) {
+                let idx = ongoingTouchIndexById(touches[i].identifier);
                 if (idx >= 0) {
-                    log(mark[idx], 1);
-                    graphics.moveTo(ongoingTouches[idx].pageX, ongoingTouches[idx].pageY);
-                    graphics.lineTo(touches[i].pageX, touches[i].pageY);
+                    graphics_line.moveTo(ongoingTouches[idx].pageX, ongoingTouches[idx].pageY);
+                    graphics_line.lineTo(touches[i].pageX, touches[i].pageY);
                     inline_function(touches[i].pageX, touches[i].pageY)
                     ongoingTouches.splice(idx, 1, copyTouch(touches[i]));  // swap in the new touch record
-                } else {
-                    log("can't figure out which touch to continue");
+                }
+                else {
+                    console.log("can't figure out which touch to continue");
                 }
             }
         }
-        //处理触摸结束事件
         function handleEnd(evt) {
             evt.preventDefault();
-            log("\ntouchend/touchleave.");
-            var touches = evt.changedTouches;
-            for (var i = 0; i < touches.length; i++) {
-                var idx = ongoingTouchIndexById(touches[i].identifier);
+            let touches = evt.changedTouches;
+            for (let i = 0; i < touches.length; i++) {
+                let idx = ongoingTouchIndexById(touches[i].identifier);
                 if (idx >= 0) {
-                    // graphics.endFill();
                     ongoingTouches.splice(idx, 1);  // remove it; we're done
                 } else {
+                    console.log("can't figure out which touch to continue");
                 }
-            }
-        }
-        //处理触摸对出事件
-        function handleCancel(evt) {
-            evt.preventDefault();
-            log("\ntouchcancel.");
-            var touches = evt.changedTouches;
-            for (var i = 0; i < touches.length; i++) {
-                ongoingTouches.splice(i, 1);  // remove it; we're done
             }
         }
         //拷贝一个触摸对象
@@ -190,65 +155,41 @@
         }
         //找出正在进行的触摸
         function ongoingTouchIndexById(idToFind) {
-            for (var i = 0; i < ongoingTouches.length; i++) {
-                var id = ongoingTouches[i].identifier;
+            for (let i = 0; i < ongoingTouches.length; i++) {
+                let id = ongoingTouches[i].identifier;
                 if (id == idToFind) {
                     return i;
                 }
             }
-            return -1;    // not found
+            return -1;
         }
-        //记录日志
-        function log(msg, i = 0) {
-            var p = document.getElementById('log');
-            if (p.innerHTML.indexOf('\n') == 0 || (i && p.innerHTML.indexOf('\n') <= 50)) {
-                p.innerHTML = msg + p.innerHTML;
-            }
-            else {
-                p.innerHTML = msg + "\n" + p.innerHTML;
-            }
-        }
-        log = function () { }
-        function pointInsideCircle(pointX, pointY, circle) {
+        function pointInsideCircle(x, y, circle) {
             if (circle.r === 0) return false;
-            var dx = circle.x - pointX;
-            var dy = circle.y - pointY;
+            let dx = circle.x - x;
+            let dy = circle.y - y;
             return dx * dx + dy * dy <= circle.r * circle.r;
         }
-        function pointInsideSpuare(pointX, pointY, spuare_site) {
-            return pointX >= spuare_site.x1 && pointX <= spuare_site.x2 && pointY >= spuare_site.y1 && pointY <= spuare_site.y2;
+        function pointInsiderectangle(x, y, rectangle) {
+            return x >= rectangle.x && x <= rectangle.x + rectangle.width && y >= rectangle.y && y <= rectangle.y + rectangle.height;
         }
-        function inline(pointX, pointY) {
-            if (pointY > _width) {
-                return pointInsideSpuare(pointX, pointY, spuare_site1) && !pointInsideSpuare(pointX, pointY, spuare_site2)
+        function inline(x, y) {
+            if (y > _width) {
+                return pointInsiderectangle(x, y, rectangle1) && !pointInsiderectangle(x, y, rectangle2)
             }
             else {
-                return pointInsideCircle(pointX, pointY, circle_site1) && !pointInsideCircle(pointX, pointY, circle_site2)
+                return pointInsideCircle(x, y, circle1) && !pointInsideCircle(x, y, circle2)
             }
         }
-        var inline_tick = 0;
-        function inline_function(pointX, pointY) {
-            if (inline_tick++ % 1 == 0) {
-                if (!inline(pointX, pointY)) {
-                    if (color >= 0x000000) {
-                        // color -= 0x010101;
-                        // color -= 1;
-                        color = 0x000000;
-                        // graphics.lineStyle(5, color);
-                        refresh.beginFill(color);
-                        refresh.drawRect(_width - 10, 10, 24, 24);
-                        refresh.endFill();
-                    }
-                } else {
-                    if (color <= 0xffffff) {
-                        // color += 0x010101;
-                        // color += 10;
-                        color = 0xffffff;
-                        // graphics.lineStyle(5, color);
-                        refresh.beginFill(color);
-                        refresh.drawRect(_width - 10, 10, 24, 24);
-                        refresh.endFill();
-                    }
+        function inline_function(x, y) {
+            if (!inline(x, y)) {
+                if (color1 >= 0x111111) {
+                    color1 -= 0x010101;
+                    graphics_bg.tint = color1;
+                }
+            } else {
+                if (color1 <= 0xeeeeee) {
+                    color1 += 0x010101;
+                    graphics_bg.tint = color1;
                 }
             }
         }
