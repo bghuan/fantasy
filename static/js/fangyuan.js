@@ -7,8 +7,6 @@ const circle1 = { x: _width / 2, y: _width / 2, r: _width * 18 / 24 / 2 }
 const circle2 = { x: _width / 2, y: _width / 2, r: _width * 18 / 24 / 2 - 30 }
 const rectangle1 = { x: _width / 6, y: _width / 6 + _width, width: _width * 4 / 6, height: _width * 4 / 6 }
 const rectangle2 = { x: _width / 6 + 30, y: _width / 6 + _width + 30, width: _width * 4 / 6 - 60, height: _width * 4 / 6 - 60 }
-const max = 1;
-const min = -1;
 let color1 = 0xffffff;
 let is_mousedown = 0;
 let ongoingTouches = new Array();
@@ -34,11 +32,24 @@ loader.add('stripe', 'static/image/stripe.jpg')
 // loader.pre(cachingMiddleware);
 // loader.use(parsingMiddleware);
 loader.load((loader, resources) => {
-    sprites.graphics = new PIXI.Graphics();
-    sprites.graphics_bg = new PIXI.Graphics();
-    sprites.graphics_line = new PIXI.Graphics();
     sprites.stripe = new PIXI.TilingSprite(resources.stripe.texture, window.innerWidth, 2);
     sprites.refresh = new PIXI.Sprite(resources.refresh.texture);
+    sprites.stripe.x = 0;
+    sprites.stripe.y = 0;
+    sprites.refresh.buttonMode = true;
+    sprites.refresh.interactive = true;
+    sprites.refresh.x = _width - 36;
+    sprites.refresh.y = 12;
+    sprites.refresh.on('click', setup)
+        .on('tap', setup);
+    app.ticker.add(delta => gameLoop(delta));
+    //设置事件处理程序
+    document.addEventListener("mousedown", handleMousedown, false);
+    document.addEventListener("mousemove", handleMousemove, false);
+    document.addEventListener("mouseup", handleMouseup, false);
+    document.addEventListener("touchstart", handleStart, false);
+    document.addEventListener("touchend", handleEnd, false);
+    document.addEventListener("touchmove", handleMove, false);
 });
 
 loader.onProgress.add(() => { console.log('onProgress'); }); // called once per loaded/errored file
@@ -47,6 +58,9 @@ loader.onLoad.add(() => { console.log('onLoad'); }); // called once per loaded f
 loader.onComplete.add(() => { console.log('onComplete'); setup(); }); // called once when the queued resources all load.
 
 const setup = () => {
+    sprites.graphics = new PIXI.Graphics();
+    sprites.graphics_bg = new PIXI.Graphics();
+    sprites.graphics_line = new PIXI.Graphics();
     sprites.graphics.lineStyle(0);
     sprites.graphics.drawCircle2 = (circle) => { sprites.graphics.drawCircle(circle.x, circle.y, circle.r); }
     sprites.graphics.drawRect2 = (rectangle) => { sprites.graphics.drawRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height); }
@@ -59,32 +73,13 @@ const setup = () => {
     sprites.graphics.drawRect2(rectangle2);
     sprites.graphics_bg.beginFill(color_bg);
     sprites.graphics_bg.drawRect(0, 0, window.innerWidth, window.innerHeight);
-    sprites.stripe.vx = min;
-    sprites.stripe.x = 0;
-    sprites.stripe.y = 0;
-    sprites.refresh.tint = 0xffffff;
-    sprites.refresh.buttonMode = true;
-    sprites.refresh.interactive = true;
-    sprites.refresh.x = _width - 36;
-    sprites.refresh.y = 12;
-    sprites.refresh.on('click', setup)
-        .on('tap', setup);
 
     Object.keys(sprites).forEach(function (key) {
         app.stage.addChild(sprites[key]);
-    });;
-    app.ticker.add(delta => gameLoop(delta));
-
-    //设置事件处理程序
-    document.addEventListener("mousedown", handleMousedown, false);
-    document.addEventListener("mousemove", handleMousemove, false);
-    document.addEventListener("mouseup", handleMouseup, false);
-    document.addEventListener("touchstart", handleStart, false);
-    document.addEventListener("touchend", handleEnd, false);
-    document.addEventListener("touchmove", handleMove, false);
+    });
 }
 const gameLoop = (delta) => {
-    sprites.stripe.tilePosition.x += sprites.stripe.vx;
+    sprites.stripe.tilePosition.x += -1;
 }
 
 const handleMousedown = (evt) => {
