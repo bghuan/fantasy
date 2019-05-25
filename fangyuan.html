@@ -1,177 +1,24 @@
 <!DOCTYPE html>
-<html>
+<html lang="zn">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no,user-scalable=no">
     <link rel="icon" href="favicon.ico" sizes="32x32">
     <title>方圆</title>
-</head>
-
-<body>
-    <canvas id="canvas1" width="0" height="0"></canvas>
-    <canvas id="canvas2" width="0" height="0"></canvas>
     <style>
         * {
             margin: 0;
             padding: 0;
         }
     </style>
-    <script type="text/javascript">
-        const yuan = {
-            startX: '',
-            startY: '',
-            start_x: this.startX,
-            start_y: this.startY,
-            temp: 1,
-            run: function () {
-                this.width = (window.innerWidth >= (window.innerHeight / 2) ? this.width = window.innerHeight / 2 - 4 : window.innerWidth);
-                this.canvas = document.getElementById("canvas1");
-                this.canvas.width = this.width;
-                this.canvas.height = this.width;
-                this.ctx = this.canvas.getContext("2d");
-                this.ctx.rect(0, 0, window.innerWidth, window.innerHeight);
-                this.ctx.fillStyle = "#838B8B";
-                this.ctx.fill();
-                this.draw();
-                this.bindEvent();
-            },
-            draw: function () {
-                this.ctx.beginPath();
-                this.ctx.lineWidth = 10;
-                this.ctx.strokeStyle = "#fff";
-                this.ctx.arc(this.width / 2, this.width / 2, this.width / 3, 0, Math.PI * 2);
-                this.ctx.stroke();
-                this.ctx.closePath();
-            },
-            bindEvent: function () {
-                this.canvas.onmousedown = function (e) {
-                    yuan.ctx.beginPath();
-                    yuan.ctx.lineWidth = 2;
-                    yuan.ctx.strokeStyle = "#5CACEE";
-                    yuan.canvas.onmousemove = function (e) {
-                        yuan.ctx.lineTo(e.clientX, e.clientY);
-                        yuan.ctx.stroke();
-                    }
-                }
-                this.canvas.onmouseup = function () {
-                    yuan.ctx.closePath();
-                    yuan.canvas.onmousemove = function () { }
-                }
-                this.canvas.ontouchstart = function (e) {
-                    yuan.startX = e.touches[0].clientX;
-                    yuan.startY = e.touches[0].clientY;
-                    yuan.ctx.lineWidth = 2;
-                    yuan.ctx.strokeStyle = "blue";
-                    yuan.ctx.beginPath()
-                }
-                this.canvas.ontouchend = function (e) {
-                    yuan.ctx.closePath()
-                    yuan.temp = 1;
-                }
-                this.canvas.ontouchmove = function (e) {
-                    e.preventDefault();
-                    yuan.drawLine(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
-                }
-            },
-            drawLine: function (x, y) {
-                if (this.temp) { this.start_x = this.startX; this.start_y = this.startY; this.temp = 0; }
-                // this.ctx.moveTo(this.start_x, this.start_y);
-                this.ctx.lineTo(x, y);
-                this.ctx.stroke();
-                this.start_x = x;
-                this.start_y = y;
-            }
-        };
+</head>
 
-        yuan.run();
+<body>
+    <canvas id="pixi_canvas"></canvas>
 
-
-        const fang = {
-            startX: '',
-            startY: '',
-            start_x: this.startX,
-            start_y: this.startY,
-            temp: 1,
-            run: function () {
-                this.width = (window.innerWidth >= (window.innerHeight / 2)) ? this.width = window.innerHeight / 2 - 4 : window.innerWidth;
-                this.canvas = document.getElementById("canvas2");
-                this.canvas.width = this.width;
-                this.canvas.height = this.width;
-                this.ctx = this.canvas.getContext("2d");
-                this.ctx.rect(0, 0, window.innerWidth, window.innerHeight);
-                this.ctx.fillStyle = "#EDEDED";
-                this.ctx.fill();
-                this.draw();
-                this.bindEvent();
-            },
-            draw: function () {
-                this.ctx.beginPath();
-                this.ctx.lineWidth = 10;
-                this.ctx.strokeStyle = "#838B8B";
-                l = Math.PI * 2 * this.width / 3 / 4 * 1.15;
-                x = (this.width - l) / 2;
-                this.ctx.rect(x, x, l, l);
-                this.ctx.stroke();
-                this.ctx.closePath();
-            },
-            bindEvent: function () {
-                this.canvas.onmousedown = function (e) {
-                    fang.ctx.beginPath();
-                    fang.ctx.lineWidth = 2;
-                    fang.ctx.strokeStyle = "#f00";
-                    fang.canvas.onmousemove = function (e) {
-                        let x = e.clientX;
-                        let y = e.clientY;
-                        if (window.innerWidth >= (window.innerHeight)) {
-                            x = e.clientX - fang.width - 3;
-                        }
-                        else if (window.innerWidth >= (window.innerHeight / 2)) {
-                            y = e.clientY - fang.width - 3;
-                        }
-                        fang.ctx.lineTo(x, y);
-                        fang.ctx.stroke();
-                    }
-                }
-                this.canvas.onmouseup = function (e) {
-                    fang.ctx.closePath();
-                    fang.canvas.onmousemove = function (e) { }
-                }
-                this.canvas.ontouchstart = function (e) {
-                    fang.startX = e.touches[0].clientX;
-                    fang.startY = e.touches[0].clientY;
-                    fang.ctx.lineWidth = 2;
-                    fang.ctx.strokeStyle = "blue";
-                    fang.ctx.beginPath()
-                }
-                this.canvas.ontouchend = function (e) {
-                    fang.ctx.closePath()
-                    fang.temp = 1;
-                }
-                this.canvas.ontouchmove = function (e) {
-                    e.preventDefault();
-                    fang.drawLine(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
-                }
-            },
-            drawLine: function (x, y) {
-                if (this.temp) { this.start_x = this.startX; this.start_y = this.startY; this.temp = 0; }
-                // this.ctx.moveTo(this.start_x, this.start_y);
-
-                if (window.innerWidth >= (window.innerHeight)) {
-                    x = x - fang.width - 3;
-                }
-                else if (window.innerWidth >= (window.innerHeight / 2)) {
-                    y = y - fang.width - 3;
-                }
-                this.ctx.lineTo(x, y);
-                this.ctx.stroke();
-                this.start_x = x;
-                this.start_y = y;
-            }
-        };
-
-        fang.run();
-    </script>
+    <script type="text/javascript" src="static/js/pixi.min.js"></script>
+    <script type="text/javascript" src="static/js/fangyuan.js"></script>
 </body>
 
 </html>
