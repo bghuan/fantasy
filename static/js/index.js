@@ -1,4 +1,5 @@
 var a, b;
+let limit = parseInt((window.innerHeight - 174) / 49);
 const getMyDate = (date = new Date()) => (date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()).toString();
 
 const HttpGet = (str, CallBack) => {
@@ -19,7 +20,7 @@ const HttpGet = (str, CallBack) => {
             }
         }
     }
-    xmlhttp.open("GET", "https://buguoheng.com" + (str || "/read.php"), true);
+    xmlhttp.open("GET", "https://buguoheng.com" + (str || "/read.php") + (str.indexOf('?') < 0 ? '?' : '&') + 'limit=' + limit, true);
     xmlhttp.send();
 }
 const func_query = (json) => {
