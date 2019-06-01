@@ -20,7 +20,7 @@ const HttpGet = (str, CallBack) => {
             }
         }
     }
-    xmlhttp.open("GET", "https://buguoheng.com" + (str || "/read.php") + (str.indexOf('?') < 0 ? '?' : '&') + 'limit=' + limit, true);
+    xmlhttp.open("GET", "https://buguoheng.com" + (str || "/read.php") + (str.indexOf('limit') > 0 ? '' : (str.indexOf('?') < 0 ? '?' : '&') + 'limit=' + limit), true);
     xmlhttp.send();
 }
 const func_query = (json) => {

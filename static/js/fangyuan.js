@@ -2,11 +2,18 @@ const color_bg = 0x1099bb;
 const color_inline = 0xffd900;
 const color_line = 0x3A5FCD;
 const _width = (window.innerWidth >= (window.innerHeight / 2) ? window.innerHeight / 2 : window.innerWidth);
-const option = { width: window.innerWidth, height: window.innerHeight - 4, backgroundColor: color_bg, transparent: true, antialias: true, resolution: 1 }
 const circle1 = { x: _width / 2, y: _width / 2, r: _width * 18 / 24 / 2 }
 const circle2 = { x: _width / 2, y: _width / 2, r: _width * 18 / 24 / 2 - 30 }
 const rectangle1 = { x: _width / 6, y: _width / 6 + _width, width: _width * 4 / 6, height: _width * 4 / 6 }
 const rectangle2 = { x: _width / 6 + 30, y: _width / 6 + _width + 30, width: _width * 4 / 6 - 60, height: _width * 4 / 6 - 60 }
+const option = {
+    width: window.innerWidth,
+    height: window.innerHeight - 4,
+    backgroundColor: color_bg,
+    transparent: true,
+    antialias: true,
+    resolution: 1
+}
 let color1 = 0xffffff;
 let is_mousedown = 0;
 let ongoingTouches = new Array();

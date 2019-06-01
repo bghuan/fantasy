@@ -28,5 +28,7 @@ var server = http.createServer(function (req, res) {
         }
     });
 }).listen(8081);
-console.log('Server running at http://127.0.0.1:8081/index.html');
-// console.log('Server running at http://127.0.0.1:8081/pixi1.html');
+let _url = 'http://127.0.0.1:8081/index.html';
+console.log('Server running at ' + _url);
+let open = require("open");
+open(_url, "chrmoe");
