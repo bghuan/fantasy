@@ -35,7 +35,7 @@ if (!empty($_id)) {
         'cursor' => new stdClass,
     ]);
     try {
-        echo json_encode($manager->executeCommand($db_document, $cmd)->toArray());
+        echo json_encode($manager->executeCommand($db_name, $cmd)->toArray());
         exit;
     } catch (MongoDB\Driver\Exception $e) {
         echo $e->getMessage(), "\n";
@@ -55,7 +55,7 @@ if (!empty($_id)) {
         'cursor' => new stdClass,
     ]);
     try {
-        echo json_encode($manager->executeCommand($db_document, $cmd)->toArray());
+        echo json_encode($manager->executeCommand($db_name, $cmd)->toArray());
         exit;
     } catch (MongoDB\Driver\Exception $e) {
         echo $e->getMessage(), "\n";

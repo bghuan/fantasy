@@ -1,5 +1,6 @@
 var a, b;
 let limit = parseInt((window.innerHeight - 174) / 49);
+const local_host="https://buguoheng.com";
 const getMyDate = (date = new Date()) => (date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()).toString();
 
 const HttpGet = (str, CallBack) => {
@@ -20,7 +21,7 @@ const HttpGet = (str, CallBack) => {
             }
         }
     }
-    xmlhttp.open("GET", "https://buguoheng.com" + (str || "/read.php") + (str.indexOf('limit') > 0 ? '' : (str.indexOf('?') < 0 ? '?' : '&') + 'limit=' + limit), true);
+    xmlhttp.open("GET", local_host + (str || "/read.php") + (str.indexOf('limit') > 0 ? '' : (str.indexOf('?') < 0 ? '?' : '&') + 'limit=' + limit), true);
     xmlhttp.send();
 }
 const func_query = (json) => {
@@ -94,7 +95,7 @@ const query = str => {
         url = "/read.php" + '?id=' + localStorage.getItem('id') || '';
     }
     window.location.hash = url;
-    if (a == '' && typeof str != 'object') { window.history.replaceState(null, null, 'https://buguoheng.com'); }
+    if (a == '' && typeof str != 'object') { window.history.replaceState(null, null, local_host); }
 }
 const skip = num => {
     let url = (a == '' ? '/read.php' : '/read.php?a=' + a);
