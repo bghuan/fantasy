@@ -19,7 +19,7 @@ if (!empty($_id)) {
     $filter = ['_id' => ['$in' => $arr]];
     $options = ['sort' => ['_id' => -1]];
     $query = new MongoDB\Driver\Query($filter, $options);
-    echo json_encode($manager->executeQuery('adb.a', $query)->toArray());
+    echo json_encode($manager->executeQuery($db_document, $query)->toArray());
     exit;
 } else if (!empty($a)) {
     $cmd = new MongoDB\Driver\Command([
@@ -35,7 +35,7 @@ if (!empty($_id)) {
         'cursor' => new stdClass,
     ]);
     try {
-        echo json_encode($manager->executeCommand('adb', $cmd)->toArray());
+        echo json_encode($manager->executeCommand($db_document, $cmd)->toArray());
         exit;
     } catch (MongoDB\Driver\Exception $e) {
         echo $e->getMessage(), "\n";
@@ -55,7 +55,7 @@ if (!empty($_id)) {
         'cursor' => new stdClass,
     ]);
     try {
-        echo json_encode($manager->executeCommand('adb', $cmd)->toArray());
+        echo json_encode($manager->executeCommand($db_document, $cmd)->toArray());
         exit;
     } catch (MongoDB\Driver\Exception $e) {
         echo $e->getMessage(), "\n";
