@@ -6,5 +6,9 @@
   "scripts": {
     "start": "",
     "fangyuan": ""
+  },
+  "dependencies": {
+    "https": "^1.0.0",
+    "open": "^6.3.0"
   }
 }
