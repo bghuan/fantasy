@@ -1,16 +1,11 @@
-var http = require('http');
-let https = require("https");
-var url = require('url');
-var fs = require('fs');
-var mine = { "css": "text/css", "gif": "image/gif", "html": "text/html", "ico": "image/x-icon", "jpeg": "image/jpeg", "jpg": "image/jpeg", "js": "text/javascript", "json": "application/json", "pdf": "application/pdf", "png": "image/png", "svg": "image/svg+xml", "swf": "application/x-shockwave-flash", "tiff": "image/tiff", "txt": "text/plain", "wav": "audio/x-wav", "wma": "audio/x-ms-wma", "wmv": "video/x-ms-wmv", "xml": "text/xml" };
-var path = require('path');
+const http = require('http');
+const url = require('url');
+const fs = require('fs');
+const mine = { "css": "text/css", "gif": "image/gif", "html": "text/html", "ico": "image/x-icon", "jpeg": "image/jpeg", "jpg": "image/jpeg", "js": "text/javascript", "json": "application/json", "pdf": "application/pdf", "png": "image/png", "svg": "image/svg+xml", "swf": "application/x-shockwave-flash", "tiff": "image/tiff", "txt": "text/plain", "wav": "audio/x-wav", "wma": "audio/x-ms-wma", "wmv": "video/x-ms-wmv", "xml": "text/xml" };
+const path = require('path');
 
-var documentRoot = './';
-const httpsOption = {
-    key : fs.readFileSync("ssl.key"),
-    cert: fs.readFileSync("ssl.crt")
-}
-let app=function (req, res) {
+let documentRoot = './';
+let app = function (req, res) {
     var pathname = url.parse(req.url).pathname;
     var realPath = path.join(documentRoot, pathname);
     var ext = path.extname(realPath);
@@ -33,8 +28,11 @@ let app=function (req, res) {
     });
 };
 http.createServer(app).listen(80);
-https.createServer(httpsOption, app).listen(443);
 let _url = 'http://127.0.0.1/index.html';
-console.log('Server running at ' + _url);
-let open = require("open");
-open(_url, "chrmoe");
+try {
+    const open = require("open");
+    open(_url, "chrmoe");
+}
+catch{
+    console.log('Server running at ' + _url);
+}
