@@ -1,6 +1,6 @@
 var a, b;
-let limit = parseInt((window.innerHeight - 174) / 49);
-const local_host="https://buguoheng.com";
+let limit = parseInt((window.innerHeight - 120) / 49);
+const local_host = "https://buguoheng.com";
 const getMyDate = (date = new Date()) => (date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()).toString();
 
 const HttpGet = (str, CallBack) => {
@@ -39,23 +39,24 @@ const func_query = (json) => {
         }
         let div_query = document.getElementById("div_query");
         div_query.innerHTML = '';
+        let div, aa, b, sum, star;
         for (j in json) {
-            let div = document.createElement("div");
-            let aa = document.createElement("a");
+            div = document.createElement("div");
+            aa = document.createElement("a");
             div.className = "navbar-brand col-12 text-truncate border-bottom";
             aa.onclick = function () { query(this.innerHTML) };
             aa.innerHTML = json[j]['a'] || '';
             div.id = json[j]['_id']['$oid'];
             div.appendChild(aa);
-            let b = document.createElement("a");
+            b = document.createElement("a");
             b.style = "font-size:80%";
-            b.innerHTML = json[j]['b'] == null ? '' : ' - ' + json[j]['b'];
+            b.innerHTML = (json[j]['b'] == null || json[j]['b'] == '' ? '' : ' - ' + json[j]['b']);
             div.appendChild(b);
-            let sum = document.createElement("a");
+            sum = document.createElement("a");
             sum.className = "float-right";
             sum.innerHTML = json[j]['count'] || '';
             div.appendChild(sum);
-            let star = document.createElement("img");
+            star = document.createElement("img");
             star.className = "float-right";
             star.src = 'static/svg/s.svg';
             star.width = "15";
@@ -153,82 +154,44 @@ const create = obj => {
     HttpGet(url, callBack);
 }
 const show_id_edit = () => {
-    tobottom();
-    document.getElementById('addid').style.display = 'block';
-    document.getElementById('af').value = localStorage.id;
-    setTimeout(function () { order_id(); }, 2000);
+    if (document.getElementById('addid').style.display == 'block') {
+        document.getElementById('addid').style.display = 'none';
+    }
+    else {
+        tobottom();
+        document.getElementById('addid').style.display = 'block';
+        document.getElementById('af').value = localStorage.id;
+        setTimeout(function () { order_id(); }, 2000);
+    }
 }
 const update_id = () => {
     localStorage.setItem(new Date().toLocaleString(), localStorage.id);
     localStorage.id = document.getElementById('af').value; query([]);
 }
-const query_id = () => {
-    document.body.innerHTML = "<button class='btn btn-primary' onclick='location.replace(location.href)'>刷新</a>";
-    for (i in localStorage) {
-        if (i > '2019' && i < '2030' || i == "id") {
-            document.body.innerHTML += "<h6>" + i + "</h6><p>" + localStorage[i] + "</p>";
-        }
-    }
-    document.body.innerHTML += "<br />";
-}
-const order_id = () => {
-    let ids = localStorage.getItem("id").split(',');
-    let new_ids = "";
-    for (let i = 0; i < ids.length; i++) {
-        if (ids[i].toString().length == 24) {
-            new_ids += ids[i] + ',';
-        }
-    }
-    document.getElementById('af').value = new_ids.substr(0, new_ids.length - 1);
-}
+const query_id = () => { document.body.innerHTML = "<button class='btn btn-primary' onclick='location.replace(location.href)'>刷新</a>"; for (i in localStorage) { if (i > '2019' && i < '2030' || i == "id") { document.body.innerHTML += "<h6>" + i + "</h6><p>" + localStorage[i] + "</p>"; } } document.body.innerHTML += "<br />"; }
+const order_id = () => { let ids = localStorage.getItem("id").split(','); let new_ids = ""; for (let i = 0; i < ids.length; i++) { if (ids[i].toString().length == 24) { new_ids += ids[i] + ','; } } document.getElementById('af').value = new_ids.substr(0, new_ids.length - 1); }
 document.getElementById("input_query").addEventListener("keyup", event => { if (event.keyCode == 13) { query(document.getElementById("input_query").value) } })
 document.getElementsByClassName("create")[0].addEventListener("keyup", event => { if (event.keyCode == 13) { create() } })
 document.getElementsByClassName("create")[1].addEventListener("keyup", event => { if (event.keyCode == 13) { create() } })
 document.getElementsByClassName("create")[1].addEventListener("keydown", event => { if (event.keyCode == 13) { event.preventDefault(); } })
 document.getElementById("div_card").style.minHeight = window.innerHeight - 90 + 'px';
 
+//keyboard type 'enter' to open input_query,need auto remove EventListener
 let i = 0;
 let enter_keycode = [69, 78, 84, 69, 82];
-document.addEventListener('keyup', event => {
-    if (event.keyCode == enter_keycode[i]) {
-        if (i++ == 4) {
-            $('#collapseb').collapse('show');
-            $('#b').focus();
-            i = 0;
-        }
-    }
-    else {
-        i = 0;
-    }
-}, true);
+const quick_open = event => { if (event.keyCode == enter_keycode[i]) { if (i++ == 4) { $('#collapseb').collapse('show'); $('#a').focus(); i = 0; } } else { i = 0; } };
+document.addEventListener('keyup', quick_open, true);
 
+//show README.md
+$('#exampleModalLong').on('show.bs.modal', function () { let readme = document.createElement("div"); $(readme).load("README.md", function () { let converter = new showdown.Converter(); $(".modal-body")[0].innerHTML = converter.makeHtml($(readme)[0].innerHTML); }); })
+const rmcollapseb = () => $('#collapseb').collapse('hide'); $('#collapseb').on('show.bs.collapse', function () { document.getElementById('collapseb').addEventListener('click', e => { e.stopPropagation(); }); document.addEventListener('click', rmcollapseb, false); })
+$('#collapseb').on('hidden.bs.collapse', function () { document.getElementById('collapseb').removeEventListener('click', e => { e.stopPropagation(); }); document.removeEventListener('click', rmcollapseb, false); })
+const rmcollapsea = () => { $('#collapsea').collapse('hide') }; $('#collapsea').on('show.bs.collapse', function () { document.getElementById('collapsea').addEventListener('click', e => { e.stopPropagation(); }); document.addEventListener('click', rmcollapsea, false); })
+$('#collapsea').on('hidden.bs.collapse', function () { document.getElementById('collapsea').removeEventListener('click', e => { e.stopPropagation(); }); document.removeEventListener('click', rmcollapsea, false); })
 
-$('#exampleModalLong').on('show.bs.modal', function () {
-    let readme = document.createElement("div");
-    $(readme).load("README.md", function () {
-        let converter = new showdown.Converter();
-        $(".modal-body")[0].innerHTML = converter.makeHtml($(readme)[0].innerHTML);
-    });
-})
-const rmcollapseb = () => $('#collapseb').collapse('hide');
-$('#collapseb').on('show.bs.collapse', function () {
-    document.getElementById('collapseb').addEventListener('click', e => { e.stopPropagation(); });
-    document.addEventListener('click', rmcollapseb, false);
-})
-$('#collapseb').on('hidden.bs.collapse', function () {
-    document.getElementById('collapseb').removeEventListener('click', e => { e.stopPropagation(); });
-    document.removeEventListener('click', rmcollapseb, false);
-})
-const rmcollapsea = () => { $('#collapsea').collapse('hide') }
-$('#collapsea').on('show.bs.collapse', function () {
-    document.getElementById('collapsea').addEventListener('click', e => { e.stopPropagation(); });
-    document.addEventListener('click', rmcollapsea, false);
-})
-$('#collapsea').on('hidden.bs.collapse', function () {
-    document.getElementById('collapsea').removeEventListener('click', e => { e.stopPropagation(); });
-    document.removeEventListener('click', rmcollapsea, false);
-})
+//change page position
+const totop = () => $('body,html').animate({ scrollTop: '0px' });
+const tobottom = () => $('body,html').animate({ scrollTop: $(".footer").offset().top });
 
-
-var totop = () => $('body,html').animate({ scrollTop: '0px' });
-const tobottom = () => $('body,html').animate({ scrollTop: $(".footer").offset().top }); 
+//div_skip add button, need auto
+document.getElementById('div_skip').innerHTML = '<button class="btn btn-light btn-sm" onclick = "skip(0)" > 1</button> <button class="btn btn-light btn-sm" onclick="skip(1)">2</button> <button class="btn btn-light btn-sm" onclick="skip(2)">3</button> <button class="btn btn-light btn-sm" onclick="skip(3)">4</button> <button class="btn btn-light btn-sm" onclick="skip(4)">5</button> <button class="btn btn-light btn-sm" onclick="skip(5)">6</button> <button class="btn btn-light btn-sm" onclick="skip(6)">7</button> <button class="btn btn-light btn-sm" onclick="skip(7)">8</button> <input class="btn btn-sm border" border-radius="5px" type="text" id="skip" size="2"> <button class="btn btn-light btn-sm" onclick="skip(document.getElementById("skip").value)">skip</button>' + document.getElementById('div_skip').innerHTML;
