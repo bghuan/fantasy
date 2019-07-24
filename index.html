@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zn">
+
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" href="favicon.ico" sizes="32x32">
+    <link rel="stylesheet" href="static/css/bootstrap.min.css">
+    <title>A third of the fantasy</title>
+</head>
+
+<body class="container-fluid">
+    <div class="pos-f-t fixed-top bg-white border-bottom container-fluid" id="accordion">
+        <nav class="navbar navbar-light bg-white" style="padding:0.1rem 1rem 0.1rem 1rem">
+            <a class="navbar-brand text-primary text-truncate col-5" data-toggle="collapse" href="#collapsea"
+                role="button" aria-expanded="false" aria-controls="collapsea" id="a_top" style="margin-left:-30px;"></a>
+            <div class="form-inline my-0" style="margin-right:-15px;">
+                <!-- <button class="btn btn-sm btn-link bg-white" onclick="totop()"></button>
+                <button class="btn btn-sm btn-link bg-white" onclick="tobottom()"></button> -->
+                <span onclick="query([])" class="btn-light btn-sm"><img src="static/svg/user.svg"></span>
+                <span onclick="query()" class="btn-light btn-sm"><img src="static/svg/home.svg"></span>
+                <span onclick="query2(a)" class="btn-light btn-sm"><img src="static/svg/refresh-cw.svg"></span>
+                <button class="btn btn-light navbar-toggler" data-toggle="collapse" data-target="#collapseb"
+                    aria-expanded="false" aria-controls="collapseb">
+                    <img src="static/svg/feather.svg">
+                </button>
+            </div>
+        </nav>
+        <div class="collapse container-fluid text-right" data-parent="#accordion" id="collapseb">
+            <div class="form-group">
+                <input type="text" class="create form-control" id="a">
+            </div>
+            <div class="form-group">
+                <textarea class="create form-control" id="b" rows="3"></textarea>
+            </div>
+            <button class="btn btn-primary" onclick="create()">create</button>
+        </div>
+        <div class="collapse container-fluid text-right" data-parent="#accordion" id="collapsea">
+            <div class="form-group">
+                <input type="text" class="form-control" id="input_query" placeholder="object name">
+            </div>
+            <button class="btn btn-primary" onclick="query(document.getElementById('input_query').value)">query</button>
+        </div>
+    </div>
+    <div style="margin-top:47px" id="div_card">
+        <div class="card bg-light">
+            <div class="card-header text-primary" id="as"></div>
+            <div class="row card-body" id="div_query" style="margin-top:-15px;margin-bottom: 0px;"></div>
+        </div>
+        <div class="card-footer text-muted text-right" style="height:40px;margin-top:-8px;padding:0" id="div_skip">
+            <a href="http://www.beian.miit.gov.cn" style="font-size:6px;margin-right:4px">豫ICP备18001086号</a>
+            <input class="btn btn-sm border" border-radius="5px" type="text" id="skip" style="height:25px;width:35px;margin:0">
+            <button class="btn btn-light btn-sm" onclick="skip(document.getElementById('skip').value)"
+                style="width:25px;margin:0;padding:0">skip</button>
+            <button class="btn btn-light btn-sm" onclick="show_id_edit()" style="margin:0;padding:0">more</button>
+            <button class="btn btn-light btn-sm" data-toggle="modal" data-target="#exampleModalLong"
+                style="width:30px;margin-left:2px;padding:0">关于</button>
+            <a class="btn btn-sm" href="https://github.com/admnst/A-third-of-the-Fantasy.git" target="_blank"><img
+                    src="static/svg/github.svg" width="20" height="40" style="margin-right:2px;margin-left:-4px;padding:0"></a>
+        </div>
+    </div>
+    <div class="footer text-right">
+    </div>
+    <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-body"></div>
+            </div>
+        </div>
+    </div>
+    <div style="display:none;" id="addid" class="text-right">
+        <textarea class="form-control" name="" id="af" cols="10" rows="10" placeholder=""></textarea>
+        <button class="btn btn-primary" onclick="query_id()">查看历史id</button>
+        <button class="btn btn-primary" onclick="update_id()">保存并更新个人拥有id</button>
+        <a href="app-debug.apk">app 点击下载</a>
+        <a href="fangyuan.html">方圆</a>
+    </div>
+    <script src="static/js/jquery-3.3.1.min.js"></script>
+    <script src="static/js/index.js"></script>
+    <script src="static/js/bootstrap.min.js"></script>
+    <script src="static/js/showdown.min.js"></script>
+    <style>
+        /*去掉bootstrap自带的input输入框半透明阴影*/
+        .form-control:focus {
+            box-shadow: none;
+        }
+    </style>
+</body>
+
+</html>
