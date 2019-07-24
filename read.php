@@ -3,8 +3,13 @@ header('Access-Control-Allow-Origin:*');
 include 'config.php';
 $a = FormitDollor($_GET["a"]);
 $_id = FormitDollor($_GET["id"]);
+<<<<<<< HEAD
 $limit = !empty($_GET["limit"]) && preg_match("/^[\d0-9]{1,3}+$/", $_GET["limit"]) ? (int) $_GET["limit"] : 100;
 $skip = !empty($_GET["skip"]) && preg_match("/^[\d0-9]{1,9}+$/", $_GET["skip"]) ? (int) $_GET["skip"] : 0;
+=======
+$limit = !empty($_GET["limit"]) && preg_match("/^[\d0-9]{1,3}+$/", $_GET["limit"]) ? (int)$_GET["limit"] : 100;
+$skip = !empty($_GET["skip"]) && preg_match("/^[\d0-9]{1,9}+$/", $_GET["skip"]) ? (int)$_GET["skip"] : 0;
+>>>>>>> f05d2682d46871768c30ee95ad302e8db5df26c4
 // if (strstr($a, '$')) {
 //     file_get_contents('https://buguoheng.com/create.php?a=dollarlink&b=['.$a.']');
 // }
@@ -27,10 +32,17 @@ if (!empty($_id)) {
         'pipeline' => [
             ['$match' => ['a' => $a]],
             ['$group' => ['_id' => '$b', 'id' => ['$first' => '$_id'], 'count' => ['$sum' => 1]]],
+<<<<<<< HEAD
             ['$sort' => ['count' => -1]],
             ['$skip' => $limit * $skip],
             ['$limit' => $limit],
             ['$project' => ['_id' => '$id', 'a' => '$_id']]
+=======
+            ['$sort' => ['count' => -1, 'id' => -1]],
+            ['$skip' => $limit * $skip],
+            ['$limit' => $limit],
+            ['$project' => ['_id' => '$id', 'a' => '$_id', 'count' => '$count']]
+>>>>>>> f05d2682d46871768c30ee95ad302e8db5df26c4
         ],
         'cursor' => new stdClass,
     ]);
@@ -45,11 +57,20 @@ if (!empty($_id)) {
     $cmd = new MongoDB\Driver\Command([
         'aggregate' => 'a',
         'pipeline' => [
+<<<<<<< HEAD
             ['$match' => ['a' => ['$exists' => true], 'b' => ['$exists' => true, '$nin' =>  ['', [], [''], [[]]]]]],
             ['$sort' => ['_id' => -1]],
             ['$skip' => $limit * $skip],
             ['$limit' => $limit],
             ['$project' => ['_id' => '$_id', 'a' => '$a', 'b' => '$b']]
+=======
+            ['$match' => ['a' => ['$exists' => true]]],
+            ['$group' => ['_id' => '$a', 'id' => ['$first' => '$_id'], 'count' => ['$sum' => 1]]],
+            ['$sort' => ['count' => -1, 'id' => -1]],
+            ['$skip' => $limit * $skip],
+            ['$limit' => $limit],
+            ['$project' => ['_id' => '$id', 'a' => '$_id', 'count' => '$count']]
+>>>>>>> f05d2682d46871768c30ee95ad302e8db5df26c4
         ],
         'cursor' => new stdClass,
     ]);
@@ -61,3 +82,8 @@ if (!empty($_id)) {
         exit;
     }
 }
+<<<<<<< HEAD
+=======
+?>
+ 
+>>>>>>> f05d2682d46871768c30ee95ad302e8db5df26c4

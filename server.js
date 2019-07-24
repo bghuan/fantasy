@@ -28,5 +28,16 @@ let app = function (req, res) {
     });
 };
 http.createServer(app).listen(80);
+<<<<<<< HEAD
 var _url = 'http://127.0.0.1/index.html';
 console.log('Server running at ' + _url);
+=======
+let _url = 'http://127.0.0.1/index.html';
+try {
+    const open = require("open");
+    open(_url, "chrmoe");
+}
+catch{
+    console.log('Server running at ' + _url);
+}
+>>>>>>> f05d2682d46871768c30ee95ad302e8db5df26c4
