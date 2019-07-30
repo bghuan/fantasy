@@ -1,10 +1,5 @@
-<<<<<<< HEAD
 let a, b;
 let limit = parseInt((window.innerHeight - 120) / 44);
-=======
-var a, b;
-let limit = parseInt((window.innerHeight - 120) / 49);
->>>>>>> f05d2682d46871768c30ee95ad302e8db5df26c4
 const local_host = "https://buguoheng.com";
 const getMyDate = (date = new Date()) => (date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()).toString();
 
@@ -42,52 +37,13 @@ const func_query = (json) => {
         else {
             document.getElementById("as").innerHTML = '<a onclick="query()" style="margin-left:-15px;">&nbsp;&nbsp;&nbsp;</a><a class="float-right text-dark">' + getMyDate() + '</a></div>';
         }
-<<<<<<< HEAD
         callBack2(json);
-=======
-        let div_query = document.getElementById("div_query");
-        div_query.innerHTML = '';
-        let div, aa, b, sum, star;
-        for (j in json) {
-            div = document.createElement("div");
-            aa = document.createElement("a");
-            div.className = "navbar-brand col-12 text-truncate border-bottom";
-            aa.onclick = function () { query(this.innerHTML) };
-            aa.innerHTML = json[j]['a'] || '';
-            div.id = json[j]['_id']['$oid'];
-            div.appendChild(aa);
-            b = document.createElement("a");
-            b.style = "font-size:80%";
-            b.innerHTML = (json[j]['b'] == null || json[j]['b'] == '' ? '' : ' - ' + json[j]['b']);
-            div.appendChild(b);
-            sum = document.createElement("a");
-            sum.className = "float-right";
-            sum.innerHTML = json[j]['count'] || '';
-            div.appendChild(sum);
-            star = document.createElement("img");
-            star.className = "float-right";
-            star.src = 'static/svg/s.svg';
-            star.width = "15";
-            star.style = "margin:10px 5px;";
-            star.onclick = function () { create(this) };
-            div.appendChild(star);
-            div_query.appendChild(div);
-        }
-        let ida = document.getElementsByTagName("img");
-        let str_id = localStorage.getItem('id') || '';
-        for (let i in ida) {
-            if (ida[i].parentNode != undefined && ida[i].parentNode.id != undefined && ida[i].parentNode.id != '' && str_id.indexOf(ida[i].parentNode.id) >= 0) {
-                ida[i].src = "static/svg/star.svg";
-            }
-        }
->>>>>>> f05d2682d46871768c30ee95ad302e8db5df26c4
         document.getElementById("input_query").value = '';
     }
     catch (e) {
         console.log('error:' + e)
     }
 }
-<<<<<<< HEAD
 
 const callBack1 = (json) => {
     let div_query = document.getElementById("div_query");
@@ -149,8 +105,6 @@ const callBack2 = (json) => {
     }
 }
 
-=======
->>>>>>> f05d2682d46871768c30ee95ad302e8db5df26c4
 const query2 = str => {
     $('#collapsea').collapse('hide');
     a = str || '';
@@ -173,15 +127,9 @@ const query = str => {
 }
 const skip = num => {
     let url = (a == '' ? '/read.php' : '/read.php?a=' + a);
-<<<<<<< HEAD
     let skip = '&skip=' + (num - 1);
     if (url.indexOf('?') < 0) {
         skip = '?skip=' + (num - 1);
-=======
-    let skip = '&skip=' + num;
-    if (url.indexOf('?') < 0) {
-        skip = '?skip=' + num;
->>>>>>> f05d2682d46871768c30ee95ad302e8db5df26c4
     }
     console.log(url + skip);
     window.location.hash = url + skip;
@@ -255,21 +203,13 @@ document.getElementsByClassName("create")[1].addEventListener("keyup", event => 
 document.getElementsByClassName("create")[1].addEventListener("keydown", event => { if (event.keyCode == 13) { event.preventDefault(); } })
 document.getElementById("div_card").style.minHeight = window.innerHeight - 90 + 'px';
 
-<<<<<<< HEAD
 // keyboard type 'enter' to open input_query,need auto remove EventListener
-=======
-//keyboard type 'enter' to open input_query,need auto remove EventListener
->>>>>>> f05d2682d46871768c30ee95ad302e8db5df26c4
 let i = 0;
 let enter_keycode = [69, 78, 84, 69, 82];
 const quick_open = event => { if (event.keyCode == enter_keycode[i]) { if (i++ == 4) { $('#collapseb').collapse('show'); $('#a').focus(); i = 0; } } else { i = 0; } };
 document.addEventListener('keyup', quick_open, true);
 
-<<<<<<< HEAD
 // show README.md
-=======
-//show README.md
->>>>>>> f05d2682d46871768c30ee95ad302e8db5df26c4
 $('#exampleModalLong').on('show.bs.modal', function () { let readme = document.createElement("div"); $(readme).load("README.md", function () { let converter = new showdown.Converter(); $(".modal-body")[0].innerHTML = converter.makeHtml($(readme)[0].innerHTML); }); })
 const rmcollapseb = () => $('#collapseb').collapse('hide'); $('#collapseb').on('show.bs.collapse', function () { document.getElementById('collapseb').addEventListener('click', e => { e.stopPropagation(); }); document.addEventListener('click', rmcollapseb, false); })
 $('#collapseb').on('hidden.bs.collapse', function () { document.getElementById('collapseb').removeEventListener('click', e => { e.stopPropagation(); }); document.removeEventListener('click', rmcollapseb, false); })
@@ -280,10 +220,5 @@ $('#collapsea').on('hidden.bs.collapse', function () { document.getElementById('
 const totop = () => $('body,html').animate({ scrollTop: '0px' });
 const tobottom = () => $('body,html').animate({ scrollTop: $(".footer").offset().top });
 
-<<<<<<< HEAD
 // div_skip add button, need auto
 // document.getElementById('div_skip').innerHTML = '<button class="btn btn-light btn-sm" onclick = "skip(0)" > 1</button> <button class="btn btn-light btn-sm" onclick="skip(1)">2</button> <button class="btn btn-light btn-sm" onclick="skip(2)">3</button> <button class="btn btn-light btn-sm" onclick="skip(3)">4</button> <button class="btn btn-light btn-sm" onclick="skip(4)">5</button> <button class="btn btn-light btn-sm" onclick="skip(5)">6</button> <button class="btn btn-light btn-sm" onclick="skip(6)">7</button> <button class="btn btn-light btn-sm" onclick="skip(7)">8</button> <input class="btn btn-sm border" border-radius="5px" type="text" id="skip" size="2"> <button class="btn btn-light btn-sm" onclick="skip(document.getElementById("skip").value)">skip</button>' + document.getElementById('div_skip').innerHTML;
-=======
-//div_skip add button, need auto
-document.getElementById('div_skip').innerHTML = '<button class="btn btn-light btn-sm" onclick = "skip(0)" > 1</button> <button class="btn btn-light btn-sm" onclick="skip(1)">2</button> <button class="btn btn-light btn-sm" onclick="skip(2)">3</button> <button class="btn btn-light btn-sm" onclick="skip(3)">4</button> <button class="btn btn-light btn-sm" onclick="skip(4)">5</button> <button class="btn btn-light btn-sm" onclick="skip(5)">6</button> <button class="btn btn-light btn-sm" onclick="skip(6)">7</button> <button class="btn btn-light btn-sm" onclick="skip(7)">8</button> <input class="btn btn-sm border" border-radius="5px" type="text" id="skip" size="2"> <button class="btn btn-light btn-sm" onclick="skip(document.getElementById("skip").value)">skip</button>' + document.getElementById('div_skip').innerHTML;
->>>>>>> f05d2682d46871768c30ee95ad302e8db5df26c4
