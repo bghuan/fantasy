@@ -1,5 +1,5 @@
-let a, b;
-let limit = parseInt((window.innerHeight - 120) / 44);
+let a, b, skip_num = 0;
+let limit = 50 || parseInt((window.innerHeight - 120) / 44);
 const local_host = "https://buguoheng.com";
 const getMyDate = (date = new Date()) => (date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()).toString();
 
@@ -39,6 +39,7 @@ const func_query = (json) => {
         }
         callBack2(json);
         document.getElementById("input_query").value = '';
+        hide_id_edit();
     }
     catch (e) {
         console.log('error:' + e)
@@ -97,7 +98,7 @@ const callBack2 = (json) => {
         b.onclick = function () { query(ahtml); }
         b.innerHTML = (json[j]['b'] == null || json[j]['b'] == '' ? '' : json[j]['b'] + ' - ');
         a.style = b.innerHTML != '' ? "font-size:60%" : "";
-        div.className = "navbar-brand col-12 text-truncate border-bottom";
+        div.className = "style-1";
         div.id = json[j]['_id']['$oid'];
         div.appendChild(b);
         div.appendChild(a);
@@ -116,6 +117,7 @@ const query2 = str => {
     HttpGet(url, callBack);
 }
 const query = str => {
+    skip_num = 1;
     $('#collapsea').collapse('hide');
     a = str || '';
     let url = (a == '' ? '' : '/read.php?a=' + a);
@@ -126,10 +128,12 @@ const query = str => {
     if (a == '' && typeof str != 'object') { window.history.replaceState(null, null, local_host); }
 }
 const skip = num => {
+    if(num == '0'){num = 1;}
+    skip_num = (parseInt(num)) ? num - 1 : skip_num + 1;
     let url = (a == '' ? '/read.php' : '/read.php?a=' + a);
-    let skip = '&skip=' + (num - 1);
+    let skip = '&skip=' + skip_num;
     if (url.indexOf('?') < 0) {
-        skip = '?skip=' + (num - 1);
+        skip = '?skip=' + skip_num;
     }
     console.log(url + skip);
     window.location.hash = url + skip;
@@ -181,9 +185,7 @@ const create = obj => {
     HttpGet(url, callBack);
 }
 const show_id_edit = () => {
-    if (document.getElementById('addid').style.display == 'block') {
-        document.getElementById('addid').style.display = 'none';
-    }
+    if (document.getElementById('addid').style.display == 'block') {hide_id_edit();}
     else {
         tobottom();
         document.getElementById('addid').style.display = 'block';
@@ -191,6 +193,7 @@ const show_id_edit = () => {
         setTimeout(function () { order_id(); }, 2000);
     }
 }
+const hide_id_edit = () => {document.getElementById('addid').style.display = 'none';}
 const update_id = () => {
     localStorage.setItem(new Date().toLocaleString(), localStorage.id);
     localStorage.id = document.getElementById('af').value; query([]);
@@ -222,3 +225,5 @@ const tobottom = () => $('body,html').animate({ scrollTop: $(".footer").offset()
 
 // div_skip add button, need auto
 // document.getElementById('div_skip').innerHTML = '<button class="btn btn-light btn-sm" onclick = "skip(0)" > 1</button> <button class="btn btn-light btn-sm" onclick="skip(1)">2</button> <button class="btn btn-light btn-sm" onclick="skip(2)">3</button> <button class="btn btn-light btn-sm" onclick="skip(3)">4</button> <button class="btn btn-light btn-sm" onclick="skip(4)">5</button> <button class="btn btn-light btn-sm" onclick="skip(5)">6</button> <button class="btn btn-light btn-sm" onclick="skip(6)">7</button> <button class="btn btn-light btn-sm" onclick="skip(7)">8</button> <input class="btn btn-sm border" border-radius="5px" type="text" id="skip" size="2"> <button class="btn btn-light btn-sm" onclick="skip(document.getElementById("skip").value)">skip</button>' + document.getElementById('div_skip').innerHTML;
+
+// console.log=function(){};
