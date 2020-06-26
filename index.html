@@ -6,11 +6,11 @@
     <link rel="icon" href="favicon.ico" sizes="32x32">
     <link rel="stylesheet" href="static/css/bootstrap.min.css">
     <link rel="stylesheet" href="static/css/index.css">
-    <title>A third of the fantasy</title>
+    <title>三分幻想</title>
 </head>
 
-<body class="container-fluid">
-    <div class="pos-f-t fixed-top bg-white border-bottom container-fluid" id="accordion">
+<body class="container-lg">
+    <div class="pos-f-t fixed-top bg-white container-lg" id="accordion">
         <nav class="navbar navbar-light bg-white" style="padding:0.1rem 1rem 0.1rem 1rem">
             <a class="navbar-brand text-primary text-truncate col-5" data-toggle="collapse" href="#collapsea"
                 role="button" aria-expanded="false" aria-controls="collapsea" id="a_top" style="margin-left:-30px;"></a>
@@ -49,9 +49,11 @@
         </div>
         <div class="card-footer text-muted text-right" style="height:40px;margin-top:-8px;padding:0" id="div_skip">
             <a href="http://www.beian.miit.gov.cn" style="font-size:6px;margin-right:4px">豫ICP备18001086号</a>
-            <input class="btn btn-sm border" border-radius="5px" type="text" id="skip" style="height:25px;width:35px;margin:0">
+            <!-- <input class="btn btn-sm border" border-radius="5px" type="text" id="skip" style="height:25px;width:35px;margin:0">
             <button class="btn btn-light btn-sm" onclick="skip(document.getElementById('skip').value)"
-                style="width:25px;margin:0;padding:0">next</button>
+                style="width:25px;margin:0;padding:0">next</button> -->
+
+            <button class="btn btn-light btn-sm" onclick="login()" style="margin:0;padding:0">test login with github</button>
             <button class="btn btn-light btn-sm" onclick="show_id_edit()" style="margin:0;padding:0">more</button>
             <button class="btn btn-light btn-sm" data-toggle="modal" data-target="#exampleModalLong"
                 style="width:30px;margin:0 5px 0 0;padding:0">about</button>

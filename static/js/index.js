@@ -3,7 +3,7 @@ let limit = 50 || parseInt((window.innerHeight - 120) / 44);
 const local_host = "https://buguoheng.com";
 const getMyDate = (date = new Date()) => (date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()).toString();
 
-const HttpGet = (str, CallBack) => {
+const HttpGet = (str, CallBack, standard) => {
     console.log(str);
     let xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
     xmlhttp.onreadystatechange = () => {
@@ -21,7 +21,10 @@ const HttpGet = (str, CallBack) => {
             }
         }
     }
-    xmlhttp.open("GET", local_host + (str || "/read.php") + (str.indexOf('limit') > 0 ? '' : (str.indexOf('?') < 0 ? '?' : '&') + 'limit=' + limit), true);
+    if (standard == true)
+        xmlhttp.open("GET", str, true);
+    else
+        xmlhttp.open("GET", local_host + (str || "/read.php") + (str.indexOf('limit') > 0 ? '' : (str.indexOf('?') < 0 ? '?' : '&') + 'limit=' + limit), true);
     xmlhttp.send();
 }
 const func_query = (json) => {
@@ -128,7 +131,7 @@ const query = str => {
     if (a == '' && typeof str != 'object') { window.history.replaceState(null, null, local_host); }
 }
 const skip = num => {
-    if(num == '0'){num = 1;}
+    if (num == '0') { num = 1; }
     skip_num = (parseInt(num)) ? num - 1 : skip_num + 1;
     let url = (a == '' ? '/read.php' : '/read.php?a=' + a);
     let skip = '&skip=' + skip_num;
@@ -140,6 +143,12 @@ const skip = num => {
 }
 const query_onhashchange = () => { a = decodeURI(location.href).split('a=')[1] || ''; HttpGet(location.hash.slice(1), json => func_query(json)); }
 $(document).ready(function () {
+    if (getQueryVariable('code')) {
+        let callBack = json => { console.log(json); alert(json.data.username) }
+        let url = "https://oauth.buguoheng.com/oauth/callback?";
+        //  url="http://localhost:81/oauth/callback?";
+        HttpGet(url + window.location.search.substring(1), callBack, true);
+    }
     window.history.replaceState(null, null, (decodeURI(location.href).split('a=')[1] == null) ? '' : "/#" + location.hash.slice(1));
     query_onhashchange();
     window.addEventListener('hashchange', query_onhashchange, false);
@@ -185,7 +194,7 @@ const create = obj => {
     HttpGet(url, callBack);
 }
 const show_id_edit = () => {
-    if (document.getElementById('addid').style.display == 'block') {hide_id_edit();}
+    if (document.getElementById('addid').style.display == 'block') { hide_id_edit(); }
     else {
         tobottom();
         document.getElementById('addid').style.display = 'block';
@@ -193,7 +202,7 @@ const show_id_edit = () => {
         setTimeout(function () { order_id(); }, 2000);
     }
 }
-const hide_id_edit = () => {document.getElementById('addid').style.display = 'none';}
+const hide_id_edit = () => { document.getElementById('addid').style.display = 'none'; }
 const update_id = () => {
     localStorage.setItem(new Date().toLocaleString(), localStorage.id);
     localStorage.id = document.getElementById('af').value; query([]);
@@ -226,4 +235,15 @@ const tobottom = () => $('body,html').animate({ scrollTop: $(".footer").offset()
 // div_skip add button, need auto
 // document.getElementById('div_skip').innerHTML = '<button class="btn btn-light btn-sm" onclick = "skip(0)" > 1</button> <button class="btn btn-light btn-sm" onclick="skip(1)">2</button> <button class="btn btn-light btn-sm" onclick="skip(2)">3</button> <button class="btn btn-light btn-sm" onclick="skip(3)">4</button> <button class="btn btn-light btn-sm" onclick="skip(4)">5</button> <button class="btn btn-light btn-sm" onclick="skip(5)">6</button> <button class="btn btn-light btn-sm" onclick="skip(6)">7</button> <button class="btn btn-light btn-sm" onclick="skip(7)">8</button> <input class="btn btn-sm border" border-radius="5px" type="text" id="skip" size="2"> <button class="btn btn-light btn-sm" onclick="skip(document.getElementById("skip").value)">skip</button>' + document.getElementById('div_skip').innerHTML;
 
-// console.log=function(){};
+const login = () => {
+    window.location.href = 'https://oauth.buguoheng.com/oauth/render';
+}
+const getQueryVariable = (variable) => {
+    let query = window.location.search.substring(1);
+    let vars = query.split("&");
+    for (let i = 0; i < vars.length; i++) {
+        let pair = vars[i].split("=");
+        if (pair[0] == variable) { return pair[1]; }
+    }
+    return (false);
+}

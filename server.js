@@ -15,7 +15,7 @@ let app = function (req, res) {
             res.writeHeader(404, {
                 'content-type': 'text/html;charset="utf-8"'
             });
-            res.write('<h1>404错误</h1><p>你要找的页面不存在</p>');
+            res.write('<h1>404错误 by bu</h1><p>你要找的页面不存在</p>');
             res.end();
         } else {
             var contentType = mine[ext] || "text/plain";
@@ -28,5 +28,5 @@ let app = function (req, res) {
     });
 };
 http.createServer(app).listen(80);
-var _url = 'http://127.0.0.1/index.html';
+var _url = 'http://127.0.0.1:80/index.html';
 console.log('Server running at ' + _url);
