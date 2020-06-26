@@ -1,5 +1,5 @@
 let a, b, skip_num = 0;
-let limit = 50 || parseInt((window.innerHeight - 120) / 44);
+let limit = 500 || parseInt((window.innerHeight - 120) / 44);
 const local_host = "https://buguoheng.com";
 const getMyDate = (date = new Date()) => (date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()).toString();
 
