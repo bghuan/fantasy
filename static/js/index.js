@@ -144,7 +144,7 @@ const skip = num => {
 const query_onhashchange = () => { a = decodeURI(location.href).split('a=')[1] || ''; HttpGet(location.hash.slice(1), json => func_query(json)); }
 $(document).ready(function () {
     if (getQueryVariable('code')) {
-        let callBack = json => { console.log(json); if (json != null && json.data != null&& json.data.username != null) alert("hello " + json.data.username) }
+        let callBack = json => { if (json != null && json.data != null&& json.data.username != null) alert("hello " + json.data.username) }
         let url = "https://oauth.buguoheng.com/oauth/callback?";
         //  url="http://localhost:81/oauth/callback?";
         HttpGet(url + window.location.search.substring(1), callBack, true);
