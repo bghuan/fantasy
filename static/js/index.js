@@ -1,5 +1,5 @@
 let a, b, skip_num = 0;
-let limit = 500 || parseInt((window.innerHeight - 120) / 44);
+let limit = 0 || parseInt((window.innerHeight - 120) / 44);
 const buguoheng = "https://buguoheng.com";
 const current_host = window.location.host;
 const local_host = (current_host.match("127.0.0.1") || current_host.match("localhost") || current_host.match("192.168") != null) ? buguoheng : current_host;
