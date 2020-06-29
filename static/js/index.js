@@ -1,6 +1,8 @@
 let a, b, skip_num = 0;
 let limit = 500 || parseInt((window.innerHeight - 120) / 44);
-const local_host = "https://buguoheng.com";
+const buguoheng = "https://buguoheng.com";
+const current_host = window.location.host;
+const local_host = (current_host.match("127.0.0.1") || current_host.match("localhost") || current_host.match("192.168") != null) ? buguoheng : current_host;
 const getMyDate = (date = new Date()) => (date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()).toString();
 
 const HttpGet = (str, CallBack, standard) => {
@@ -144,7 +146,7 @@ const skip = num => {
 const query_onhashchange = () => { a = decodeURI(location.href).split('a=')[1] || ''; HttpGet(location.hash.slice(1), json => func_query(json)); }
 $(document).ready(function () {
     if (getQueryVariable('code')) {
-        let callBack = json => { if (json != null && json.data != null&& json.data.username != null) alert("hello " + json.data.username) }
+        let callBack = json => { if (json != null && json.data != null && json.data.username != null) alert("hello " + json.data.username) }
         let url = "https://oauth.buguoheng.com/oauth/callback?";
         //  url="http://localhost:81/oauth/callback?";
         HttpGet(url + window.location.search.substring(1), callBack, true);
