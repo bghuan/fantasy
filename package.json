@@ -1,10 +1,10 @@
 {
-  "name": "asd",
+  "name": "fantasy",
   "version": "1.0.0",
-  "description": "asd",
+  "description": "收集幻想",
   "main": "server.js",
   "scripts": {
-    "start": "",
+    "start": "node server.js",
     "fangyuan": ""
   },
   "dependencies": {

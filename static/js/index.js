@@ -1,8 +1,6 @@
 let a, b, skip_num = 0;
-let limit = 0 || parseInt((window.innerHeight - 120) / 44);
+let limit = 1000 || parseInt((window.innerHeight - 120) / 44);
 const buguoheng = "https://buguoheng.com";
-const current_host = window.location.host;
-const local_host = (current_host.match("127.0.0.1") || current_host.match("localhost") || current_host.match("192.168") != null) ? buguoheng : current_host;
 const getMyDate = (date = new Date()) => (date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()).toString();
 
 const HttpGet = (str, CallBack, standard) => {
@@ -26,7 +24,7 @@ const HttpGet = (str, CallBack, standard) => {
     if (standard == true)
         xmlhttp.open("GET", str, true);
     else
-        xmlhttp.open("GET", local_host + (str || "/read.php") + (str.indexOf('limit') > 0 ? '' : (str.indexOf('?') < 0 ? '?' : '&') + 'limit=' + limit), true);
+        xmlhttp.open("GET", buguoheng + (str || "/read.php") + (str.indexOf('limit') > 0 ? '' : (str.indexOf('?') < 0 ? '?' : '&') + 'limit=' + limit), true);
     xmlhttp.send();
 }
 const func_query = (json) => {
@@ -130,7 +128,7 @@ const query = str => {
         url = "/read.php" + '?id=' + localStorage.getItem('id') || '';
     }
     window.location.hash = url;
-    if (a == '' && typeof str != 'object') { window.history.replaceState(null, null, local_host); }
+    if (a == '' && typeof str != 'object') { window.history.replaceState(null, null, buguoheng); }
 }
 const skip = num => {
     if (num == '0') { num = 1; }

@@ -53,12 +53,12 @@
             <button class="btn btn-light btn-sm" onclick="skip(document.getElementById('skip').value)"
                 style="width:25px;margin:0;padding:0">next</button> -->
 
-            <button class="btn btn-light btn-sm" onclick="login()" style="margin:0;padding:0">test login with github</button>
             <button class="btn btn-light btn-sm" onclick="show_id_edit()" style="margin:0;padding:0">more</button>
             <button class="btn btn-light btn-sm" data-toggle="modal" data-target="#exampleModalLong"
                 style="width:30px;margin:0 5px 0 0;padding:0">about</button>
             <a class="btn btn-sm" href="https://github.com/admnst/A-third-of-the-Fantasy.git" target="_blank"><img
-                    src="static/svg/github.svg" width="20" height="40" style="margin-right:2px;margin-left:-4px;padding:0"></a>
+                    src="static/svg/github.svg" width="20" height="40"
+                    style="margin-right:2px;margin-left:-4px;padding:0"></a>
         </div>
     </div>
     <div class="footer text-right">
@@ -72,14 +72,16 @@
         </div>
     </div>
     <div style="display:none;" id="addid" class="text-right">
-        <textarea class="form-control" name="" id="af" cols="10" rows="10" placeholder=""></textarea>
+        <!-- <textarea class="form-control" name="" id="af" cols="10" rows="10" placeholder=""></textarea>
         <button class="btn btn-primary" onclick="query_id()">查看历史id</button>
-        <button class="btn btn-primary" onclick="update_id()">保存并更新个人拥有id</button>
-        <a href="app-debug.apk">app 点击下载</a>
-        <a href="fangyuan.html">方圆</a>
+        <button class="btn btn-primary" onclick="update_id()">保存并更新个人拥有id</button> -->
+        <a class="btn btn-primary btn-sm" href="app-debug.apk">app下载</a>
+        <a class="btn btn-primary btn-sm" href="fangyuan.html">左手画圆右手画方</a>
+        <a class="btn btn-primary btn-sm" href="./rtc/index.html">视频通话</a>
+        <button class="btn btn-primary btn-sm" onclick="login()">GitHub登录</button>
     </div>
     <script src="static/js/jquery-3.3.1.min.js"></script>
-    <script src="static/js/index.js?ss"></script>
+    <script src="static/js/index.js?sss"></script>
     <script src="static/js/bootstrap.min.js"></script>
     <script src="static/js/showdown.min.js"></script>
     <style>

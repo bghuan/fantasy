@@ -6,9 +6,9 @@ const path = require('path');
 
 let documentRoot = './';
 let app = function (req, res) {
-    var pathname = url.parse(req.url).pathname;
-    var realPath = path.join(documentRoot, pathname);
-    var ext = path.extname(realPath);
+    let pathname = url.parse(req.url).pathname;
+    let realPath = path.join(documentRoot, pathname);
+    let ext = path.extname(realPath);
     ext = ext ? ext.slice(1) : 'unknown';
     fs.readFile(realPath, function (err, data) {
         if (err) {
@@ -18,7 +18,7 @@ let app = function (req, res) {
             res.write('<h1>404错误 by bu</h1><p>你要找的页面不存在</p>');
             res.end();
         } else {
-            var contentType = mine[ext] || "text/plain";
+            let contentType = mine[ext] || "text/plain";
             res.writeHeader(200, {
                 'content-type': contentType
             });
@@ -28,5 +28,5 @@ let app = function (req, res) {
     });
 };
 http.createServer(app).listen(80);
-var _url = 'http://127.0.0.1:80/index.html';
+const _url = 'http://127.0.0.1:80/index.html';
 console.log('Server running at ' + _url);
