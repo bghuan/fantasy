@@ -2,6 +2,8 @@ let a, b, skip_num = 0;
 let limit = 1000 || parseInt((window.innerHeight - 120) / 44);
 const buguoheng = "https://buguoheng.com";
 const getMyDate = (date = new Date()) => (date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()).toString();
+const readPath = '/php/read.php';
+const createPath = '/php/create.php';
 
 const HttpGet = (str, CallBack, standard) => {
     console.log(str);
@@ -24,7 +26,7 @@ const HttpGet = (str, CallBack, standard) => {
     if (standard == true)
         xmlhttp.open("GET", str, true);
     else
-        xmlhttp.open("GET", buguoheng + (str || "/read.php") + (str.indexOf('limit') > 0 ? '' : (str.indexOf('?') < 0 ? '?' : '&') + 'limit=' + limit), true);
+        xmlhttp.open("GET", buguoheng + (str || readPath) + (str.indexOf('limit') > 0 ? '' : (str.indexOf('?') < 0 ? '?' : '&') + 'limit=' + limit), true);
     xmlhttp.send();
 }
 const func_query = (json) => {
@@ -112,9 +114,9 @@ const callBack2 = (json) => {
 const query2 = str => {
     $('#collapsea').collapse('hide');
     a = str || '';
-    let url = (a == '' ? '' : '/read.php?a=' + a);
+    let url = (a == '' ? '' : readPath + '?a=' + a);
     if (typeof str == 'object') {
-        url = "/read.php" + '?id=' + localStorage.getItem('id') || '';
+        url = readPath + '?id=' + localStorage.getItem('id') || '';
     }
     var callBack = json => func_query(json);
     HttpGet(url, callBack);
@@ -123,9 +125,9 @@ const query = str => {
     skip_num = 1;
     $('#collapsea').collapse('hide');
     a = str || '';
-    let url = (a == '' ? '' : '/read.php?a=' + a);
+    let url = (a == '' ? '' : readPath + '?a=' + a);
     if (typeof str == 'object') {
-        url = "/read.php" + '?id=' + localStorage.getItem('id') || '';
+        url = readPath + '?id=' + localStorage.getItem('id') || '';
     }
     window.location.hash = url;
     if (a == '' && typeof str != 'object') { window.history.replaceState(null, null, buguoheng); }
@@ -133,7 +135,7 @@ const query = str => {
 const skip = num => {
     if (num == '0') { num = 1; }
     skip_num = (parseInt(num)) ? num - 1 : skip_num + 1;
-    let url = (a == '' ? '/read.php' : '/read.php?a=' + a);
+    let url = (a == '' ? readPath : readPath + '?a=' + a);
     let skip = '&skip=' + skip_num;
     if (url.indexOf('?') < 0) {
         skip = '?skip=' + skip_num;
@@ -176,7 +178,7 @@ const create = obj => {
         b = document.getElementById("b").value;
     }
     if (a == '') { alert("please type a object") }
-    let url = '/create.php?a=' + a + '&b=' + JSON.stringify(typeof b == "string" ? b.split(",") : []);
+    let url = createPath + '?a=' + a + '&b=' + JSON.stringify(typeof b == "string" ? b.split(",") : []);
     let callBack = create_id => {
         if (create_id.length == 24) {
             localStorage.id += (',' + create_id);
