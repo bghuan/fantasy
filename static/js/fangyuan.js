@@ -20,12 +20,12 @@ let ongoingTouches = new Array();
 let mouse_x;
 let mouse_y;
 let sprites = {
-    graphics_bg: '',
-    graphics: '',
-    stripe: '',
-    refresh: '',
-    graphics_line: ''
-}//顺序
+        graphics_bg: '',
+        graphics: '',
+        stripe: '',
+        refresh: '',
+        graphics_line: ''
+    } //顺序
 
 const app = new PIXI.Application(option);
 const stage = new PIXI.Container();
@@ -34,8 +34,8 @@ document.body.appendChild(app.view);
 
 const loader = PIXI.Loader.shared;
 
-loader.add('stripe', 'static/image/stripe.jpg')
-    .add('refresh', 'static/svg/refresh-cw-write.svg');
+loader.add('stripe', '../image/stripe.jpg')
+    .add('refresh', '../svg/refresh-cw-write.svg');
 // loader.pre(cachingMiddleware);
 // loader.use(parsingMiddleware);
 loader.load((loader, resources) => {
@@ -62,7 +62,10 @@ loader.load((loader, resources) => {
 loader.onProgress.add(() => { console.log('onProgress'); }); // called once per loaded/errored file
 loader.onError.add(() => { console.log('onError'); }); // called once per errored file
 loader.onLoad.add(() => { console.log('onLoad'); }); // called once per loaded file
-loader.onComplete.add(() => { console.log('onComplete'); setup(); }); // called once when the queued resources all load.
+loader.onComplete.add(() => {
+    console.log('onComplete');
+    setup();
+}); // called once when the queued resources all load.
 
 const setup = () => {
     sprites.graphics = new PIXI.Graphics();
@@ -81,7 +84,7 @@ const setup = () => {
     sprites.graphics_bg.beginFill(color_bg);
     sprites.graphics_bg.drawRect(0, 0, window.innerWidth, window.innerHeight);
 
-    Object.keys(sprites).forEach(function (key) {
+    Object.keys(sprites).forEach(function(key) {
         app.stage.addChild(sprites[key]);
     });
 }
@@ -127,30 +130,29 @@ const handleMove = (evt) => {
             sprites.graphics_line.moveTo(ongoingTouches[idx].pageX, ongoingTouches[idx].pageY);
             sprites.graphics_line.lineTo(touches[i].pageX, touches[i].pageY);
             inline_const(touches[i].pageX, touches[i].pageY)
-            ongoingTouches.splice(idx, 1, copyTouch(touches[i]));  // swap in the new touch record
-        }
-        else {
-            console.log("can't figure out which touch to continue");
-        }
-    }
-}
-const handleEnd = (evt) => {
-    evt.preventDefault();
-    let touches = evt.changedTouches;
-    for (let i = 0; i < touches.length; i++) {
-        let idx = ongoingTouchIndexById(touches[i].identifier);
-        if (idx >= 0) {
-            ongoingTouches.splice(idx, 1);  // remove it; we're done
+            ongoingTouches.splice(idx, 1, copyTouch(touches[i])); // swap in the new touch record
         } else {
             console.log("can't figure out which touch to continue");
         }
     }
 }
-//拷贝一个触摸对象
+const handleEnd = (evt) => {
+        evt.preventDefault();
+        let touches = evt.changedTouches;
+        for (let i = 0; i < touches.length; i++) {
+            let idx = ongoingTouchIndexById(touches[i].identifier);
+            if (idx >= 0) {
+                ongoingTouches.splice(idx, 1); // remove it; we're done
+            } else {
+                console.log("can't figure out which touch to continue");
+            }
+        }
+    }
+    //拷贝一个触摸对象
 const copyTouch = (touch) => {
-    return { identifier: touch.identifier, pageX: touch.pageX, pageY: touch.pageY };
-}
-//找出正在进行的触摸
+        return { identifier: touch.identifier, pageX: touch.pageX, pageY: touch.pageY };
+    }
+    //找出正在进行的触摸
 const ongoingTouchIndexById = (idToFind) => {
     for (let i = 0; i < ongoingTouches.length; i++) {
         let id = ongoingTouches[i].identifier;
@@ -172,8 +174,7 @@ const pointInsiderectangle = (x, y, rectangle) => {
 const inline = (x, y) => {
     if (y > _width) {
         return pointInsiderectangle(x, y, rectangle1) && !pointInsiderectangle(x, y, rectangle2)
-    }
-    else {
+    } else {
         return pointInsideCircle(x, y, circle1) && !pointInsideCircle(x, y, circle2)
     }
 }
