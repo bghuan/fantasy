@@ -19,7 +19,7 @@ const HttpGet = (str, CallBack, standard) => {
                 CallBack(xmlhttp.responseText);
                 console.log(xmlhttp.responseText + '\n' + e)
             } finally {
-                if (totop != undefined) { totop(); }
+                // if (totop != undefined) { totop(); }
             }
         }
     }
@@ -200,8 +200,8 @@ const show_id_edit = () => {
     else {
         tobottom();
         document.getElementById('addid').style.display = 'block';
-        document.getElementById('af').value = localStorage.id;
-        setTimeout(function () { order_id(); }, 2000);
+        // document.getElementById('af').value = localStorage.id;
+        // setTimeout(function () { order_id(); }, 2000);
     }
 }
 const hide_id_edit = () => { document.getElementById('addid').style.display = 'none'; }

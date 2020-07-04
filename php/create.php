@@ -3,10 +3,10 @@ header('Access-Control-Allow-Origin:*');
 include 'config.php';
 $a = FormitDollor($_GET["a"]);
 $b = FormitDollor($_GET["b"]);
-if(empty($b)){
-    $b=[];
-}else{
-    $b=json_decode($b);
+if (empty($b)) {
+    $b = [];
+} else {
+    $b = json_decode($b);
 }
 if (empty($a)) {
     exit;
@@ -24,4 +24,4 @@ if ($result) {
     echo $document["_id"];
     exit;
 }
-?>
+$isBuckuped = false;

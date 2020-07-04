@@ -10,6 +10,13 @@ if (is_file(__DIR__ . '/vendor/autoload.php')) {
 use OSS\OssClient;
 use OSS\Core\OssException;
 
+$object .= '?timestamp=' . time();
+if ($isBuckuped) {
+    die;
+} else {
+    $isBuckuped = true;
+}
+
 $cmd = new MongoDB\Driver\Command([
     'aggregate' => 'a',
     'pipeline' => [
@@ -31,8 +38,9 @@ try {
 
     $ossClient->uploadFile($bucket, $object, $filePath);
 
-    print(__FUNCTION__ . ": OK" . "\n");
-    echo $json;
+    // print(__FUNCTION__ . ": OK" . "\n");
+    print(__FUNCTION__ . "https://oss.buguoheng.com/" . $object . "\n");
+    // echo $json;
     exit;
 } catch (MongoDB\Driver\Exception $e) {
     echo $e->getMessage(), "\n";

@@ -94,7 +94,7 @@ ul,li{
 
 .remote-user-list
 {
-  display: none;
+  /* display: none; */
   position: absolute;
   left: 0;
   top: 0;
@@ -217,8 +217,7 @@ ul,li{
   top: 0px;
   right: 0px;
   bottom: 0px;
-  /* width: 260px; */
-  /* width: 0; */
+  width: 260px;
   background-color: #eee;
   color: #fff;
   /* padding: 20px; */
