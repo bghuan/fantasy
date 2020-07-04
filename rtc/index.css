@@ -74,14 +74,14 @@ ul,li{
 
 .container-box
 {
-  /* margin-left: 200px;
-  margin-right: 300px; */
+  margin-left: 200px;
+  margin-right: 300px;
   position: relative;
 }
 
 .local-video
 {
-  /* margin: 0 calc(50 / 1080 * 100vh); */
+  margin: 0 calc(50 / 1080 * 100vh);
   position: relative;
 }
 
@@ -94,7 +94,6 @@ ul,li{
 
 .remote-user-list
 {
-  /* display: none; */
   position: absolute;
   left: 0;
   top: 0;
@@ -174,7 +173,7 @@ ul,li{
 
 .local-display-name span
 {
-  /* margin: 0 30px; */
+  margin: 0 30px;
   line-height: 50px;
   font-size: 15px;
 }
@@ -220,7 +219,7 @@ ul,li{
   width: 260px;
   background-color: #eee;
   color: #fff;
-  /* padding: 20px; */
+  padding: 20px;
   overflow-y: scroll;
 }
 .video-container::-webkit-scrollbar {

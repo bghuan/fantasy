@@ -26,7 +26,7 @@ if (!empty($_id)) {
         'pipeline' => [
             ['$match' => ['a' => $a]],
             ['$group' => ['_id' => '$b', 'id' => ['$first' => '$_id'], 'count' => ['$sum' => 1]]],
-            ['$sort' => ['count' => -1]],
+            ['$sort' => ['id' => 1]],
             ['$skip' => $limit * $skip],
             ['$limit' => $limit],
             ['$project' => ['_id' => '$id', 'a' => '$_id']]

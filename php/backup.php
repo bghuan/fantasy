@@ -10,6 +10,7 @@ if (is_file(__DIR__ . '/vendor/autoload.php')) {
 use OSS\OssClient;
 use OSS\Core\OssException;
 
+
 $object .= '?timestamp=' . time();
 if ($isBuckuped) {
     die;
