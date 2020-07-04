@@ -1,14 +1,13 @@
 {
-  "name": "fantasy",
-  "version": "1.0.0",
-  "description": "收集幻想",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js",
-    "fangyuan": ""
-  },
-  "dependencies": {
-    "https": "^1.0.0",
-    "ws": "^7.3.0"
-  }
+    "name": "fantasy",
+    "version": "1.0.0",
+    "description": "收集幻想",
+    "main": "server.js",
+    "scripts": {
+        "start": "node server.js"
+    },
+    "dependencies": {
+        "https": "^1.0.0",
+        "ws": "^7.3.0"
+    }
 }

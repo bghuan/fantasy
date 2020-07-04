@@ -1,3 +1,7 @@
 .style-1{
     margin:5px 0 0 0;
+} 
+/*去掉bootstrap自带的input输入框半透明阴影*/
+.form-control:focus {
+    box-shadow: none;
 }
