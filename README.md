@@ -1,4 +1,4 @@
-## 三分幻想 · A-third-of-the-Fantasy
+## 三分幻想 · One-third-of-the-Fantasy
 
 ### 收集幻想
 ###### 写下我们部分的幻想,见证它在世界的存在
