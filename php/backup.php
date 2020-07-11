@@ -10,37 +10,26 @@ if (is_file(__DIR__ . '/vendor/autoload.php')) {
 use OSS\OssClient;
 use OSS\Core\OssException;
 
+$objectName= $objectDir.$db_name.'.'.$db_document.'.json';
 
-$object .= '?timestamp=' . time();
+// $object .= '?timestamp=' . time();
 if ($isBuckuped) {
     die;
 } else {
     $isBuckuped = true;
 }
 
-$cmd = new MongoDB\Driver\Command([
-    'aggregate' => 'a',
-    'pipeline' => [
-        ['$match' => ['a' => ['$exists' => true], 'b' => ['$exists' => true, '$nin' =>  ['', [], [''], [[]]]]]],
-        ['$sort' => ['_id' => -1]],
-        ['$project' => ['_id' => '$_id', 'a' => '$a', 'b' => '$b']]
-    ],
-    'cursor' => new stdClass,
-]);
+$query = new MongoDB\Driver\Query([],[]);
+    
 try {
-    $json = json_encode($manager->executeCommand($db_name, $cmd)->toArray());
-
-    $myfile = fopen("bdb.json", "w") or die("Unable to open file!");
-    fwrite($myfile, $json);
-    fclose($myfile);
-
-
+    $json = json_encode($manager->executeQuery($db_name.'.'.$db_document, $query)->toArray());
+    
     $ossClient = new OssClient($accessKeyId, $accessKeySecret, $endpoint);
 
-    $ossClient->uploadFile($bucket, $object, $filePath);
+    $ossClient->putObject($bucket, $objectName, $json);
 
     // print(__FUNCTION__ . ": OK" . "\n");
-    print(__FUNCTION__ . "https://oss.buguoheng.com/" . $object . "\n");
+    // print(__FUNCTION__ . "https://oss.buguoheng.com/" . $object . "\n");
     // echo $json;
     exit;
 } catch (MongoDB\Driver\Exception $e) {

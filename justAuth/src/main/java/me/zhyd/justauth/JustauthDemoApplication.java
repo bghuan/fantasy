@@ -34,19 +34,19 @@ public class JustauthDemoApplication implements ApplicationRunner {
         SpringApplication.run(JustauthDemoApplication.class, args);
     }
 
-    @RequestMapping("")
-    public ModelAndView index() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("enableAuthPlatforms", JustAuthPlatformInfo.getPlatformInfos());
-        return new ModelAndView("index", map);
-    }
-
-    @RequestMapping("/users")
-    public ModelAndView users() {
-        Map<String, Object> map = new HashMap<>(1);
-        map.put("users", userService.listAll());
-        return new ModelAndView("users", map);
-    }
+//    @RequestMapping("")
+//    public ModelAndView index() {
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("enableAuthPlatforms", JustAuthPlatformInfo.getPlatformInfos());
+//        return new ModelAndView("index", map);
+//    }
+//
+//    @RequestMapping("/users")
+//    public ModelAndView users() {
+//        Map<String, Object> map = new HashMap<>(1);
+//        map.put("users", userService.listAll());
+//        return new ModelAndView("users", map);
+//    }
 
 
 

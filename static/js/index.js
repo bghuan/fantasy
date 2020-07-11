@@ -6,14 +6,13 @@ const readPath = '/php/read.php';
 const createPath = '/php/create.php';
 
 const HttpGet = (str, CallBack, standard) => {
-    console.log(str);
     let xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
     xmlhttp.onreadystatechange = () => {
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
             let json;
             try {
                 json = JSON.parse(xmlhttp.responseText);
-                console.log(json);
+                // console.log(json);
                 CallBack(json);
             } catch (e) {
                 CallBack(xmlhttp.responseText);
@@ -138,7 +137,6 @@ const skip = num => {
     if (url.indexOf('?') < 0) {
         skip = '?skip=' + skip_num;
     }
-    console.log(url + skip);
     window.location.hash = url + skip;
 }
 const query_onhashchange = () => {
@@ -273,7 +271,7 @@ const login = () => {
 const loginCallback = () => {
     if (getQueryVariable('code')) {
         let callBack = json => { if (json != null && json.data != null && json.data.username != null) alert("hello " + json.data.username) }
-        let url = "https://oauth.buguoheng.com/oauth/callback/github";
+        let url = "https://oauth.buguoheng.com/oauth/callback/github?";
         HttpGet(url + window.location.search.substring(1), callBack, true);
     }
 }

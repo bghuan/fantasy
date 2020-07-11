@@ -18,18 +18,18 @@ if (!empty($_id)) {
     $filter = ['_id' => ['$in' => $arr]];
     $options = ['sort' => ['_id' => -1]];
     $query = new MongoDB\Driver\Query($filter, $options);
-    echo json_encode($manager->executeQuery($db_document, $query)->toArray());
+    echo json_encode($manager->executeQuery($db_name.'.'.$db_document, $query)->toArray());
     exit;
 } else if (!empty($a)) {
     $cmd = new MongoDB\Driver\Command([
-        'aggregate' => 'a',
+        'aggregate' => $db_document,
         'pipeline' => [
             ['$match' => ['a' => $a]],
-            ['$group' => ['_id' => '$b', 'id' => ['$first' => '$_id'], 'count' => ['$sum' => 1]]],
-            ['$sort' => ['id' => 1]],
+            ['$group' => ['_id' => '$b', 'id_temp' => ['$first' => '$_id'], 'count' => ['$sum' => 1]]],
+            ['$sort' => ['id_temp' => 1]],
             ['$skip' => $limit * $skip],
             ['$limit' => $limit],
-            ['$project' => ['_id' => '$id', 'a' => '$_id']]
+            ['$project' => ['_id' => '$id_temp', 'a' => '$_id']]
         ],
         'cursor' => new stdClass,
     ]);
@@ -42,25 +42,19 @@ if (!empty($_id)) {
     }
 } else {
     $cmd = new MongoDB\Driver\Command([
-        'aggregate' => 'a',
+        'aggregate' => $db_document,
         'pipeline' => [
             ['$match' => ['a' => ['$exists' => true], 'b' => ['$exists' => true, '$nin' =>  ['', [], [''], [[]]]]]],
-            ['$sort' => ['_id' => -1]],
+            ['$group'=>['_id'=>'$b', 'a' =>  ['$first' => '$a'], 'id_temp' => ['$first' => '$_id']]],
+            ['$sort' => ['id_temp' => -1]],
             ['$skip' => $limit * $skip],
             ['$limit' => $limit],
-            ['$project' => ['_id' => '$_id', 'a' => '$a', 'b' => '$b']]
+            ['$project' => ['_id' => '$id_temp', 'a' => '$a', 'b' => '$_id']]
         ],
         'cursor' => new stdClass,
     ]);
     try {
         $json=json_encode($manager->executeCommand($db_name, $cmd)->toArray());
-        
-        if($limit>=1000&&false){
-        $myfile = fopen("index.json?timestamp=123", "w") or die("Unable to open file!");
-        fwrite($myfile, $json);
-        fclose($myfile);
-        }
-
         echo $json;
         exit;
     } catch (MongoDB\Driver\Exception $e) {

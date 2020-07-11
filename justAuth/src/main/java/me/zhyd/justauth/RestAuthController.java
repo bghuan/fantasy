@@ -15,6 +15,7 @@ import me.zhyd.oauth.utils.AuthStateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -36,6 +37,7 @@ import java.util.Map;
  * @since 1.8
  */
 @Controller
+@CrossOrigin(origins = "https://buguoheng.com")
 @RequestMapping("/oauth")
 public class RestAuthController {
 
@@ -58,32 +60,41 @@ public class RestAuthController {
     @RequestMapping("/render/{source}")
     @ResponseBody
     public void renderAuth(@PathVariable("source") String source, HttpServletResponse response) throws IOException {
-        System.out.println("进入render：" + source);
+
         AuthRequest authRequest = getAuthRequest(source);
-        String authorizeUrl = authRequest.authorize(AuthStateUtils.createState());
-        System.out.println(authorizeUrl);
-        response.sendRedirect(authorizeUrl);
+        response.sendRedirect(authRequest.authorize(AuthStateUtils.createState()));
+
+
+//        System.out.println("进入render：" + source);
+//        AuthRequest authRequest = getAuthRequest(source);
+//        String authorizeUrl = authRequest.authorize(AuthStateUtils.createState());
+//        System.out.println(authorizeUrl);
+//        response.sendRedirect(authorizeUrl);
     }
 
     /**
      * oauth平台中配置的授权回调地址，以本项目为例，在创建github授权应用时的回调地址应为：http://127.0.0.1:8443/oauth/callback/github
      */
     @RequestMapping("/callback/{source}")
-    public ModelAndView login(@PathVariable("source") String source, AuthCallback callback, HttpServletRequest request) {
-        System.out.println("进入callback：" + source + " callback params：" + JSONObject.toJSONString(callback));
-        AuthRequest authRequest = getAuthRequest(source);
-        AuthResponse<AuthUser> response = authRequest.login(callback);
-        System.out.println(JSONObject.toJSONString(response));
+    public Object login(@PathVariable("source") String source, AuthCallback callback, HttpServletRequest request) {
+        AuthRequest authRequest2 = getAuthRequest(source);
+        return authRequest2.login(callback);
 
-        if (response.ok()) {
-            userService.save(response.getData());
-            return new ModelAndView("redirect:/users");
-        }
-
-        Map<String, Object> map = new HashMap<>(1);
-        map.put("errorMsg", response.getMsg());
-
-        return new ModelAndView("error", map);
+//
+//        System.out.println("进入callback：" + source + " callback params：" + JSONObject.toJSONString(callback));
+//        AuthRequest authRequest = getAuthRequest(source);
+//        AuthResponse<AuthUser> response = authRequest.login(callback);
+//        System.out.println(JSONObject.toJSONString(response));
+//
+//        if (response.ok()) {
+//            userService.save(response.getData());
+//            return new ModelAndView("redirect:/users");
+//        }
+//
+//        Map<String, Object> map = new HashMap<>(1);
+//        map.put("errorMsg", response.getMsg());
+//
+//        return new ModelAndView("error", map);
     }
 
     @RequestMapping("/revoke/{source}/{uuid}")
