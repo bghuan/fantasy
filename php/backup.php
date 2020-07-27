@@ -13,11 +13,16 @@ use OSS\Core\OssException;
 $objectName= $objectDir.$db_name.'.'.$db_document.'.json';
 
 // $object .= '?timestamp=' . time();
+
+$redis = new Redis();
+$redis->connect('127.0.0.1', 6379);
+// $redis->set("isBuckuped",false);
+$isBuckuped = $redis->get("isBuckuped");
+// echo $isBuckuped;
+
 if ($isBuckuped) {
     die;
-} else {
-    $isBuckuped = true;
-}
+} 
 
 $query = new MongoDB\Driver\Query([],[]);
     
@@ -27,10 +32,12 @@ try {
     $ossClient = new OssClient($accessKeyId, $accessKeySecret, $endpoint);
 
     $ossClient->putObject($bucket, $objectName, $json);
+    // $ossClient->uploadFile($bucket, "dsc.tzr.gz", "temp.tar.gz");
 
     // print(__FUNCTION__ . ": OK" . "\n");
     // print(__FUNCTION__ . "https://oss.buguoheng.com/" . $object . "\n");
     // echo $json;
+    $redis->set("isBuckuped", true);
     exit;
 } catch (MongoDB\Driver\Exception $e) {
     echo $e->getMessage(), "\n";
@@ -40,3 +47,4 @@ try {
     printf($e->getMessage() . "\n");
     return;
 }
+
