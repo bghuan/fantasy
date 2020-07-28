@@ -19,12 +19,11 @@ $document = [
 ];
 $_id = $bulk->insert($document);
 $writeConcern = new MongoDB\Driver\WriteConcern(MongoDB\Driver\WriteConcern::MAJORITY, 1000);
-$result = $manager->executeBulkWrite($db_name.'.'.$db_document, $bulk, $writeConcern);
+$result = $manager->executeBulkWrite($db_name . '.' . $db_document, $bulk, $writeConcern);
 if ($result) {
     echo $document["_id"];
+    $redis = new Redis();
+    $redis->connect('127.0.0.1', 6379);
+    $redis->set("isBuckuped", false);
     exit;
 }
-
-$redis = new Redis();
-$redis->connect('127.0.0.1', 6379);
-$redis->set("isBuckuped", false);

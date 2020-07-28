@@ -10,7 +10,7 @@ if (is_file(__DIR__ . '/vendor/autoload.php')) {
 use OSS\OssClient;
 use OSS\Core\OssException;
 
-$objectName= $objectDir.$db_name.'.'.$db_document.'.json';
+$objectName = $objectDir . $db_name . '.' . $db_document . '.json';
 
 // $object .= '?timestamp=' . time();
 
@@ -22,13 +22,13 @@ $isBuckuped = $redis->get("isBuckuped");
 
 if ($isBuckuped) {
     die;
-} 
+}
 
-$query = new MongoDB\Driver\Query([],[]);
-    
+$query = new MongoDB\Driver\Query([], []);
+
 try {
-    $json = json_encode($manager->executeQuery($db_name.'.'.$db_document, $query)->toArray());
-    
+    $json = json_encode($manager->executeQuery($db_name . '.' . $db_document, $query)->toArray());
+
     $ossClient = new OssClient($accessKeyId, $accessKeySecret, $endpoint);
 
     $ossClient->putObject($bucket, $objectName, $json);
@@ -47,4 +47,3 @@ try {
     printf($e->getMessage() . "\n");
     return;
 }
-

@@ -29,7 +29,8 @@ if (!empty($_id)) {
             ['$sort' => ['id_temp' => 1]],
             ['$skip' => $limit * $skip],
             ['$limit' => $limit],
-            ['$project' => ['_id' => '$id_temp', 'a' => '$_id']]
+            // ['$project' => ['_id' => '$id_temp', 'a' => '$_id']]
+            ['$project' => ['a' => '$_id']]
         ],
         'cursor' => new stdClass,
     ]);
@@ -49,7 +50,8 @@ if (!empty($_id)) {
             ['$sort' => ['id_temp' => -1]],
             ['$skip' => $limit * $skip],
             ['$limit' => $limit],
-            ['$project' => ['_id' => '$id_temp', 'a' => '$a', 'b' => '$_id']]
+            // ['$project' => ['_id' => '$id_temp', 'a' => '$a', 'b' => '$_id']]
+            ['$project' => ['a' => '$a', 'b' => '$_id']]
         ],
         'cursor' => new stdClass,
     ]);

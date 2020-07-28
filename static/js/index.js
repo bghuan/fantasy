@@ -48,44 +48,6 @@ const func_query = (json) => {
     }
 }
 
-const callBack1 = (json) => {
-    let div_query = document.getElementById("div_query");
-    div_query.innerHTML = '';
-    let div, aa, b, sum, star;
-    for (j in json) {
-        div = document.createElement("div");
-        aa = document.createElement("a");
-        aa.onclick = function() { query(this.innerHTML) };
-        aa.innerHTML = json[j]['a'] || '';
-        b = document.createElement("a");
-        b.style = "font-size:80%";
-        b.innerHTML = (json[j]['b'] == null || json[j]['b'] == '' ? '' : ' - ' + json[j]['b']);
-        sum = document.createElement("a");
-        sum.className = "float-right";
-        sum.innerHTML = json[j]['count'] || '';
-        star = document.createElement("img");
-        star.className = "float-right";
-        star.src = 'static/svg/s.svg';
-        star.width = "15";
-        star.style = "margin:10px 5px;";
-        star.onclick = function() { create(this) };
-        div.className = "navbar-brand col-12 text-truncate border-bottom";
-        div.id = json[j]['_id']['$oid'];
-        div.appendChild(aa);
-        div.appendChild(b);
-        div.appendChild(sum);
-        div.appendChild(star);
-        div_query.appendChild(div);
-    }
-    let ida = document.getElementsByTagName("img");
-    let str_id = localStorage.getItem('id') || '';
-    for (let i in ida) {
-        if (ida[i].parentNode != undefined && ida[i].parentNode.id != undefined && ida[i].parentNode.id != '' && str_id.indexOf(ida[i].parentNode.id) >= 0) {
-            ida[i].src = "static/svg/star.svg";
-        }
-    }
-}
-
 const callBack2 = (json) => {
     let div_query = document.getElementById("div_query");
     div_query.innerHTML = '';
@@ -101,7 +63,7 @@ const callBack2 = (json) => {
         b.innerHTML = (json[j]['b'] == null || json[j]['b'] == '' ? '' : json[j]['b'] + ' - ');
         a.style = b.innerHTML != '' ? "font-size:60%" : "";
         div.className = "style-1";
-        div.id = json[j]['_id']['$oid'];
+        // div.id = json[j]['_id']['$oid'];
         div.appendChild(b);
         div.appendChild(a);
         div_query.appendChild(div);
@@ -151,24 +113,8 @@ $(document).ready(function() {
 });
 const create = obj => {
     $('#collapseb').collapse('hide');
-    if (obj != undefined && obj.parentNode.id != undefined) {
-        let str_id = localStorage.getItem('id') || '';
-        let i = str_id.indexOf(obj.parentNode.id);
-        if (i >= 0) {
-            localStorage.id = str_id.substring(0, i) + str_id.substring(i + obj.parentNode.id.length);
-            query([]);
-            return;
-        }
-        if (a == '') {
-            a = obj.parentNode.childNodes[0].innerHTML;
-            b = [];
-        } else {
-            b = obj.parentNode.childNodes[0].innerHTML;
-        }
-    } else {
-        a = document.getElementById("a").value;
-        b = document.getElementById("b").value;
-    }
+    a = document.getElementById("a").value;
+    b = document.getElementById("b").value;
     if (a == '') { alert("please type a object") }
     let url = createPath + '?a=' + a + '&b=' + JSON.stringify(typeof b == "string" ? b.split(",") : []);
     let callBack = create_id => {
@@ -241,6 +187,7 @@ $('#exampleModalLong').on('show.bs.modal', function() {
 })
 const rmcollapseb = () => $('#collapseb').collapse('hide');
 $('#collapseb').on('show.bs.collapse', function() {
+    document.getElementById("a").focus()
     document.getElementById('collapseb').addEventListener('click', e => { e.stopPropagation(); });
     document.addEventListener('click', rmcollapseb, false);
 })
@@ -250,6 +197,7 @@ $('#collapseb').on('hidden.bs.collapse', function() {
 })
 const rmcollapsea = () => { $('#collapsea').collapse('hide') };
 $('#collapsea').on('show.bs.collapse', function() {
+    document.getElementById("a").focus()
     document.getElementById('collapsea').addEventListener('click', e => { e.stopPropagation(); });
     document.addEventListener('click', rmcollapsea, false);
 })
