@@ -117,6 +117,7 @@ const create = obj => {
     b = document.getElementById("b").value;
     if (a == '') { alert("please type a object") }
     let url = createPath + '?a=' + a + '&b=' + JSON.stringify(typeof b == "string" ? b.split(",") : []);
+    url = createPath + '?a=' + a + '&b=' + b;
     let callBack = create_id => {
         if (create_id.length == 24) {
             localStorage.id += (',' + create_id);

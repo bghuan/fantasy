@@ -1,9 +1,9 @@
 <?php
 header('Access-Control-Allow-Origin:*');
-header('Content-type: text/html; charset=utf-8');
+header('Content-type: application/json; charset:utf-8');
 include 'config.php';
-$a = FormitDollor($_GET["a"]);
-$_id = FormitDollor($_GET["id"]);
+$a = $_GET["a"];
+$_id = $_GET["id"];
 $limit = !empty($_GET["limit"]) && preg_match("/^[\d0-9]{1,3}+$/", $_GET["limit"]) ? (int) $_GET["limit"] : 1000;
 $skip = !empty($_GET["skip"]) && preg_match("/^[\d0-9]{1,9}+$/", $_GET["skip"]) ? (int) $_GET["skip"] : 0;
 
@@ -29,8 +29,7 @@ if (!empty($_id)) {
             ['$sort' => ['id_temp' => 1]],
             ['$skip' => $limit * $skip],
             ['$limit' => $limit],
-            // ['$project' => ['_id' => '$id_temp', 'a' => '$_id']]
-            ['$project' => ['a' => '$_id']]
+            ['$project' => ['_id' => '$id_temp', 'a' => '$_id']]
         ],
         'cursor' => new stdClass,
     ]);
@@ -50,8 +49,7 @@ if (!empty($_id)) {
             ['$sort' => ['id_temp' => -1]],
             ['$skip' => $limit * $skip],
             ['$limit' => $limit],
-            // ['$project' => ['_id' => '$id_temp', 'a' => '$a', 'b' => '$_id']]
-            ['$project' => ['a' => '$a', 'b' => '$_id']]
+            ['$project' => ['_id' => '$id_temp', 'a' => '$a', 'b' => '$_id']]
         ],
         'cursor' => new stdClass,
     ]);

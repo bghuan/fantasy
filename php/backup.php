@@ -14,11 +14,7 @@ $objectName = $objectDir . $db_name . '.' . $db_document . '.json';
 
 // $object .= '?timestamp=' . time();
 
-$redis = new Redis();
-$redis->connect('127.0.0.1', 6379);
-// $redis->set("isBuckuped",false);
 $isBuckuped = $redis->get("isBuckuped");
-// echo $isBuckuped;
 
 if ($isBuckuped) {
     die;
