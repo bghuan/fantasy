@@ -22,7 +22,9 @@ const HttpGet = (str, CallBack, standard) => {
             }
         }
     }
-    if (standard == true)
+    if (a == null || a == undefined || a == '')
+        xmlhttp.open("GET", 'http://bghuan.oss-accelerate.aliyuncs.com/backup/fantasy.open.read.json', true);
+    else if (standard == true)
         xmlhttp.open("GET", str, true);
     else
         xmlhttp.open("GET", buguoheng + (str || readPath) + (str.indexOf('limit') > 0 ? '' : (str.indexOf('?') < 0 ? '?' : '&') + 'limit=' + limit), true);

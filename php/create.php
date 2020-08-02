@@ -47,26 +47,25 @@ if ($result) {
     $redis->set("isBuckuped", false);
 }
 
-// $cmd = new MongoDB\Driver\Command([
-//         'aggregate' => $db_document,
-//         'pipeline' => [
-//             ['$match' => ['a' => ['$exists' => true], 'b' => ['$exists' => true, '$nin' =>  ['', [], [''], [[]]]]]],
-//             ['$group'=>['_id'=>'$b', 'a' =>  ['$first' => '$a'], 'id_temp' => ['$first' => '$_id']]],
-//             ['$sort' => ['id_temp' => -1]],
-//             ['$project' => ['_id' => '$id_temp', 'a' => '$a', 'b' => '$_id']]
-//         ],
-//         'cursor' => new stdClass,
-//     ]);
-//     try {
-//         $json=json_encode($manager->executeCommand($db_name, $cmd)->toArray());
-//     } catch (MongoDB\Driver\Exception $e) {
-//         echo $e->getMessage(), "\n";
-//     }
+$cmd = new MongoDB\Driver\Command([
+        'aggregate' => $db_document,
+        'pipeline' => [
+            ['$match' => ['a' => ['$exists' => true], 'b' => ['$exists' => true, '$nin' =>  ['', [], [''], [[]]]]]],
+            ['$group'=>['_id'=>'$b', 'a' =>  ['$first' => '$a'], 'id_temp' => ['$first' => '$_id']]],
+            ['$sort' => ['id_temp' => -1]],
+            ['$project' => ['_id' => '$id_temp', 'a' => '$a', 'b' => '$_id']]
+        ],
+        'cursor' => new stdClass,
+    ]);
+    try {
+        $json=json_encode($manager->executeCommand($db_name, $cmd)->toArray());
+    } catch (MongoDB\Driver\Exception $e) {
+        echo $e->getMessage(), "\n";
+    }
   
-// require_once __DIR__ . '/vendor/autoload.php';
-// use OSS\OssClient;
-// use OSS\Core\OssException;  
+require_once __DIR__ . '/vendor/autoload.php';
+use OSS\OssClient;
 
-// $ossClient = new OssClient($accessKeyId, $accessKeySecret, $endpoint);
-// $objectName = $objectDir . $db_name . '.' . $db_document.'.read' . '.json';
-// $ossClient->putObject($bucket, $objectName, $json);
+$ossClient = new OssClient($accessKeyId, $accessKeySecret, $endpoint);
+$objectName = $objectDir . $db_name . '.' . $db_document.'.read' . '.json';
+$ossClient->putObject($bucket, $objectName, $json);
