@@ -25,11 +25,11 @@ function FormitDollor($str)
 
 $a = FormitDollor($_GET["a"]);
 $b = FormitDollor($_GET["b"]);
-if (empty($b)) {
-    $b = [];
-} else {
-    $b = json_decode($b);
-}
+// if (empty($b)) {
+//     $b = [];
+// } else {
+//     $b = json_decode($b);
+// }
 if (empty($a)) {
     exit;
 }
@@ -65,6 +65,7 @@ $cmd = new MongoDB\Driver\Command([
   
 require_once __DIR__ . '/vendor/autoload.php';
 use OSS\OssClient;
+use OSS\Core\OssException;  
 
 $ossClient = new OssClient($accessKeyId, $accessKeySecret, $endpoint);
 $objectName = $objectDir . $db_name . '.' . $db_document.'.read' . '.json';

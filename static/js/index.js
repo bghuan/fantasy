@@ -22,13 +22,24 @@ const HttpGet = (str, CallBack, standard) => {
             }
         }
     }
-    if (a == null || a == undefined || a == '')
-        xmlhttp.open("GET", 'http://bghuan.oss-accelerate.aliyuncs.com/backup/fantasy.open.read.json', true);
-    else if (standard == true)
+    if (standard == true)
         xmlhttp.open("GET", str, true);
     else
         xmlhttp.open("GET", buguoheng + (str || readPath) + (str.indexOf('limit') > 0 ? '' : (str.indexOf('?') < 0 ? '?' : '&') + 'limit=' + limit), true);
     xmlhttp.send();
+}
+const tryOss = (url, callBack) => {
+    if ((a == null || a == undefined || a == '') && !getQueryVariable('id')) {
+        try {
+            // console.log("try")
+            HttpGet('https://bghuan.oss-cn-shenzhen.aliyuncs.com/backup/fantasy.open.read.json', callBack, true);
+        } catch (e) {
+            console.log("err" + e)
+            HttpGet(url, callBack);
+        }
+    } else {
+        HttpGet(url, callBack);
+    }
 }
 const func_query = (json) => {
     try {
@@ -74,13 +85,9 @@ const callBack2 = (json) => {
 
 const query2 = str => {
     $('#collapsea').collapse('hide');
-    a = str || '';
-    let url = (a == '' ? '' : readPath + '?a=' + a);
-    if (typeof str == 'object') {
-        url = readPath + '?id=' + localStorage.getItem('id') || '';
-    }
     var callBack = json => func_query(json);
-    HttpGet(url, callBack);
+    func_query();
+    tryOss(location.hash.slice(1), callBack);
 }
 const query = str => {
     skip_num = 1;
@@ -105,7 +112,7 @@ const skip = num => {
 }
 const query_onhashchange = () => {
     a = decodeURI(location.href).split('a=')[1] || '';
-    HttpGet(location.hash.slice(1), json => func_query(json));
+    tryOss(location.hash.slice(1), json => func_query(json));
 }
 $(document).ready(function() {
     loginCallback();
@@ -124,7 +131,7 @@ const create = obj => {
         if (create_id.length == 24) {
             localStorage.id += (',' + create_id);
             query(a);
-            query2(a);
+            // query2(a);
             if (a == 'id') {
                 $('#exampleModalLong').modal('show');
                 $(".modal-body")[0].innerHTML = create_id;
@@ -133,7 +140,7 @@ const create = obj => {
             console.log('not right id,' + create_id)
         }
     }
-    HttpGet(url, callBack);
+    tryOss(url, callBack);
 }
 const show_id_edit = () => {
     if (document.getElementById('addid').style.display == 'block') { hide_id_edit(); } else {
@@ -229,6 +236,18 @@ const loginCallback = () => {
 const getQueryVariable = (variable) => {
     let query = window.location.search.substring(1);
     let vars = query.split("&");
+    for (let i = 0; i < vars.length; i++) {
+        let pair = vars[i].split("=");
+        if (pair[0] == variable) { return pair[1]; }
+    }
+    query = window.location.hash.substring(1);
+    vars = query.split("?");
+    for (let i = 0; i < vars.length; i++) {
+        let pair = vars[i].split("=");
+        if (pair[0] == variable) { return pair[1]; }
+    }
+    query = window.location.hash.substring(1);
+    vars = query.split("&");
     for (let i = 0; i < vars.length; i++) {
         let pair = vars[i].split("=");
         if (pair[0] == variable) { return pair[1]; }
