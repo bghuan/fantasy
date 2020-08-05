@@ -1,6 +1,6 @@
 let a, b, skip_num = 0;
 let limit = 1000 || parseInt((window.innerHeight - 120) / 44);
-const buguoheng = "https://buguoheng.com";
+const api = "https://api.buguoheng.com";
 const getMyDate = (date = new Date()) => (date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()).toString();
 const readPath = '/php/read.php';
 const createPath = '/php/create.php';
@@ -25,7 +25,7 @@ const HttpGet = (str, CallBack, standard) => {
     if (standard == true)
         xmlhttp.open("GET", str, true);
     else
-        xmlhttp.open("GET", buguoheng + (str || readPath) + (str.indexOf('limit') > 0 ? '' : (str.indexOf('?') < 0 ? '?' : '&') + 'limit=' + limit), true);
+        xmlhttp.open("GET", api + (str || readPath) + (str.indexOf('limit') > 0 ? '' : (str.indexOf('?') < 0 ? '?' : '&') + 'limit=' + limit), true);
     xmlhttp.send();
 }
 const tryOss = (url, callBack) => {
@@ -86,7 +86,7 @@ const callBack2 = (json) => {
 const query2 = str => {
     $('#collapsea').collapse('hide');
     var callBack = json => func_query(json);
-    func_query();
+    // func_query();
     tryOss(location.hash.slice(1), callBack);
 }
 const query = str => {
@@ -98,7 +98,7 @@ const query = str => {
         url = readPath + '?id=' + localStorage.getItem('id') || '';
     }
     window.location.hash = url;
-    if (a == '' && typeof str != 'object') { window.history.replaceState(null, null, buguoheng); }
+    if (a == '' && typeof str != 'object') { window.history.replaceState(null, null, window.location.protocol + "//" + window.location.host); }
 }
 const skip = num => {
     if (num == '0') { num = 1; }
@@ -131,7 +131,7 @@ const create = obj => {
         if (create_id.length == 24) {
             localStorage.id += (',' + create_id);
             query(a);
-            // query2(a);
+            query2(a);
             if (a == 'id') {
                 $('#exampleModalLong').modal('show');
                 $(".modal-body")[0].innerHTML = create_id;
@@ -224,12 +224,12 @@ const tobottom = () => $('body,html').animate({ scrollTop: $(".footer").offset()
 // document.getElementById('div_skip').innerHTML = '<button class="btn btn-light btn-sm" onclick = "skip(0)" > 1</button> <button class="btn btn-light btn-sm" onclick="skip(1)">2</button> <button class="btn btn-light btn-sm" onclick="skip(2)">3</button> <button class="btn btn-light btn-sm" onclick="skip(3)">4</button> <button class="btn btn-light btn-sm" onclick="skip(4)">5</button> <button class="btn btn-light btn-sm" onclick="skip(5)">6</button> <button class="btn btn-light btn-sm" onclick="skip(6)">7</button> <button class="btn btn-light btn-sm" onclick="skip(7)">8</button> <input class="btn btn-sm border" border-radius="5px" type="text" id="skip" size="2"> <button class="btn btn-light btn-sm" onclick="skip(document.getElementById("skip").value)">skip</button>' + document.getElementById('div_skip').innerHTML;
 
 const login = () => {
-    window.location.href = 'https://oauth.buguoheng.com/oauth/render/github';
+    window.location.href = api + '/oauth/render/github';
 }
 const loginCallback = () => {
     if (getQueryVariable('code')) {
         let callBack = json => { if (json != null && json.data != null && json.data.username != null) alert("hello " + json.data.username) }
-        let url = "https://oauth.buguoheng.com/oauth/callback/github?";
+        let url = api + "/oauth/callback/github?";
         HttpGet(url + window.location.search.substring(1), callBack, true);
     }
 }

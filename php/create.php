@@ -63,10 +63,48 @@ $cmd = new MongoDB\Driver\Command([
         echo $e->getMessage(), "\n";
     }
   
-require_once __DIR__ . '/vendor/autoload.php';
-use OSS\OssClient;
-use OSS\Core\OssException;  
+// require_once __DIR__ . '/vendor/autoload.php';
+// use OSS\OssClient;
+// use OSS\Core\OssException;  
 
-$ossClient = new OssClient($accessKeyId, $accessKeySecret, $endpoint);
+// $ossClient = new OssClient($accessKeyId, $accessKeySecret, $endpoint);
 $objectName = $objectDir . $db_name . '.' . $db_document.'.read' . '.json';
-$ossClient->putObject($bucket, $objectName, $json);
+// $ossClient->putObject($bucket, $objectName, $json,$metadata);
+ 
+function curlput($url,$data,$method='PUT',$bucket,$object,$accesskey ,$accesskeySecret){
+ $time = gmdate ("D, d M Y H:i:s T");
+    $str = "PUT\n\n"."application/json\n".$time."\n/".$bucket."/".$object;
+    // echo($str);
+    $signature = base64_encode(hash_hmac("sha1", $str, $accesskeySecret, true));
+    // echo($time);
+    // echo($signature);
+    $ch = curl_init(); //初始化CURL句柄 
+    curl_setopt($ch, CURLOPT_URL, $url); //设置请求的URL
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method); //设置请求方式 
+    
+    $headers = array(
+    "Date:".$time,
+    'Content-Type:application/json',
+    'Cache-Control:no-cache',
+    "Authorization:OSS ".$accesskey.":".$signature
+    );
+    curl_setopt($ch,CURLOPT_HTTPHEADER,$headers);//设置HTTP头信息
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);//设置提交的字符串
+    $document = curl_exec($ch);//执行预定义的CURL 
+    if(!curl_errno($ch)){ 
+      $info = curl_getinfo($ch); 
+    //   echo 'Took ' . $info['total_time'] . ' seconds to send a request to ' . $info['url']; 
+    } else { 
+      echo 'Curl error: ' . curl_error($ch); 
+    }
+    curl_close($ch);
+     
+    return $document;
+}
+$bucket = 'bghuan';
+$object = $objectName;
+$url = 'http://bghuan.oss-cn-shenzhen-internal.aliyuncs.com/'.$object;
+$data = $json;
+$return = curlput($url, $data, 'PUT',$bucket,$object,$accessKeyId,$accessKeySecret);
+ 
+// var_dump($return);
