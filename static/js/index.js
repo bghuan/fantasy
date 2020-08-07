@@ -43,7 +43,7 @@ const tryOss = (url, callBack) => {
 const func_query = (json) => {
     try {
         document.getElementById("a_top").innerHTML = a || 'fantasy';
-        document.getElementById("a").value = a || 'fantasy';
+        document.getElementById("a").value = a;
         if (a != '' && a != undefined) {
             let str = '/&nbsp;<a onclick="query(\'' + a + '\');">' + a.substring(0, 5) + '</a>&nbsp;';
             let str_as = document.getElementById("as").innerHTML;
@@ -52,7 +52,7 @@ const func_query = (json) => {
         } else {
             document.getElementById("as").innerHTML = '<a onclick="query()" style="margin-left:-15px;">&nbsp;&nbsp;&nbsp;</a><a class="float-right text-dark">' + getMyDate() + '</a></div>';
         }
-        callBack2(json);
+        callBack(json);
         document.getElementById("input_query").value = '';
         hide_id_edit();
     } catch (e) {
@@ -60,7 +60,7 @@ const func_query = (json) => {
     }
 }
 
-const callBack2 = (json) => {
+const callBack = (json) => {
     let div_query = document.getElementById("div_query");
     div_query.innerHTML = '';
     let div, a, b;
@@ -123,7 +123,7 @@ const create = obj => {
     $('#collapseb').collapse('hide');
     a = document.getElementById("a").value;
     b = document.getElementById("b").value;
-    if (a == '') { alert("please type a object") }
+    if (a == '') a = 'fantasy';
     let url = createPath + '?a=' + a + '&b=' + JSON.stringify(typeof b == "string" ? b.split(",") : []);
     url = createPath + '?a=' + a + '&b=' + b;
     let callBack = create_id => {
@@ -196,9 +196,11 @@ $('#exampleModalLong').on('show.bs.modal', function() {
 })
 const rmcollapseb = () => $('#collapseb').collapse('hide');
 $('#collapseb').on('show.bs.collapse', function() {
-    document.getElementById("a").focus()
     document.getElementById('collapseb').addEventListener('click', e => { e.stopPropagation(); });
     document.addEventListener('click', rmcollapseb, false);
+})
+$('#collapseb').on('shown.bs.collapse', function() {
+    document.getElementById('a').focus()
 })
 $('#collapseb').on('hidden.bs.collapse', function() {
     document.getElementById('collapseb').removeEventListener('click', e => { e.stopPropagation(); });
@@ -206,9 +208,11 @@ $('#collapseb').on('hidden.bs.collapse', function() {
 })
 const rmcollapsea = () => { $('#collapsea').collapse('hide') };
 $('#collapsea').on('show.bs.collapse', function() {
-    document.getElementById("a").focus()
     document.getElementById('collapsea').addEventListener('click', e => { e.stopPropagation(); });
     document.addEventListener('click', rmcollapsea, false);
+})
+$('#collapsea').on('shown.bs.collapse', function() {
+    document.getElementById('input_query').focus()
 })
 $('#collapsea').on('hidden.bs.collapse', function() {
     document.getElementById('collapsea').removeEventListener('click', e => { e.stopPropagation(); });
