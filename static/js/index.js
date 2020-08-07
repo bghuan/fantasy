@@ -23,18 +23,17 @@ const HttpGet = (str, CallBack, standard) => {
         }
     }
     if (standard == true)
-        xmlhttp.open("GET", str, true);
+        xmlhttp.open("GET", str, false);
     else
-        xmlhttp.open("GET", api + (str || readPath) + (str.indexOf('limit') > 0 ? '' : (str.indexOf('?') < 0 ? '?' : '&') + 'limit=' + limit), true);
+        xmlhttp.open("GET", api + (str || readPath) + (str.indexOf('limit') > 0 ? '' : (str.indexOf('?') < 0 ? '?' : '&') + 'limit=' + limit), false);
     xmlhttp.send();
 }
+
 const tryOss = (url, callBack) => {
     if ((a == null || a == undefined || a == '') && !getQueryVariable('id')) {
         try {
-            // console.log("try")
-            HttpGet('https://bghuan.oss-cn-shenzhen.aliyuncs.com/backup/fantasy.open.read.json', callBack, true);
+            HttpGet('https://bghuan.oss-cn-shenzhen.aliyuncs.com/fantasy.open.read.json', callBack, true);
         } catch (e) {
-            console.log("err" + e)
             HttpGet(url, callBack);
         }
     } else {
