@@ -5,37 +5,33 @@ const getMyDate = (date = new Date()) => (date.getFullYear() + '-' + (date.getMo
 const readPath = '/php/read.php';
 const createPath = '/php/create.php';
 
-const HttpGet = (str, CallBack, standard) => {
+const HttpGet = (str, callBack, standard, url2) => {
     let xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
     xmlhttp.onreadystatechange = () => {
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-            let json;
             try {
-                json = JSON.parse(xmlhttp.responseText);
-                // console.log(json);
-                CallBack(json);
+                callBack(JSON.parse(xmlhttp.responseText));
             } catch (e) {
-                CallBack(xmlhttp.responseText);
-                console.log(xmlhttp.responseText + '\n' + e)
-            } finally {
-                // if (totop != undefined) { totop(); }
+                callBack(xmlhttp.responseText);
             }
+        } else if (xmlhttp.readyState == 4 && xmlhttp.status != 200) {
+            HttpGet(url2, callBack);
         }
     }
     if (standard == true)
-        xmlhttp.open("GET", str, false);
+        xmlhttp.open("GET", str, true);
     else
-        xmlhttp.open("GET", api + (str || readPath) + (str.indexOf('limit') > 0 ? '' : (str.indexOf('?') < 0 ? '?' : '&') + 'limit=' + limit), false);
+        xmlhttp.open("GET", api + (str || readPath) + (str.indexOf('limit') > 0 ? '' : (str.indexOf('?') < 0 ? '?' : '&') + 'limit=' + limit), true);
     xmlhttp.send();
 }
 
 const tryOss = (url, callBack) => {
     if ((a == null || a == undefined || a == '') && !getQueryVariable('id')) {
-        try {
-            HttpGet('https://bghuan.oss-cn-shenzhen.aliyuncs.com/fantasy.open.read.json', callBack, true);
-        } catch (e) {
-            HttpGet(url, callBack);
-        }
+        // try {
+        HttpGet('https://bghuan.oss-cn-shenzhen.aliyuncs.com/fantasy.open.read.json', callBack, true, url);
+        // } catch (e) {
+        //     HttpGet(url, callBack);
+        // }
     } else {
         HttpGet(url, callBack);
     }
@@ -74,7 +70,7 @@ const callBack = (json) => {
         b.onclick = function() { query(ahtml); }
         b.innerHTML = (json[j]['b'] == null || json[j]['b'] == '' ? '' : json[j]['b'] + ' - ');
         a.style = b.innerHTML != '' ? "font-size:60%" : "";
-        div.className = "style-1";
+        div.className = " margin:5px 0 0 0";
         // div.id = json[j]['_id']['$oid'];
         div.appendChild(b);
         div.appendChild(a);
@@ -84,8 +80,7 @@ const callBack = (json) => {
 
 const query2 = str => {
     $('#collapsea').collapse('hide');
-    var callBack = json => func_query(json);
-    // func_query();
+    let callBack = json => func_query(json);
     tryOss(location.hash.slice(1), callBack);
 }
 const query = str => {
@@ -131,12 +126,6 @@ const create = obj => {
             localStorage.id += (',' + create_id);
             query(a);
             query2(a);
-            if (a == 'id') {
-                $('#exampleModalLong').modal('show');
-                $(".modal-body")[0].innerHTML = create_id;
-            }
-        } else {
-            console.log('not right id,' + create_id)
         }
     }
     tryOss(url, callBack);
@@ -188,12 +177,30 @@ document.addEventListener('keyup', quick_open, true);
 
 // show README.md
 $('#exampleModalLong').on('show.bs.modal', function() {
-    let readme = document.createElement("div");
-    $(readme).load("README.md", function() {
-        let converter = new showdown.Converter();
-        $(".modal-body")[0].innerHTML = converter.makeHtml($(readme)[0].innerHTML);
-    });
+    loadJS('static/js/showdown.min.js', () => {
+        let readme = document.createElement("div");
+        $(readme).load("README.md", function() {
+            let converter = new showdown.Converter();
+            $(".modal-body")[0].innerHTML = converter.makeHtml($(readme)[0].innerHTML);
+        });
+    })
 })
+const loadJS = function(url, callback) {
+    var script = document.createElement('script');
+    script.src = url;
+    script.type = "text/javascript";
+    if (script.onreadystatechange) {　　
+        script.onreadystatechange = function() {　　
+            if (this.readyState == "complete" || this.readyState == "loaded") {　　　　
+                script.onreadystatechange = null;　　　　　
+                callback();
+            }
+        };
+    } else {　
+        script.onload = () => callback();
+    }　　
+    document.body.appendChild(script);
+}
 const rmcollapseb = () => $('#collapseb').collapse('hide');
 $('#collapseb').on('show.bs.collapse', function() {
     document.getElementById('collapseb').addEventListener('click', e => { e.stopPropagation(); });
