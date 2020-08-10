@@ -2,34 +2,9 @@
 header('Access-Control-Allow-Origin:*');
 include 'config.php';
 
-function FormitDollor($str)
-{
-    if (is_array($str)) {
-        $str = implode(' ',$str);
-    }
-    if (is_object($str)) {
-        $str = '\''.$str.'\'';
-    }
-    $i = 0; 
-    while (strpos($str, '\$')) {
-        $str = str_replace('\$', '$', $str);
-        if ($i > 100) {
-            return '';
-            exit;
-        }
-        $i++;
-    }
-    return str_replace('$', '\$', $str);
-    exit;
-} 
+$a = $_GET["a"];
+$b = $_GET["b"];
 
-$a = FormitDollor($_GET["a"]);
-$b = FormitDollor($_GET["b"]);
-// if (empty($b)) {
-//     $b = [];
-// } else {
-//     $b = json_decode($b);
-// }
 if (empty($a)) {
     exit;
 }
@@ -63,13 +38,29 @@ $cmd = new MongoDB\Driver\Command([
         echo $e->getMessage(), "\n";
     }
   
+$objectName = $db_name . '.' . $db_document.'.read' . '.json';
+
 // require_once __DIR__ . '/vendor/autoload.php';
 // use OSS\OssClient;
 // use OSS\Core\OssException;  
 
+// // $redis->set("position", 13);
 // $ossClient = new OssClient($accessKeyId, $accessKeySecret, $endpoint);
-$objectName = $objectDir . $db_name . '.' . $db_document.'.read' . '.json';
-// $ossClient->putObject($bucket, $objectName, $json,$metadata);
+// $objectName = $db_name . '.' . $db_document.'.read' . '.json';
+// // // $ossClient->putObject($bucket, $objectName, $json,$metadata);
+// // $position = $ossClient->appendObject($bucket,  $objectName, $document, 0); 
+// // $position = $ossClient->appendObject($bucket,  $objectName, $document, $position); 
+// // // $position = $ossClient->appendObject($bucket, $object, json_encode($document), 0); 
+
+// // $redis->set($objectName, 0);
+// $ossClient = new OssClient($accessKeyId, $accessKeySecret, $endpoint);
+// $position = $redis->get($objectName)?:0;
+// // echo '<br />';
+// // echo $position;
+// // $position = $ossClient->appendObject($bucket, $objectName, $json,$position);  
+// $position = $ossClient->appendObject($bucket, $objectName, json_encode($document),$position);    
+// $redis->set($objectName, $position);
+// exit;
  
 function curlput($url,$data,$method='PUT',$bucket,$object,$accesskey ,$accesskeySecret){
  $time = gmdate ("D, d M Y H:i:s T");
