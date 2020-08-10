@@ -4,28 +4,17 @@ const getMyDate = (date = new Date()) => (date.getFullYear() + '-' + (date.getMo
 const readPath = '/php/read.php'
 const createPath = '/php/create.php'
     // const get = document.getElementById
-let variable_a_Collapse = document.getElementById('collapsea')
-let variable_b_Collapse = document.getElementById('collapseb')
-let exampleModalLong = document.getElementById('exampleModalLong')
 
 document.addEventListener("DOMContentLoaded", (function() {
     loginCallback()
-        // window.history.replaceState(null, null, (decodeURI(location.href).split('a=')[1] == null) ? '' : "/#" + location.hash.slice(1))
     query_onhashchange()
     window.addEventListener('hashchange', query_onhashchange, false)
-        // bootstrapCallback = () => {
-        //     a_Collapse = new bootstrap.Collapse(variable_a_Collapse, { toggle: false })
-        //     b_Collapse = new bootstrap.Collapse(variable_b_Collapse, { toggle: false })
-        // }
-        // if (typeof bootstrap == 'undefined') loadJS('static/js/bootstrap.min.js', bootstrapCallback)
-        // else bootstrapCallback
+    if (typeof bootstrap == 'undefined') loadJS('static/js/bootstrap.min.js', bootstrapCallback())
+    else bootstrapCallback()
 }))
-let bootstrapCallback = () => {
-    if (typeof bootstrap == 'undefined')
-        loadJS('static/js/bootstrap.min.js', () => {
-            a_Collapse = new bootstrap.Collapse(variable_a_Collapse, { toggle: false })
-            b_Collapse = new bootstrap.Collapse(variable_b_Collapse, { toggle: false })
-        })
+const bootstrapCallback = () => {
+    a_Collapse = new bootstrap.Collapse(document.getElementById('collapsea'), { toggle: false })
+    b_Collapse = new bootstrap.Collapse(document.getElementById('collapseb'), { toggle: false })
 }
 
 const HttpGet = (str, callBack, standard, url2) => {
@@ -171,12 +160,7 @@ let keyup_i = 0
 let enter_keycode = [69, 78, 84, 69, 82]
 const quick_open = event => {
     if (event.keyCode == enter_keycode[keyup_i]) {
-        keyup_i++
-        if (keyup_i == 3) {
-            if (typeof bootstrap == 'undefined')
-                bootstrapCallback()
-        }
-        if (keyup_i == 4) {
+        if (keyup_i++ == 4) {
             b_Collapse.show()
             document.getElementById('a').focus()
             keyup_i = 0
@@ -186,7 +170,7 @@ const quick_open = event => {
 document.addEventListener('keyup', quick_open, true)
 
 // show README.md
-exampleModalLong.addEventListener('show.bs.modal', function() {
+document.getElementById('exampleModalLong').addEventListener('show.bs.modal', function() {
     if (document.getElementsByClassName("modal-body")[0].innerHTML.length <= 0) {
         let callBack = (json) => {
             let converter = new showdown.Converter()
