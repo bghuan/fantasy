@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", (function() {
     if (typeof bootstrap == 'undefined') loadJS('static/js/bootstrap.min.js', bootstrapCallback())
     else bootstrapCallback()
 }))
+
 const bootstrapCallback = () => {
     a_Collapse = new bootstrap.Collapse(document.getElementById('collapsea'), { toggle: false })
     b_Collapse = new bootstrap.Collapse(document.getElementById('collapseb'), { toggle: false })
@@ -43,6 +44,7 @@ const tryOss = (url, callBack) => {
     else
         HttpGet(url, callBack)
 }
+
 const func_query = (json) => {
     try {
         document.getElementById("a_top").innerHTML = a || 'fantasy'
@@ -53,7 +55,7 @@ const func_query = (json) => {
             document.getElementById("as").innerHTML = str_as.substring(0, str_as.indexOf(str) >= 0 ? str_as.indexOf(str) : 999)
             document.getElementById("as").innerHTML += str
         } else {
-            document.getElementById("as").innerHTML = '<a onclick="query()" style="margin-left:-15px">&nbsp&nbsp&nbsp</a><a class="float-right text-dark">' + getMyDate() + '</a></div>'
+            document.getElementById("as").innerHTML = '<a onclick="query()" style="margin-left:-15px">&nbsp&nbsp&nbsp</a><span class="float-right text-dark">' + getMyDate() + '</span></div>'
         }
         callBack(json)
         document.getElementById("input_query").value = ''

@@ -9,8 +9,8 @@
 
 <body class="container-lg">
     <div class="pos-f-t fixed-top bg-white container-lg" id="accordion">
-        <nav class="navbar navbar-light bg-white" style="padding:0.1rem 1rem 0.1rem 1rem">
-            <a class="navbar-brand text-primary text-truncate col-5" data-toggle="collapse" href="#collapsea" role="button" aria-expanded="false" aria-controls="collapsea" id="a_top" style="margin-left:-30px;"></a>
+        <nav class="navbar navbar-light bg-white border-bottom" style="padding:0.1rem 1rem 0.1rem 1rem">
+            <a class="navbar-brand text-primary text-truncate col-5" data-toggle="collapse" href="#collapsea" role="button" aria-expanded="false" aria-controls="collapsea" id="a_top" style="margin-left:-16px;"></a>
             <div class="form-inline my-0" style="margin-right:-15px;">
                 <span onclick="query([])" class="btn-light btn-sm"><svg xmlns="http://www.w3.org/2000/svg" width="24"
                         height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -46,6 +46,7 @@
             <div class="form-group">
                 <input type="text" class="create form-control" id="a" placeholder="fantasy">
             </div>
+            <br>
             <div class="form-group">
                 <textarea class="create form-control" id="b" rows="3"></textarea>
             </div>
@@ -58,7 +59,7 @@
             <button class="btn btn-primary" onclick="query(document.getElementById('input_query').value||'fantasy')">query</button>
         </div>
     </div>
-    <div style="margin-top:47px" id="div_card">
+    <div style="margin-top:40px" id="div_card">
         <div class="card bg-light">
             <div class="card-header text-primary" id="as"></div>
             <div class="card-body" id="div_query" style="margin-top:-15px;"></div>
@@ -103,6 +104,10 @@
     <style>
         .form-control:focus {
             box-shadow: none;
+        }
+        
+        body {
+            overflow: overlay;
         }
     </style>
 </body>
