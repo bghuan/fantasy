@@ -83,7 +83,7 @@ const callBack = (json) => {
         b.onclick = function() { query(ahtml) }
         num.style = "font-size:0.5em"
         a.style = b.innerHTML != '' ? "font-size:0.5em" : ""
-        div.style = " margin:8px 0 4px -10px"
+        div.style = " margin:8px 0 4px 0px"
         div.className = ""
         div.appendChild(num)
         div.appendChild(b)
@@ -130,6 +130,7 @@ const create = obj => {
 const show_id_edit = () => {
     if (document.getElementById('addid').style.display == 'block') { hide_id_edit() } else {
         document.getElementById('addid').style.display = 'block'
+        document.getElementById("addid").scrollIntoView()
             // document.getElementById('af').value = localStorage.id
             // setTimeout(function () { order_id() }, 2000)
     }

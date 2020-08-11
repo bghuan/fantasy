@@ -9,7 +9,7 @@
 
 <body class="container-lg">
     <div class="pos-f-t fixed-top bg-white container-lg" id="accordion">
-        <nav class="navbar navbar-light bg-white border-bottom" style="padding:0.1rem 1rem 0.1rem 1rem">
+        <nav class="navbar navbar-light bg-white" style="padding:0.1rem 1rem 0.1rem 1rem">
             <a class="navbar-brand text-primary text-truncate col-5" data-toggle="collapse" href="#collapsea" role="button" aria-expanded="false" aria-controls="collapsea" id="a_top" style="margin-left:-16px;"></a>
             <div class="form-inline my-0" style="margin-right:-15px;">
                 <span onclick="query([])" class="btn-light btn-sm"><svg xmlns="http://www.w3.org/2000/svg" width="24"
@@ -42,7 +42,7 @@
                 </button>
             </div>
         </nav>
-        <div class="collapse container-fluid text-right" data-parent="#accordion" id="collapseb">
+        <div class="collapse text-right" data-parent="#accordion" id="collapseb">
             <div class="form-group">
                 <input type="text" class="create form-control" id="a" placeholder="fantasy">
             </div>
@@ -52,10 +52,11 @@
             </div>
             <button class="btn btn-primary" onclick="create()">create</button>
         </div>
-        <div class="collapse container-fluid text-right" data-parent="#accordion" id="collapsea">
+        <div class="collapse text-right" data-parent="#accordion" id="collapsea">
             <div class="form-group">
                 <input type="text" class="form-control" id="input_query" placeholder="fantasy">
             </div>
+            <br>
             <button class="btn btn-primary" onclick="query(document.getElementById('input_query').value||'fantasy')">query</button>
         </div>
     </div>
@@ -68,8 +69,8 @@
             <a class="btn btn-sm text-primary" href="http://www.beian.miit.gov.cn" style="font-size:6px;margin-right:4px;margin-bottom: -4px;">豫ICP备18001086号</a>
             <button class="btn btn-light btn-sm" onclick="show_id_edit()">more</button>
             <button class="btn btn-light btn-sm" data-toggle="modal" data-target="#exampleModalLong">about</button>
-            <a class="btn btn-sm" href="https://www.ted.com"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="16"
-                    viewBox="-17.49 -3.308 71.607 26.572">
+            <a class="btn btn-sm" href="https://www.ted.com"><svg xmlns="http://www.w3.org/2000/svg" width="40"
+                    height="16" viewBox="-17.49 -3.308 71.607 26.572">
                     <path
                         d="M-17.49 3.772h6.893v19.41h8.64V3.772h6.91v-7.08H-17.49v7.08zM5.869 23.264h22.464v-7.066H14.448v-2.686l13.885.011V6.487H14.448V3.788l13.885-.009v-7.086H5.869v26.571zM42.413-3.308H29.195v26.489H40.85c9.051 0 13.267-5.173 13.267-13.311-.001-6.687-3.053-13.178-11.704-13.178zm-2 19.732h-3.359V3.392h2.778c5.779 0 6.289 4.696 6.289 6.368 0 2.489-.728 6.664-5.708 6.664z"
                         fill="#ed1c24" /></svg></a>
@@ -80,8 +81,6 @@
                     </path>
                 </svg></a>
         </div>
-    </div>
-    <div class="footer text-right">
     </div>
     <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
@@ -105,10 +104,10 @@
         .form-control:focus {
             box-shadow: none;
         }
-        
-        body {
+        /* BootStrap5 at 2020-08-09 at fixed-top container margin-left error */
+        /* body {
             overflow: overlay;
-        }
+        } */
     </style>
 </body>
 
