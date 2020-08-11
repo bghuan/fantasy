@@ -1,4 +1,4 @@
-let a, b, a_Collapse, b_Collapse
+let a, b, a_Collapse, b_Collapse, isGoBack, localStorageBackup = 'fantasy.'
 const api = "https://api.buguoheng.com"
 const getMyDate = (date = new Date()) => (date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()).toString()
 const readPath = '/php/read.php'
@@ -9,14 +9,9 @@ document.addEventListener("DOMContentLoaded", (function() {
     loginCallback()
     query_onhashchange()
     window.addEventListener('hashchange', query_onhashchange, false)
-    if (typeof bootstrap == 'undefined') loadJS('static/js/bootstrap.min.js', bootstrapCallback())
-    else bootstrapCallback()
-}))
-
-const bootstrapCallback = () => {
     a_Collapse = new bootstrap.Collapse(document.getElementById('collapsea'), { toggle: false })
     b_Collapse = new bootstrap.Collapse(document.getElementById('collapseb'), { toggle: false })
-}
+}))
 
 const HttpGet = (str, callBack, standard, url2) => {
     let xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP")
@@ -26,43 +21,41 @@ const HttpGet = (str, callBack, standard, url2) => {
                 callBack(JSON.parse(xmlhttp.responseText))
             } catch (e) {
                 callBack(xmlhttp.responseText)
+            } finally {
+                localStorage.setItem(localStorageBackup + a, xmlhttp.responseText)
             }
         } else if (xmlhttp.readyState == 4 && xmlhttp.status != 200) {
             HttpGet(url2, callBack)
         }
     }
-    if (standard == true)
-        xmlhttp.open("GET", str, true)
-    else
-        xmlhttp.open("GET", api + (str || readPath), true)
+    xmlhttp.open("GET", standard ? str : api + (str || readPath), true)
     xmlhttp.send()
 }
 
 const tryOss = (url, callBack) => {
+    if (callBack == null)
+        callBack = (json) => func_query(json)
     if ((a == null || a == undefined || a == '') && !getQueryVariable('id'))
         HttpGet('https://bghuan.oss-cn-shenzhen.aliyuncs.com/fantasy.open.read.json', callBack, true, url)
     else
         HttpGet(url, callBack)
+    isGoBack = true
 }
 
 const func_query = (json) => {
-    try {
-        document.getElementById("a_top").innerHTML = a || 'fantasy'
-        document.getElementById("a").value = a
-        if (a != '' && a != undefined) {
-            let str = '/&nbsp<a onclick="query(\'' + a + '\')">' + a.substring(0, 5) + '</a>&nbsp'
-            let str_as = document.getElementById("as").innerHTML
-            document.getElementById("as").innerHTML = str_as.substring(0, str_as.indexOf(str) >= 0 ? str_as.indexOf(str) : 999)
-            document.getElementById("as").innerHTML += str
-        } else {
-            document.getElementById("as").innerHTML = '<a onclick="query()" style="margin-left:-15px">&nbsp&nbsp&nbsp</a><span class="float-right text-dark">' + getMyDate() + '</span></div>'
-        }
-        callBack(json)
-        document.getElementById("input_query").value = ''
-        hide_id_edit()
-    } catch (e) {
-        console.log('error:' + e)
+    document.getElementById("a_top").innerHTML = a || 'fantasy'
+    document.getElementById("a").value = a
+    if (a != '' && a != undefined) {
+        let str = '/&nbsp<a onclick="query(\'' + a + '\')">' + a.substring(0, 5) + '</a>&nbsp'
+        let str_as = document.getElementById("as").innerHTML
+        document.getElementById("as").innerHTML = str_as.substring(0, str_as.indexOf(str) >= 0 ? str_as.indexOf(str) : 999)
+        document.getElementById("as").innerHTML += str
+    } else {
+        document.getElementById("as").innerHTML = '<a onclick="query()" style="margin-left:-15px">&nbsp&nbsp&nbsp</a><span class="float-right text-dark">' + getMyDate() + '</span></div>'
     }
+    callBack(json)
+    document.getElementById("input_query").value = ''
+    hide_id_edit()
 }
 
 const callBack = (json) => {
@@ -91,25 +84,37 @@ const callBack = (json) => {
         div_query.appendChild(div)
     }
 }
-
-const query2 = str => {
-    rmcollapsea()
-    let callBack = json => func_query(json)
-    tryOss(location.hash.slice(1), callBack)
-}
-const query = str => {
+const query = (str, isQueryById = false, IsRefresh = false) => {
+    isGoBack = false;
     rmcollapsea()
     a = str || ''
     let url = (a == '' ? '' : readPath + '?a=' + a)
-    if (typeof str == 'object') {
-        url = readPath + '?id=' + localStorage.getItem('id') || ''
-    }
-    window.location.hash = url
-    if (a == '' && typeof str != 'object') { window.history.replaceState(null, null, window.location.protocol + "//" + window.location.host) }
+    if (isQueryById) url = readPath + '?id=' + localStorage.getItem('id') || ''
+    if (IsRefresh) {
+        func_query([])
+        tryOss(location.hash.slice(1))
+    } else
+        window.location.hash = url
 }
 const query_onhashchange = () => {
     a = decodeURI(location.href).split('a=')[1] || ''
-    tryOss(location.hash.slice(1), json => func_query(json))
+    if (isGoBack) {
+        let temp = localStorage.getItem(localStorageBackup + a)
+        if (temp != null && temp.length > 0 && isJSON(temp))
+            func_query(JSON.parse(localStorage.getItem(localStorageBackup + a)))
+    } else
+        tryOss(location.hash.slice(1))
+}
+
+function isJSON(str) {
+    if (typeof str == 'string')
+        try {
+            var obj = JSON.parse(str);
+            if (typeof obj == 'object' && obj) return true;
+            else return false;
+        } catch (e) {
+            return false;
+        }
 }
 const create = obj => {
     rmcollapseb()
@@ -121,8 +126,7 @@ const create = obj => {
     let callBack = create_id => {
         if (create_id.length == 24) {
             localStorage.id += (',' + create_id)
-            query(a)
-            query2(a)
+            query(a, false, true)
         }
     }
     tryOss(url, callBack)

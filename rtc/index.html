@@ -4,8 +4,7 @@
 <head>
     <title>AliWebRTC Demo</title>
     <meta charset="UTF-8">
-    <meta name="viewport"
-        content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
     <link rel="stylesheet" href="./index.css" />
     <!--<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>-->
     <script src="https://buguoheng.com/static/js/jquery-3.3.1.min.js"></script>
@@ -139,13 +138,17 @@
             //3:同一个ID在其他端登录,被服务器踢出
             var msg;
             switch (message.code) {
-                case 1: msg = "被服务器踢出";
+                case 1:
+                    msg = "被服务器踢出";
                     break;
-                case 2: msg = "频道关闭";
+                case 2:
+                    msg = "频道关闭";
                     break;
-                case 3: msg = "同一个ID在其他端登录,被服务器踢出";
+                case 3:
+                    msg = "同一个ID在其他端登录,被服务器踢出";
                     break;
-                default: msg = "onBye";
+                default:
+                    msg = "onBye";
             }
             showAlert(msg, "danger");
         });
@@ -257,8 +260,7 @@
         $(".local-display-name .streamstate b").text("当前未推流");
         //1.预览
         var localVideo = $(".local-video video");
-        aliWebrtc.startPreview(localVideo[0]).then((obj) => {
-        }).catch((error) => {
+        aliWebrtc.startPreview(localVideo[0]).then((obj) => {}).catch((error) => {
             showAlert("[开启预览失败]" + error.message, "danger");
         });
         //2. 获取频道鉴权令牌参数 为了防止被盗用建议该方法在服务端获取
@@ -306,8 +308,8 @@
      * @return {object} authinfo 
      */
     var GenerateAliRtcAuthInfo = (channelId) => {
-        var appId = "v3v0h95f";// 修改为自己的appid 该方案仅为开发测试使用，正式上线需要使用服务端的AppServer
-        var appKey = "";// 修改为自己的appkey 该方案仅为开发测试使用，正式上线需要使用服务端的AppServer
+        var appId = "v3v0h95f"; // 修改为自己的appid 该方案仅为开发测试使用，正式上线需要使用服务端的AppServer
+        var appKey = ""; // 修改为自己的appkey 该方案仅为开发测试使用，正式上线需要使用服务端的AppServer
         // userId = '1'.replace(/[xy]/g, function (c) {
         //     var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
         //     return v.toString(16);
@@ -316,18 +318,18 @@
         var nonce = 'AK-' + timestamp;
         // var token = sha256(appId + appKey + channelId + userId + nonce + timestamp);
         var token;
-        var url4324323 = "https://buguoheng.com/php/alicloud.php" + "?channelId=" + channelId + "&userId=" + userId + "&nonce=" + nonce + "&timestamp=" + timestamp;
+        var url4324323 = "https://api.buguoheng.com/php/alicloud.php" + "?channelId=" + channelId + "&userId=" + userId + "&nonce=" + nonce + "&timestamp=" + timestamp;
 
         $.ajax({
             url: url4324323,
             type: 'get',
-            async: false,//使用同步的方式,true为异步方式
-            data: {},//这里使用json对象
-            success: function (data) {
+            async: false, //使用同步的方式,true为异步方式
+            data: {}, //这里使用json对象
+            success: function(data) {
                 // console.log(data)
                 token = data;
             },
-            fail: function () {
+            fail: function() {
                 //code here...
             }
         });
@@ -346,34 +348,36 @@
         $.ajax({
             url: 'test.php',
             type: 'post',
-            async: false,//使用同步的方式,true为异步方式
-            data: { 'act': 'addvideo', 'videoname': videoname },//这里使用json对象
-            success: function (data) {
+            async: false, //使用同步的方式,true为异步方式
+            data: {
+                'act': 'addvideo',
+                'videoname': videoname
+            }, //这里使用json对象
+            success: function(data) {
                 //code here...
             },
-            fail: function () {
+            fail: function() {
                 //code here...
             }
         });
     }
     const HttpGet = (url, CallBack) => {
-        let xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
-        xmlhttp.onreadystatechange = () => {
-            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                try {
-                    CallBack(xmlhttp.responseText);
-                } catch (e) {
-                    console.log(xmlhttp.responseText + '\n' + e)
-                } finally {
+            let xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+            xmlhttp.onreadystatechange = () => {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    try {
+                        CallBack(xmlhttp.responseText);
+                    } catch (e) {
+                        console.log(xmlhttp.responseText + '\n' + e)
+                    } finally {}
                 }
             }
+            xmlhttp.open("GET", url, true);
+            xmlhttp.send();
         }
-        xmlhttp.open("GET", url, true);
-        xmlhttp.send();
-    }
-    /**
-     * 获取当前remote用户的流菜单
-     */
+        /**
+         * 获取当前remote用户的流菜单
+         */
     var showUserMenu = (evt) => {
         let userId = evt.data;
         if (!$(event.target).eq(0).hasClass("user-ul-li")) {
@@ -465,7 +469,7 @@
     /**
      * 创建获取订阅的remote的video标签
      */
-    var getDisplayRemoteVideo = function (userId, label) {
+    var getDisplayRemoteVideo = function(userId, label) {
         var label = label === "sophon_video_camera_large" ? "camera" : "screen";
         var id = userId + "_" + label;
         var videoWrapper = $("#" + id);
@@ -654,7 +658,7 @@
     /**
      * 控制预览
      */
-    $(".publisher .select-preview").click(function (e) {
+    $(".publisher .select-preview").click(function(e) {
         var localVideo = $(".local-video video");
         if ($(this).text() === "开启预览") {
             $(this).text("处理中...");
@@ -688,7 +692,7 @@
     /**
      * 控制推流选项
      */
-    $(".publisher .streamType input").click(function (e) {
+    $(".publisher .streamType input").click(function(e) {
         var config = $(this).val();
         var isChecked = $(this).prop("checked");
         if (config === "cameraPublisher") {
@@ -713,7 +717,7 @@
     /**
      * 处理推流
      */
-    $(".publisher .push-stream").click(function (e) {
+    $(".publisher .push-stream").click(function(e) {
         if ($(this).text() === "开始推流") {
             $(this).text("处理中...")
             $(".streamType").hide()
@@ -754,7 +758,7 @@
     /**
      * 页面刷新时调用离会
      */
-    window.onbeforeunload = function (e) {
+    window.onbeforeunload = function(e) {
         if (!aliWebrtc) {
             showAlert("isSupport失败,未能初始化aliWebrtc", "danger");
             return

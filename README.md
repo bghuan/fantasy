@@ -7,5 +7,5 @@
 ###### 调整生理自由与心理自由的比率
 ###### 为无用的人脱离被排斥的使不存在感
 #### config
-###### php-7.3 bootstrap.js-4.4 mongodb-4.0.5 nginx-1.14.2 bt-panel redis-6.0.5 aliyun-oss rtc justAuth-github
+###### php-7.3 bootstrap.js-v5.0.0-alpha1 mongodb-4.0.5 nginx-1.14.2 bt-panel redis-6.0.5 aliyun-oss rtc justAuth-github
 ###### linux: git fetch --all;git reset --hard origin/main
