@@ -57,10 +57,10 @@
                 <input type="text" class="form-control" id="input_query" placeholder="fantasy">
             </div>
             <br>
-            <button class="btn btn-primary" onclick="query(document.getElementById('input_query').value||'fantasy')">query</button>
+            <button class="btn btn-primary" onclick="query(document.getElementById('input_query').value||'fantasy',false,false,true)">query</button>
         </div>
     </div>
-    <div style="margin-top:40px" id="div_card">
+    <div style="margin-top:45px" id="div_card">
         <div class="card bg-light">
             <div class="card-header text-primary" id="as"></div>
             <div class="card-body" id="div_query" style="margin-top:-15px;"></div>
@@ -99,15 +99,16 @@
         <button class="btn btn-primary btn-sm" onclick="login()">GitHub登录</button>
     </div>
     <script src="static/js/bootstrap.min.js?d"></script>
-    <script src="static/js/index.js?d"></script>
+    <script src="static/js/index.js?e"></script>
     <style>
         .form-control:focus {
             box-shadow: none;
         }
         /* BootStrap5 at 2020-08-09 at fixed-top container margin-left error */
-        /* body {
+        
+        body {
             overflow: overlay;
-        } */
+        }
     </style>
 </body>
 

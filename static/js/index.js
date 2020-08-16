@@ -3,7 +3,6 @@ const api = "https://api.buguoheng.com"
 const getMyDate = (date = new Date()) => (date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()).toString()
 const readPath = '/php/read.php'
 const createPath = '/php/create.php'
-    // const get = document.getElementById
 
 document.addEventListener("DOMContentLoaded", (function() {
     loginCallback()
@@ -23,8 +22,9 @@ const HttpGet = (str, callBack, standard, url2) => {
                 callBack(xmlhttp.responseText)
             } finally {
                 localStorage.setItem(localStorageBackup + a, xmlhttp.responseText)
+                isGoBack = true
             }
-        } else if (xmlhttp.readyState == 4 && xmlhttp.status != 200) {
+        } else if (xmlhttp.readyState == 4 && xmlhttp.status != 200 && url2 != null) {
             HttpGet(url2, callBack)
         }
     }
@@ -32,67 +32,43 @@ const HttpGet = (str, callBack, standard, url2) => {
     xmlhttp.send()
 }
 
-const tryOss = (url, callBack) => {
-    if (callBack == null)
-        callBack = (json) => func_query(json)
-    if ((a == null || a == undefined || a == '') && !getQueryVariable('id'))
-        HttpGet('https://bghuan.oss-cn-shenzhen.aliyuncs.com/fantasy.open.read.json', callBack, true, url)
-    else
-        HttpGet(url, callBack)
-    isGoBack = true
-}
-
-const func_query = (json) => {
+//card1.style.height=window.innerHeight-card.style.marginTop.replace('px','')-document.getElementById('as').style.height+'px'
+const queryCallBack = (json) => {
     document.getElementById("a_top").innerHTML = a || 'fantasy'
     document.getElementById("a").value = a
-    if (a != '' && a != undefined) {
-        let str = '/&nbsp<a onclick="query(\'' + a + '\')">' + a.substring(0, 5) + '</a>&nbsp'
-        let str_as = document.getElementById("as").innerHTML
-        document.getElementById("as").innerHTML = str_as.substring(0, str_as.indexOf(str) >= 0 ? str_as.indexOf(str) : 999)
-        document.getElementById("as").innerHTML += str
-    } else {
-        document.getElementById("as").innerHTML = '<a onclick="query()" style="margin-left:-15px">&nbsp&nbsp&nbsp</a><span class="float-right text-dark">' + getMyDate() + '</span></div>'
-    }
-    callBack(json)
     document.getElementById("input_query").value = ''
     hide_id_edit()
-}
-
-const callBack = (json) => {
     let div_query = document.getElementById("div_query")
     div_query.innerHTML = ''
-    let div, a, b
-    let i = json.length
+    let div, fantasy, content
     for (j in json) {
         div = document.createElement("div")
-        num = document.createElement("a")
-        a = document.createElement("a")
-        b = document.createElement("a")
-        num.innerHTML = i-- + '&nbsp&nbsp'
-        a.innerHTML = json[j]['a'] || ''
-        b.innerHTML = (json[j]['b'] == null || json[j]['b'] == '' ? '' : json[j]['b'] + ' - ')
-        let ahtml = a.innerHTML
-        a.onclick = function() { query(this.innerHTML) }
-        b.onclick = function() { query(ahtml) }
-        num.style = "font-size:0.5em"
-        a.style = b.innerHTML != '' ? "font-size:0.5em" : ""
+        fantasy = document.createElement("a")
+        content = document.createElement("a")
+        fantasy.innerHTML = json[j]['a'] || ''
+        content.innerHTML = (json[j]['b'] == null || json[j]['b'] == '' ? '' : json[j]['b'] + ' - ')
+        let ahtml = fantasy.innerHTML
+        fantasy.onclick = function() { query(this.innerHTML) }
+        content.onclick = function() { query(ahtml) }
+        fantasy.style = content.innerHTML != '' ? "font-size:0.6em" : ""
         div.style = " margin:8px 0 4px 0px"
-        div.className = ""
-        div.appendChild(num)
-        div.appendChild(b)
-        div.appendChild(a)
+        div.appendChild(content)
+        div.appendChild(fantasy)
         div_query.appendChild(div)
     }
 }
-const query = (str, isQueryById = false, IsRefresh = false) => {
+const query = (str, isQueryById = false, IsRefresh = false, isForceQuery = false) => {
     isGoBack = false;
     rmcollapsea()
     a = str || ''
     let url = (a == '' ? '' : readPath + '?a=' + a)
     if (isQueryById) url = readPath + '?id=' + localStorage.getItem('id') || ''
-    if (IsRefresh) {
-        func_query([])
-        tryOss(location.hash.slice(1))
+    if (isForceQuery) {
+        queryCallBack([])
+        window.location.hash = url
+    } else if (IsRefresh) {
+        queryCallBack([])
+        HttpGet(location.hash.slice(1), queryCallBack)
     } else
         window.location.hash = url
 }
@@ -101,9 +77,9 @@ const query_onhashchange = () => {
     if (isGoBack) {
         let temp = localStorage.getItem(localStorageBackup + a)
         if (temp != null && temp.length > 0 && isJSON(temp))
-            func_query(JSON.parse(localStorage.getItem(localStorageBackup + a)))
+            queryCallBack(JSON.parse(localStorage.getItem(localStorageBackup + a)))
     } else
-        tryOss(location.hash.slice(1))
+        HttpGet(location.hash.slice(1), queryCallBack)
 }
 
 function isJSON(str) {
@@ -126,10 +102,10 @@ const create = obj => {
     let callBack = create_id => {
         if (create_id.length == 24) {
             localStorage.id += (',' + create_id)
-            query(a, false, true)
         }
+        query(a, false, true)
     }
-    tryOss(url, callBack)
+    HttpGet(url, callBack)
 }
 const show_id_edit = () => {
     if (document.getElementById('addid').style.display == 'block') { hide_id_edit() } else {
