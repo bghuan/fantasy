@@ -7,8 +7,8 @@ $b = $_GET["b"];
 
 if (empty($a)) {
     exit;
-}else if($a=="test"){
-    echo("testing");
+} else if ($a == "test") {
+    echo ("testing");
     exit;
 }
 

@@ -12,27 +12,14 @@ use OSS\Core\OssException;
 
 $objectName = $objectDir . $db_name . '.' . $db_document . '.json';
 
-// $object .= '?timestamp=' . time();
-
-$isBuckuped = $redis->get("isBuckuped");
-
-if ($isBuckuped) {
+if ($redis->get("isBuckuped")) {
     die;
 }
 
-$query = new MongoDB\Driver\Query([], []);
-
 try {
-    $json = json_encode($manager->executeQuery($db_name . '.' . $db_document, $query)->toArray());
-
+    $json = json_encode($manager->executeQuery($db_name . '.' . $db_document, new MongoDB\Driver\Query([], []))->toArray());
     $ossClient = new OssClient($accessKeyId, $accessKeySecret, $endpoint);
-
     $ossClient->putObject($bucket, $objectName, $json);
-    // $ossClient->uploadFile($bucket, "dsc.tzr.gz", "temp.tar.gz");
-
-    // print(__FUNCTION__ . ": OK" . "\n");
-    // print(__FUNCTION__ . "https://oss.buguoheng.com/" . $object . "\n");
-    // echo $json;
     $redis->set("isBuckuped", true);
     exit;
 } catch (MongoDB\Driver\Exception $e) {
