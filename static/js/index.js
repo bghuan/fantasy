@@ -12,27 +12,74 @@ document.addEventListener("DOMContentLoaded", (function() {
     b_Collapse = new bootstrap.Collapse(document.getElementById('collapseb'), { toggle: false })
 }))
 
-const HttpGet = (str, callBack, standard, url2) => {
+const HttpGet = (str, callBack, standard) => {
+    let url = standard ? str : api + (str || readPath)
     let xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP")
     xmlhttp.onreadystatechange = () => {
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
             try {
                 callBack(JSON.parse(xmlhttp.responseText))
+                localStorage.setItem(localStorageBackup + a, xmlhttp.responseText)
             } catch (e) {
                 callBack(xmlhttp.responseText)
             } finally {
-                localStorage.setItem(localStorageBackup + a, xmlhttp.responseText)
                 isGoBack = true
             }
-        } else if (xmlhttp.readyState == 4 && xmlhttp.status != 200 && url2 != null) {
-            HttpGet(url2, callBack)
         }
     }
-    xmlhttp.open("GET", standard ? str : api + (str || readPath), true)
+    xmlhttp.open("GET", url, true)
     xmlhttp.send()
 }
+const query_onhashchange = () => {
+    a = decodeURI(location.href).split('a=')[1] || ''
+    if (isGoBack) {
+        let temp = localStorage.getItem(localStorageBackup + a)
+        if (temp != null && temp.length > 0 && isJSON(temp))
+            queryCallBack(JSON.parse(localStorage.getItem(localStorageBackup + a)))
+    } else
+        HttpGet(location.hash.slice(1), queryCallBack)
+}
 
-//card1.style.height=window.innerHeight-card.style.marginTop.replace('px','')-document.getElementById('as').style.height+'px'
+const query = (str, purpose) => {
+    isGoBack = false;
+    rmcollapsea()
+    a = str || ''
+    let url = (a == '' ? '' : readPath + '?a=' + a)
+    switch (purpose) {
+        case "personal":
+            url = readPath + '?id=' + localStorage.getItem('id') || ''
+            window.location.hash = url
+            break
+        case "refresh":
+            queryCallBack([])
+            HttpGet(location.hash.slice(1), queryCallBack)
+            break
+        case "force":
+            queryCallBack([])
+            HttpGet(url, queryCallBack)
+            window.location.hash = url
+            break
+        default:
+            window.location.hash = url
+    }
+}
+const create = obj => {
+        rmcollapseb()
+        a = document.getElementById("a").value
+        b = document.getElementById("b").value
+        if ((a + b).trim().length == 0 || (a == 'fantasy' && b.length == 0)) return
+        if (a == '') a = 'fantasy'
+        let url = createPath + '?a=' + a + '&b=' + JSON.stringify(typeof b == "string" ? b.split(",") : [])
+        url = createPath + '?a=' + a + '&b=' + b
+        let callBack = create_id => {
+            if (create_id.length == 24) {
+                localStorage.id += (',' + create_id)
+            }
+            query(a, 'force')
+        }
+        HttpGet(url, callBack)
+    }
+    //card1.style.height=window.innerHeight-card.style.marginTop.replace('px','')-document.getElementById('as').style.height+'px'
 const queryCallBack = (json) => {
     document.getElementById("a_top").innerHTML = a || 'fantasy'
     document.getElementById("a").value = a
@@ -57,56 +104,7 @@ const queryCallBack = (json) => {
         div_query.appendChild(div)
     }
 }
-const query = (str, isQueryById = false, IsRefresh = false, isForceQuery = false) => {
-    isGoBack = false;
-    rmcollapsea()
-    a = str || ''
-    let url = (a == '' ? '' : readPath + '?a=' + a)
-    if (isQueryById) url = readPath + '?id=' + localStorage.getItem('id') || ''
-    if (isForceQuery) {
-        queryCallBack([])
-        window.location.hash = url
-    } else if (IsRefresh) {
-        queryCallBack([])
-        HttpGet(location.hash.slice(1), queryCallBack)
-    } else
-        window.location.hash = url
-}
-const query_onhashchange = () => {
-    a = decodeURI(location.href).split('a=')[1] || ''
-    if (isGoBack) {
-        let temp = localStorage.getItem(localStorageBackup + a)
-        if (temp != null && temp.length > 0 && isJSON(temp))
-            queryCallBack(JSON.parse(localStorage.getItem(localStorageBackup + a)))
-    } else
-        HttpGet(location.hash.slice(1), queryCallBack)
-}
 
-function isJSON(str) {
-    if (typeof str == 'string')
-        try {
-            var obj = JSON.parse(str);
-            if (typeof obj == 'object' && obj) return true;
-            else return false;
-        } catch (e) {
-            return false;
-        }
-}
-const create = obj => {
-    rmcollapseb()
-    a = document.getElementById("a").value
-    b = document.getElementById("b").value
-    if (a == '') a = 'fantasy'
-    let url = createPath + '?a=' + a + '&b=' + JSON.stringify(typeof b == "string" ? b.split(",") : [])
-    url = createPath + '?a=' + a + '&b=' + b
-    let callBack = create_id => {
-        if (create_id.length == 24) {
-            localStorage.id += (',' + create_id)
-        }
-        query(a, false, true)
-    }
-    HttpGet(url, callBack)
-}
 const show_id_edit = () => {
     if (document.getElementById('addid').style.display == 'block') { hide_id_edit() } else {
         document.getElementById('addid').style.display = 'block'
@@ -115,11 +113,12 @@ const show_id_edit = () => {
             // setTimeout(function () { order_id() }, 2000)
     }
 }
+
 const hide_id_edit = () => { document.getElementById('addid').style.display = 'none' }
 const update_id = () => {
     localStorage.setItem(new Date().toLocaleString(), localStorage.id)
     localStorage.id = document.getElementById('af').value
-    query([])
+    query('', 'personal')
 }
 const query_id = () => {
     document.body.innerHTML = "<button class='btn btn-primary' onclick='location.replace(location.href)'>刷新</a>"
@@ -246,4 +245,15 @@ const loadJS = function(url, callback) {
         script.onload = () => callback()
     }　　
     document.body.appendChild(script)
+}
+
+function isJSON(str) {
+    if (typeof str == 'string')
+        try {
+            var obj = JSON.parse(str);
+            if (typeof obj == 'object' && obj) return true;
+            else return false;
+        } catch (e) {
+            return false;
+        }
 }

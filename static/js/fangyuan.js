@@ -35,7 +35,7 @@ document.body.appendChild(app.view);
 const loader = PIXI.Loader.shared;
 
 loader.add('stripe', '../image/stripe.jpg')
-    .add('refresh', '../svg/refresh-cw-write.svg');
+    .add('refresh', '../svg/refresh-cw-white.svg');
 // loader.pre(cachingMiddleware);
 // loader.use(parsingMiddleware);
 loader.load((loader, resources) => {
