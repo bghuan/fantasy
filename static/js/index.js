@@ -75,7 +75,7 @@ const create = obj => {
             if (create_id.length == 24) {
                 localStorage.id += (',' + create_id)
             }
-            query(a, 'force')
+            query('', 'force')
         }
         HttpGet(url, callBack)
     }
