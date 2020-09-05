@@ -4,14 +4,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
     <title>websocket</title>
 </head>
 
-<body>
-    <input id="text" value="">
-    <input type="submit" value="send" onclick="start()">
-    <input type="submit" value="close" onclick="close()">
-    <div id="msg"></div>
+<body class=" container-lg">
+    <div class="input-group mb-3 fixed-bottom container-lg">
+        <input type="text" class="form-control" id="text">
+        <div class="input-group-append">
+            <span class="input-group-text btn btn-primary" id="basic-addon2" onclick="send()">Send</span>
+        </div>
+    </div>
+    <div id="msg" style="margin-bottom:100px"></div>
+    <div id="footer"></div>
+    <style>
+        .form-control:focus {
+            box-shadow: none;
+        }
+    </style>
     <script>
         var webSocket = new WebSocket("wss://api.buguoheng.com/ws");
         // var webSocket = new WebSocket("ws://127.0.0.1:8091");
@@ -23,11 +33,12 @@
 
         webSocket.onopen = function (event) {
             console.log("open:" + sockState());
-            document.getElementById("msg").innerHTML = "<p>Connect to Service</p>";
+            document.getElementById("msg").innerHTML = "<p class='text-primary'>Connect to Service</p>";
         };
 
         webSocket.onmessage = function (event) {
-            document.getElementById("msg").innerHTML += "<p>    " + event.data + "</p>"
+            document.getElementById("msg").innerHTML += "<p>" + event.data + "</p>"
+            document.getElementById("footer").scrollIntoView()
         };
 
         webSocket.onclose = function (event) {
@@ -39,11 +50,13 @@
             return status[webSocket.readyState];
         }
 
-        function start(msg) {
-            msg = document.getElementById('text').value;
+        function send(msg) {
+            if (!msg)
+                msg = document.getElementById('text').value;
             document.getElementById('text').value = '';
             webSocket.send(msg);
             document.getElementById("msg").innerHTML += "<p>" + msg + "</p>"
+            document.getElementById("footer").scrollIntoView()
         };
 
         function close(event) {

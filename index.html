@@ -106,38 +106,8 @@
         <button class="btn btn-primary btn-sm" onclick="login()">GitHub登录</button>
         <a class="btn btn-primary btn-sm" href="static/html/socket.html">Websocket</a>
     </div>
-    <!-- <input type="file" id="file" />
-    <script type="text/javascript">
-        document.getElementById('file').addEventListener('change', function (e) {
-            let file = e.target.files[0];
-            let storeAs = 'image/' + file.name;
-            console.log(file.name + ' => ' + storeAs);
-
-            let client = new OSS({
-                region: 'oss-cn-shenzhen',
-                //云账号AccessKey有所有API访问权限，建议遵循阿里云安全最佳实践，创建并使用STS方式来进行API访问
-                accessKeyId: '',
-                accessKeySecret: '',
-                // stsToken: '<Your securityToken(STS)>',
-                bucket: 'bghuan'
-            });
-
-            async function putObject() {
-                try {
-                    // object-key可以自定义为文件名（例如file.txt）或目录（例如abc/test/file.txt）的形式，实现将文件上传至当前Bucket或Bucket下的指定目录。
-                    let result = await client.put(storeAs, file);
-                    console.log(result);
-                } catch (e) {
-                    console.log(e);
-                }
-            }
-            putObject();
-
-        });
-    </script>
-    <script src="static/js/aliyun-oss-sdk.js"></script> -->
     <script src="static/js/bootstrap.min.js?d"></script>
-    <script src="static/js/index.js?ee"></script>
+    <script src="static/js/index.js"></script>
     <style>
         .form-control:focus {
             box-shadow: none;

@@ -8,4 +8,4 @@
 ###### 无用的人被排斥的使不存在感
 #### config
 ###### php-7.3 bootstrap.js-v5.0.0-alpha1 mongodb-4.0.5 redis-6.0.5 aliyun-oss+rtc justAuth-github
-###### github page
+###### linux: git fetch --all;git reset --hard origin/main
