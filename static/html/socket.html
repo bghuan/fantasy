@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>websocket</title>
+</head>
+
+<body>
+    <input id="text" value="">
+    <input type="submit" value="send" onclick="start()">
+    <input type="submit" value="close" onclick="close()">
+    <div id="msg"></div>
+    <script>
+        var webSocket = new WebSocket("wss://api.buguoheng.com/ws");
+        // var webSocket = new WebSocket("ws://127.0.0.1:8091");
+
+        webSocket.onerror = function (event) {
+            document.getElementById("msg").innerHTML = "<p>close</p>";
+            console.log("error" + event.data);
+        };
+
+        webSocket.onopen = function (event) {
+            console.log("open:" + sockState());
+            document.getElementById("msg").innerHTML = "<p>Connect to Service</p>";
+        };
+
+        webSocket.onmessage = function (event) {
+            document.getElementById("msg").innerHTML += "<p>    " + event.data + "</p>"
+        };
+
+        webSocket.onclose = function (event) {
+            close(event)
+        }
+
+        function sockState() {
+            var status = ['未连接', '连接成功，可通讯', '正在关闭', '连接已关闭或无法打开'];
+            return status[webSocket.readyState];
+        }
+
+        function start(msg) {
+            msg = document.getElementById('text').value;
+            document.getElementById('text').value = '';
+            webSocket.send(msg);
+            document.getElementById("msg").innerHTML += "<p>" + msg + "</p>"
+        };
+
+        function close(event) {
+            document.getElementById("msg").innerHTML = "<p>close</p>";
+            console.log("close:" + sockState());
+            webSocket.close();
+        }
+
+    </script>
+</body>
+
+</html>

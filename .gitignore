@@ -5,3 +5,6 @@ php/config.php
 ### properties ###
 justAuth/src/main/resources/application.properties
 justAuth/target/
+
+android/.gradle
+android/.idea
