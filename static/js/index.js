@@ -1,4 +1,4 @@
-let a, b, a_Collapse, b_Collapse, isGoBack, localStorageBackup = 'fantasy.'
+let a, b, a_Collapse, b_Collapse, isGoBack, localStorageBackup = 'fantasy.', isPhp = false
 const api = "https://api.buguoheng.com"
 const getMyDate = (date = new Date()) => (date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()).toString()
 const readPath = '/php/read.php'
@@ -6,7 +6,7 @@ const createPath = '/php/create.php'
 
 document.addEventListener("DOMContentLoaded", (function () {
     loginCallback()
-    query_onhashchange()
+    if (!isPhp) query_onhashchange()
     window.addEventListener('hashchange', query_onhashchange, false)
     a_Collapse = new bootstrap.Collapse(document.getElementById('collapsea'), { toggle: false })
     b_Collapse = new bootstrap.Collapse(document.getElementById('collapseb'), { toggle: false })
@@ -82,7 +82,7 @@ const create = obj => {
 //card1.style.height=window.innerHeight-card.style.marginTop.replace('px','')-document.getElementById('as').style.height+'px'
 const queryCallBack = (json) => {
     document.getElementById("a_top").innerHTML = a || 'fantasy'
-    document.getElementById("a").value = a
+    document.getElementById("a").value = a || ''
     document.getElementById("input_query").value = ''
     hide_id_edit()
     let div_query = document.getElementById("div_query")

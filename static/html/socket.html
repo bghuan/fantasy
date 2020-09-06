@@ -26,14 +26,13 @@
         var webSocket = new WebSocket("wss://api.buguoheng.com/ws");
         // var webSocket = new WebSocket("ws://127.0.0.1:8091");
 
-        webSocket.onerror = function (event) {
-            document.getElementById("msg").innerHTML = "<p>close</p>";
-            console.log("error" + event.data);
+        webSocket.onerror = function (err) {
+            console.log(err);
         };
 
         webSocket.onopen = function (event) {
             console.log("open:" + sockState());
-            document.getElementById("msg").innerHTML = "<p class='text-primary'>Connect to Service</p>";
+            document.getElementById("msg").innerHTML += "<p class='text-primary'>Connect to Service</p>";
         };
 
         webSocket.onmessage = function (event) {
@@ -42,7 +41,7 @@
         };
 
         webSocket.onclose = function (event) {
-            close(event)
+            document.getElementById("msg").innerHTML += "<p>close</p>";
         }
 
         function sockState() {
@@ -57,13 +56,14 @@
             webSocket.send(msg);
             document.getElementById("msg").innerHTML += "<p>" + msg + "</p>"
             document.getElementById("footer").scrollIntoView()
+            document.getElementById('text').focus()
         };
 
         function close(event) {
-            document.getElementById("msg").innerHTML = "<p>close</p>";
-            console.log("close:" + sockState());
             webSocket.close();
         }
+
+        document.getElementById('text').focus()
 
     </script>
 </body>
