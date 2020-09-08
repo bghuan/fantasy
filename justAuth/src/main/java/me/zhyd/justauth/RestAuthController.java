@@ -37,7 +37,7 @@ import java.util.Map;
  * @since 1.8
  */
 @Controller
-@CrossOrigin(origins = "https://buguoheng.com")
+@CrossOrigin(origins = "*",maxAge = 3600)
 @RequestMapping("/oauth")
 public class RestAuthController {
 
@@ -49,9 +49,9 @@ public class RestAuthController {
     @Value("${github.clientSecret}")
     String GithubClientSecret;
 
-    @Value("${google.clientId}")
+//    @Value("${google.clientId}")
     String GoogleClientId;
-    @Value("${google.clientSecret}")
+//    @Value("${google.clientSecret}")
     String GoogleClientSecret;
 
     @Autowired
@@ -76,6 +76,7 @@ public class RestAuthController {
      * oauth平台中配置的授权回调地址，以本项目为例，在创建github授权应用时的回调地址应为：http://127.0.0.1:8443/oauth/callback/github
      */
     @RequestMapping("/callback/{source}")
+    @ResponseBody
     public Object login(@PathVariable("source") String source, AuthCallback callback, HttpServletRequest request) {
         AuthRequest authRequest2 = getAuthRequest(source);
         return authRequest2.login(callback);
