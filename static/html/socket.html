@@ -12,12 +12,12 @@
     <div class="input-group mb-3 fixed-bottom container-lg">
         <input type="text" class="form-control" id="text">
         <div class="input-group-append">
-            <span class="input-group-text btn btn-primary" id="send" onclick="send()">Send</span>
+            <a class="input-group-text btn btn-primary" id="send">Send</a>
         </div>
     </div>
-    <a class="btn">Connecting</a>
-    <a class="btn text-primary float-right">Close</a>
-    <a class="btn text-primary float-right">Refresh</a>
+    <span>Connecting</span>
+    <span class="btn text-primary float-right">Close</span>
+    <span class="btn text-primary float-right">Refresh</span>
     <div id="msg" style="margin-bottom:100px"></div>
     <div id="footer"></div>
     <style>
@@ -30,7 +30,7 @@
         }
     </style>
     <script id="wsScript">
-        const wwww = () => {
+        (function () {
             var webSocket = new WebSocket("wss://api.buguoheng.com/ws");
             // var webSocket = new WebSocket("ws://127.0.0.1:8091");
 
@@ -40,10 +40,10 @@
 
             webSocket.onopen = function (event) {
                 console.log("open:" + sockState());
-                document.getElementsByTagName("a")[0].innerHTML = "Connected";
-                document.getElementsByTagName("a")[0].className = "btn text-primary"
-                document.getElementsByTagName("a")[1].innerHTML = "Close"
-                document.getElementsByTagName("a")[1].addEventListener("click", () => close())
+                document.getElementsByTagName("span")[0].innerHTML = "Connected";
+                document.getElementsByTagName("span")[0].className = "text-primary"
+                document.getElementsByTagName("span")[1].innerHTML = "Close"
+                document.getElementsByTagName("span")[1].addEventListener("click", () => close())
             };
 
             webSocket.onmessage = function (event) {
@@ -52,8 +52,8 @@
             };
 
             webSocket.onclose = function (event) {
-                document.getElementsByTagName("a")[0].innerHTML = "Disconnect";
-                document.getElementsByTagName("a")[0].className = "btn text-danger"
+                document.getElementsByTagName("span")[0].innerHTML = "Disconnect";
+                document.getElementsByTagName("span")[0].className = "text-danger"
             }
             function sockState() {
                 var status = ['未连接', '连接成功，可通讯', '正在关闭', '连接已关闭或无法打开'];
@@ -64,22 +64,21 @@
                     msg = document.getElementById('text').value;
                 document.getElementById('text').value = '';
                 webSocket.send(msg);
-                document.getElementById("msg").innerHTML += "<div class='btn d-block text-left" + (webSocket.readyState == 1 ? '' : ' text-danger') + "'>" + msg + "</div>"
+                document.getElementById("msg").innerHTML += "<p class='" + (webSocket.readyState == 1 ? '' : ' text-danger') + "'>" + msg + "</p>"
                 document.getElementById("footer").scrollIntoView()
                 document.getElementById('text').focus()
             };
             function close() {
                 webSocket.close();
-                // document.getElementsByTagName("a")[1].onclick = wwww
+                // document.getElementsByTagName("span")[1].onclick = wwww
             }
 
             document.getElementById('text').focus()
             document.addEventListener("keyup", event => { if (event.keyCode == 13) { send() } })
-            document.getElementsByTagName("a")[1].onclick = close
+            document.getElementsByTagName("span")[1].onclick = close
             document.getElementById("send").addEventListener("click", (event) => send(event.data))
-            document.getElementsByTagName("a")[2].addEventListener("click", () => location.reload())
-        }
-        wwww()
+            document.getElementsByTagName("span")[2].addEventListener("click", () => location.reload())
+        })()
     </script>
 </body>
 
