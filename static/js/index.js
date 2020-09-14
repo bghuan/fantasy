@@ -47,7 +47,7 @@ const query = (str, purpose) => {
     let url = (a == '' ? '' : readPath + '?a=' + a)
     switch (purpose) {
         case "personal":
-            url = readPath + '?id=' + localStorage.getItem('id') || ''
+            url = readPath + '?a=personal&id=' + localStorage.getItem('id') || ''
             window.location.hash = url
             break
         case "refresh":

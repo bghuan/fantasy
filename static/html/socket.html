@@ -29,10 +29,12 @@
             overflow-x: hidden;
         }
     </style>
-    <script id="wsScript">
-        (function () {
+    <script>
+        let globalWebsocket
+        const websocketLifePeriod = () => {
             var webSocket = new WebSocket("wss://api.buguoheng.com/ws");
             // var webSocket = new WebSocket("ws://127.0.0.1:8091");
+            globalWebsocket = webSocket
 
             webSocket.onerror = function (err) {
                 console.log(err);
@@ -43,7 +45,7 @@
                 document.getElementsByTagName("span")[0].innerHTML = "Connected";
                 document.getElementsByTagName("span")[0].className = "text-primary"
                 document.getElementsByTagName("span")[1].innerHTML = "Close"
-                document.getElementsByTagName("span")[1].addEventListener("click", () => close())
+                document.getElementsByTagName("span")[1].onclick = close
             };
 
             webSocket.onmessage = function (event) {
@@ -63,14 +65,15 @@
                 if (!msg)
                     msg = document.getElementById('text').value;
                 document.getElementById('text').value = '';
-                webSocket.send(msg);
-                document.getElementById("msg").innerHTML += "<p class='" + (webSocket.readyState == 1 ? '' : ' text-danger') + "'>" + msg + "</p>"
+                globalWebsocket.send(msg);
+                document.getElementById("msg").innerHTML += "<p class='" + (globalWebsocket.readyState == 1 ? '' : ' text-danger') + "'>" + msg + "</p>"
                 document.getElementById("footer").scrollIntoView()
                 document.getElementById('text').focus()
             };
             function close() {
                 webSocket.close();
-                // document.getElementsByTagName("span")[1].onclick = wwww
+                document.getElementsByTagName("span")[1].innerHTML = 'Open'
+                document.getElementsByTagName("span")[1].onclick = websocketLifePeriod
             }
 
             document.getElementById('text').focus()
@@ -78,7 +81,8 @@
             document.getElementsByTagName("span")[1].onclick = close
             document.getElementById("send").addEventListener("click", (event) => send(event.data))
             document.getElementsByTagName("span")[2].addEventListener("click", () => location.reload())
-        })()
+        }
+        websocketLifePeriod()
     </script>
 </body>
 
