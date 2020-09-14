@@ -104,7 +104,7 @@
     try {
         $json = json_encode($manager->executeCommand($db_name, $cmd)->toArray());
         // echo gzencode($json);
-        echo '<script>let json = ' . $json . ';queryCallBack(json);isPhp=true;</script>';
+        echo '<script>let json = ' . $json . ';queryCallBack(json);isPhp=true;localStorage.setItem(localStorageBackup,JSON.stringify(json));</script>';
     } catch (MongoDB\Driver\Exception $e) {
         echo $e->getMessage(), "\n";
     }
