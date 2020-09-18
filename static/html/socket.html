@@ -49,6 +49,12 @@
             };
 
             webSocket.onmessage = function (event) {
+                if (typeof event.data == "string")
+                    data = event.data;
+                else if (typeof event.data == "object")
+                    data = unzip(event.data);
+
+                    
                 document.getElementById("msg").innerHTML += "<p>" + event.data + "</p>"
                 document.getElementById("footer").scrollIntoView()
             };
@@ -82,7 +88,7 @@
             document.getElementById("send").addEventListener("click", (event) => send(event.data))
             document.getElementsByTagName("span")[2].addEventListener("click", () => location.reload())
         }
-        
+
         websocketLifePeriod()
     </script>
 </body>

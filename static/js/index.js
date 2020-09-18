@@ -30,6 +30,17 @@ const HttpGet = (str, callBack, standard) => {
     xmlhttp.open("GET", url, true)
     xmlhttp.send()
 }
+const HttpGetPure = (str, callBack) => {
+    let xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP")
+    xmlhttp.onreadystatechange = () => {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            console.log(xmlhttp.responseText)
+            callBack(xmlhttp.responseText)
+        }
+    }
+    xmlhttp.open("GET", str, true)
+    xmlhttp.send()
+}
 const query_onhashchange = () => {
     a = decodeURI(location.href).split('a=')[1] || ''
     if (isGoBack) {

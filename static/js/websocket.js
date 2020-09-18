@@ -1,24 +1,24 @@
-var WebSocketServer = require('ws').Server
-wss = new WebSocketServer({ port: 8091 });
+const WebSocket = require('ws');
+var wss = new WebSocket.Server({ port: 8091 });
 
-let lastedMessage
-let clientList = []
-
-wss.on('connection', function (client) {
-    if (lastedMessage) client.send(lastedMessage)
-    clientList.push(client);
-    client.on('message', function (message) {
-        lastedMessage = message
-        broadcast(message, client);
+wss.on('connection', function (ws) {
+    ws.on('message', function (data) {
+        broadcast(data, ws)
+    });
+    ws.on('close', function () {
+        wss.clients.delete(ws)
+    });
+    ws.on('error', function () {
+        wss.clients.delete(ws)
     });
 });
 
-function broadcast(message, client) {
-    for (var i = 0; i < clientList.length; i++) {
-        if (client !== clientList[i]) {
-            clientList[i].send(message);
+function broadcast(data, ws) {
+    wss.clients.forEach(function each(client) {
+        if (client !== ws && client.readyState === WebSocket.OPEN) {
+            client.send(data);
         }
-    }
+    });
 }
 
-setInterval(() => { broadcast('', null); lastedMessage = null }, 60000)
+setInterval(() => broadcast('', null), 60000)
