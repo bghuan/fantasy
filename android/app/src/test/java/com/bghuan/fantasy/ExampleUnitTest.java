@@ -1,4 +1,4 @@
-package com.example.administrator.myapplication;
+package com.bghuan.fantasy;
 
 import org.junit.Test;
 
