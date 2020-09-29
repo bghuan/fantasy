@@ -3,7 +3,7 @@ function Router() {
     this.currentURL = '';
 }
 Router.prototype.route = function (path, callback) {
-    this.routes[path] = callback || function () { console.log(path+'default function')};
+    this.routes[path] = callback || function () { console.log(path + 'default function') };
 }
 Router.prototype.refresh = function () {
     this.currentURL = location.hash.slice(1) || '/index';

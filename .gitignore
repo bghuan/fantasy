@@ -1,10 +1,12 @@
 .vscode
-node_modules
+node_modules/
 php/config.php
 
 ### properties ###
 justAuth/src/main/resources/application.properties
 justAuth/target/
 
-android/.gradle
-android/.idea
+android/.gradle/
+android/.idea/
+android/build/
+android/app/build/
