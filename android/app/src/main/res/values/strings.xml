@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">fantasy</string>
+    <string name="app_name">三分幻想</string>
+    <string name="loading">收集幻想</string>
 </resources>
