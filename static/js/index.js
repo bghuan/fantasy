@@ -1,4 +1,4 @@
-let a, b, a_Collapse, b_Collapse, isGoBack, localStorageBackup = 'fantasy.', isPhp = false
+let a, b, a_Collapse, b_Collapse, isGoBack, localStorageBackup = 'fantasy.'
 const api = "https://api.buguoheng.com"
 const getMyDate = (date = new Date()) => (date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()).toString()
 const readPath = '/php/read.php'
@@ -6,7 +6,12 @@ const createPath = '/php/create.php'
 
 document.addEventListener("DOMContentLoaded", (function () {
     loginCallback()
-    if (!isPhp) query_onhashchange()
+    HttpGet(location.hash.slice(1), (res) => {
+        queryCallBack(res)
+        document.getElementById('loading').style.display = 'none'
+        document.getElementById('afterLoading').style.display = 'block'
+        document.body.style = 'overflow-y: scroll'
+    })
     window.addEventListener('hashchange', query_onhashchange, false)
     a_Collapse = new bootstrap.Collapse(document.getElementById('collapsea'), { toggle: false })
     b_Collapse = new bootstrap.Collapse(document.getElementById('collapseb'), { toggle: false })

@@ -51,4 +51,5 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
+    // jarsigner -verbose -certs -verify fantasy.apk
 }
