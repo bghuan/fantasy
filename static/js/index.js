@@ -4,11 +4,12 @@ const getMyDate = (date = new Date()) => (date.getFullYear() + '-' + (date.getMo
 const readPath = '/php/read.php'
 const createPath = '/php/create.php'
 
-document.addEventListener("DOMContentLoaded", (function () {
+document.addEventListener("DOMContentLoaded", (function() {
     loginCallback()
     HttpGet(location.hash.slice(1), (res) => {
         queryCallBack(res)
         document.getElementById('loading').style.display = 'none'
+        document.getElementById('spinner').style.display = 'none'
         document.getElementById('afterLoading').style.display = 'block'
         document.body.style = 'overflow-y: scroll'
     })
@@ -80,22 +81,22 @@ const query = (str, purpose) => {
     }
 }
 const create = obj => {
-    rmcollapseb()
-    a = document.getElementById("a").value
-    b = document.getElementById("b").value
-    if ((a + b).trim().length == 0 || (a == 'fantasy' && b.length == 0)) return
-    if (a == '') a = 'fantasy'
-    let url = createPath + '?a=' + a + '&b=' + JSON.stringify(typeof b == "string" ? b.split(",") : [])
-    url = createPath + '?a=' + a + '&b=' + b
-    let callBack = create_id => {
-        if (create_id.length == 24) {
-            localStorage.id += (',' + create_id)
+        rmcollapseb()
+        a = document.getElementById("a").value
+        b = document.getElementById("b").value
+        if ((a + b).trim().length == 0 || (a == 'fantasy' && b.length == 0)) return
+        if (a == '') a = 'fantasy'
+        let url = createPath + '?a=' + a + '&b=' + JSON.stringify(typeof b == "string" ? b.split(",") : [])
+        url = createPath + '?a=' + a + '&b=' + b
+        let callBack = create_id => {
+            if (create_id.length == 24) {
+                localStorage.id += (',' + create_id)
+            }
+            query('', 'force')
         }
-        query('', 'force')
+        HttpGet(url, callBack)
     }
-    HttpGet(url, callBack)
-}
-//card1.style.height=window.innerHeight-card.style.marginTop.replace('px','')-document.getElementById('as').style.height+'px'
+    //card1.style.height=window.innerHeight-card.style.marginTop.replace('px','')-document.getElementById('as').style.height+'px'
 const queryCallBack = (json) => {
     document.getElementById("a_top").innerHTML = a || 'fantasy'
     document.getElementById("a").value = a || ''
@@ -108,12 +109,12 @@ const queryCallBack = (json) => {
         div = document.createElement("div")
         fantasy = document.createElement("a")
         content = document.createElement("a")
-        // fantasy.innerHTML = json[j]['a'] + '  ' + convertIdTime(json[j]['_id']['$oid']) || ''
+            // fantasy.innerHTML = json[j]['a'] + '  ' + convertIdTime(json[j]['_id']['$oid']) || ''
         fantasy.innerHTML = json[j]['a'] || ''
         content.innerHTML = (json[j]['b'] == null || json[j]['b'] == '' ? '' : json[j]['b'] + ' - ')
         let ahtml = fantasy.innerHTML
-        fantasy.onclick = function () { query(this.innerHTML) }
-        content.onclick = function () { query(ahtml) }
+        fantasy.onclick = function() { query(this.innerHTML) }
+        content.onclick = function() { query(ahtml) }
         fantasy.style = content.innerHTML != '' ? "font-size:0.6em" : ""
         div.style = " margin:8px 0 4px 0px"
         div.appendChild(content)
@@ -122,8 +123,9 @@ const queryCallBack = (json) => {
     }
 }
 var json1 = [
-    { a: 'a', b: '<image src="https://i2.hdslb.com/bfs/face/421179426c929dfeaed4117461c83f5d07ffb148.png@62w_62h.webp" />', _id: { $id: 123 } }
+    { a: 'a', b: '<image src="https://bghuan.oss-cn-shenzhen.aliyuncs.com/image/d6a3950e0566aa2a8b71e6e37e1271e.png" />', _id: { $id: 123 } }
 ]
+
 function convertIdTime(id) {
     return
     /* 从Date对象（标准时间格式）返回对应数据 */
@@ -141,8 +143,8 @@ const show_id_edit = () => {
     if (document.getElementById('addid').style.display == 'block') { hide_id_edit() } else {
         document.getElementById('addid').style.display = 'block'
         document.getElementById("addid").scrollIntoView()
-        // document.getElementById('af').value = localStorage.id
-        // setTimeout(function () { order_id() }, 2000)
+            // document.getElementById('af').value = localStorage.id
+            // setTimeout(function () { order_id() }, 2000)
     }
 }
 
@@ -184,7 +186,7 @@ const quick_open = event => {
 document.addEventListener('keyup', quick_open, true)
 
 // show README.md
-document.getElementById('exampleModalLong').addEventListener('show.bs.modal', function () {
+document.getElementById('exampleModalLong').addEventListener('show.bs.modal', function() {
     if (document.getElementsByClassName("modal-body")[0].innerHTML.length <= 0) {
         let callBack = (json) => {
             let converter = new showdown.Converter()
@@ -199,31 +201,31 @@ document.getElementById('exampleModalLong').addEventListener('show.bs.modal', fu
 const rmcollapseb = () => { if (typeof bootstrap != 'undefined') b_Collapse.hide() }
 const rmcollapsea = () => { if (typeof bootstrap != 'undefined') a_Collapse.hide() }
 let b_collapseb_show = document.getElementById('collapseb')
-b_collapseb_show.addEventListener('show.bs.collapse', function () {
+b_collapseb_show.addEventListener('show.bs.collapse', function() {
     document.getElementById('collapseb').addEventListener('click', e => { e.stopPropagation() })
     document.addEventListener('click', rmcollapseb, false)
 })
 let b_collapse_hidden = document.getElementById('collapseb')
-b_collapse_hidden.addEventListener('hidden.bs.collapse', function () {
+b_collapse_hidden.addEventListener('hidden.bs.collapse', function() {
     document.getElementById('collapseb').removeEventListener('click', e => { e.stopPropagation() })
     document.removeEventListener('click', rmcollapseb, false)
 })
 let b_collapse_shown = document.getElementById('collapseb')
-b_collapse_shown.addEventListener('shown.bs.collapse', function () {
+b_collapse_shown.addEventListener('shown.bs.collapse', function() {
     document.getElementById('a').focus()
 })
 let a_collapseb_show = document.getElementById('collapsea')
-a_collapseb_show.addEventListener('show.bs.collapse', function () {
+a_collapseb_show.addEventListener('show.bs.collapse', function() {
     document.getElementById('collapsea').addEventListener('click', e => { e.stopPropagation() })
     document.addEventListener('click', rmcollapsea, false)
 })
 let a_collapse_hidden = document.getElementById('collapsea')
-a_collapse_hidden.addEventListener('hidden.bs.collapse', function () {
+a_collapse_hidden.addEventListener('hidden.bs.collapse', function() {
     document.getElementById('collapsea').removeEventListener('click', e => { e.stopPropagation() })
     document.removeEventListener('click', rmcollapsea, false)
 })
 let a_collapse_shown = document.getElementById('collapsea')
-a_collapse_shown.addEventListener('shown.bs.collapse', function () {
+a_collapse_shown.addEventListener('shown.bs.collapse', function() {
     document.getElementById('input_query').focus()
 })
 
@@ -262,12 +264,12 @@ const getQueryVariable = (variable) => {
     }
     return (false)
 }
-const loadJS = function (url, callback) {
+const loadJS = function(url, callback) {
     let script = document.createElement('script')
     script.src = url
     script.type = "text/javascript"
     if (script.onreadystatechange) {
-        script.onreadystatechange = function () {
+        script.onreadystatechange = function() {
             if (this.readyState == "complete" || this.readyState == "loaded") {
                 script.onreadystatechange = null
                 callback()
