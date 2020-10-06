@@ -5,17 +5,15 @@ const readPath = '/php/read.php'
 const createPath = '/php/create.php'
 
 document.addEventListener("DOMContentLoaded", (function() {
-    loginCallback()
     HttpGet(location.hash.slice(1), (res) => {
         queryCallBack(res)
-        document.getElementById('loading').style.display = 'none'
-        document.getElementById('spinner').style.display = 'none'
+        slideout(document.getElementById('loading'))
         document.getElementById('afterLoading').style.display = 'block'
-        document.body.style = 'overflow-y: scroll'
     })
     window.addEventListener('hashchange', query_onhashchange, false)
     a_Collapse = new bootstrap.Collapse(document.getElementById('collapsea'), { toggle: false })
     b_Collapse = new bootstrap.Collapse(document.getElementById('collapseb'), { toggle: false })
+    loginCallback()
 }))
 
 const HttpGet = (str, callBack, standard) => {
@@ -109,7 +107,6 @@ const queryCallBack = (json) => {
         div = document.createElement("div")
         fantasy = document.createElement("a")
         content = document.createElement("a")
-            // fantasy.innerHTML = json[j]['a'] + '  ' + convertIdTime(json[j]['_id']['$oid']) || ''
         fantasy.innerHTML = json[j]['a'] || ''
         content.innerHTML = (json[j]['b'] == null || json[j]['b'] == '' ? '' : json[j]['b'] + ' - ')
         let ahtml = fantasy.innerHTML
@@ -125,19 +122,6 @@ const queryCallBack = (json) => {
 var json1 = [
     { a: 'a', b: '<image src="https://bghuan.oss-cn-shenzhen.aliyuncs.com/image/d6a3950e0566aa2a8b71e6e37e1271e.png" />', _id: { $id: 123 } }
 ]
-
-function convertIdTime(id) {
-    return
-    /* 从Date对象（标准时间格式）返回对应数据 */
-    let date = new Date(parseInt(id.toString().substring(0, 8), 16) * 1000);
-    let year = date.getFullYear();
-    let month = date.getMonth();
-    let day = date.getDate();
-    let hour = date.getHours();
-    let minute = date.getMinutes();
-    let second = date.getSeconds();
-    return year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second;
-}
 
 const show_id_edit = () => {
     if (document.getElementById('addid').style.display == 'block') { hide_id_edit() } else {
@@ -290,4 +274,13 @@ function isJSON(str) {
         } catch (e) {
             return false;
         }
+}
+
+const slideout = (obj) => {
+    if (obj.style.opacity == null || obj.style.opacity == '') obj.style.opacity = 1
+    var opac = parseFloat(obj.style.opacity)
+    if (opac > 0) {
+        obj.style.opacity = opac - 0.01 - opac * 0.05
+        setTimeout(function() { slideout(obj) }, 20)
+    }
 }
