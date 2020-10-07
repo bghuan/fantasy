@@ -51,17 +51,18 @@
             </nav>
             <div class="collapse text-right" data-parent="#accordion" id="collapseb">
                 <div class="form-group">
-                    <input type="text" class="create form-control" id="a" placeholder="fantasy">
+                    <input type="text" class="create form-control" id="a">
                 </div>
                 <br>
                 <div class="form-group">
                     <textarea class="create form-control" id="b" rows="3"></textarea>
                 </div>
+                <br>
                 <button class="btn btn-primary" onclick="create()">create</button>
             </div>
             <div class="collapse text-right" data-parent="#accordion" id="collapsea">
                 <div class="form-group">
-                    <input type="text" class="form-control" id="input_query" placeholder="fantasy">
+                    <input type="text" class="form-control" id="input_query">
                 </div>
                 <br>
                 <button class="btn btn-primary" onclick="query(document.getElementById('input_query').value||'fantasy','force')">query</button>

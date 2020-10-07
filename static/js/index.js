@@ -1,13 +1,15 @@
-let a, b, a_Collapse, b_Collapse, isGoBack, localStorageBackup = 'fantasy.'
+let a, b, a_Collapse, b_Collapse, isGoBack, localStorageBackup = 'fantasy.',
+    stopServiceIfDateNineIsNeedRefresh = false
 const api = "https://api.buguoheng.com"
 const getMyDate = (date = new Date()) => (date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()).toString()
 const readPath = '/php/read.php'
 const createPath = '/php/create.php'
 
 document.addEventListener("DOMContentLoaded", (function() {
+    if (stopServiceIfDateNine()) return
     HttpGet(location.hash.slice(1), (res) => {
         queryCallBack(res)
-        slideout(document.getElementById('loading'))
+        document.getElementById('loading').style.display = 'none'
         document.getElementById('afterLoading').style.display = 'block'
     })
     window.addEventListener('hashchange', query_onhashchange, false)
@@ -48,6 +50,8 @@ const HttpGetPure = (str, callBack) => {
 const query_onhashchange = () => {
     a = decodeURI(location.href).split('a=')[1] || ''
     if (isGoBack) {
+        b_Collapse.hide()
+        a_Collapse.hide()
         let temp = localStorage.getItem(localStorageBackup + a)
         if (temp != null && temp.length > 0 && isJSON(temp))
             queryCallBack(JSON.parse(localStorage.getItem(localStorageBackup + a)))
@@ -182,8 +186,8 @@ document.getElementById('exampleModalLong').addEventListener('show.bs.modal', fu
     }
 })
 
-const rmcollapseb = () => { if (typeof bootstrap != 'undefined') b_Collapse.hide() }
-const rmcollapsea = () => { if (typeof bootstrap != 'undefined') a_Collapse.hide() }
+const rmcollapseb = () => { b_Collapse.hide() }
+const rmcollapsea = () => { a_Collapse.hide() }
 let b_collapseb_show = document.getElementById('collapseb')
 b_collapseb_show.addEventListener('show.bs.collapse', function() {
     document.getElementById('collapseb').addEventListener('click', e => { e.stopPropagation() })
@@ -283,4 +287,15 @@ const slideout = (obj) => {
         obj.style.opacity = opac - 0.01 - opac * 0.05
         setTimeout(function() { slideout(obj) }, 20)
     }
+}
+
+const stopServiceIfDateNine = () => {
+    if (new Date().getDate() == '9') {
+        document.body.innerHTML = new Date() + '<br />' + '每月9号不收集幻想'
+        stopServiceIfDateNineIsNeedRefresh = true
+    } else if (stopServiceIfDateNineIsNeedRefresh)
+        window.location.reload()
+    else return false
+    setTimeout(stopServiceIfDateNine, 100)
+    return true
 }
