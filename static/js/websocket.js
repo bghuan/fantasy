@@ -1,16 +1,19 @@
 const WebSocket = require('ws');
 var wss = new WebSocket.Server({ port: 8091 });
 
-wss.on('connection', function (ws) {
-    ws.on('message', function (data) {
+wss.on('connection', function(ws) {
+    ws.on('message', function(data) {
         broadcast(data, ws)
     });
-    ws.on('close', function () {
+    ws.on('close', function() {
         wss.clients.delete(ws)
     });
-    ws.on('error', function () {
+    ws.on('error', function() {
         wss.clients.delete(ws)
     });
+    ws.on("binary", function(data) {
+        broadcast(data, ws)
+    })
 });
 
 function broadcast(data, ws) {
