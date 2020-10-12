@@ -6,8 +6,8 @@ include 'config.php';
 
 $a = $_GET["a"];
 $_id = $_GET["id"];
-$limit = !empty($_GET["limit"]) && preg_match("/^[\d0-9]{1,3}+$/", $_GET["limit"]) ? (int) $_GET["limit"] : 1000;
-$skip = !empty($_GET["skip"]) && preg_match("/^[\d0-9]{1,9}+$/", $_GET["skip"]) ? (int) $_GET["skip"] : 0;
+$limit = $_GET["limit"] ? $_GET["limit"] : 1000;
+$skip = $_GET["skip"] ? $_GET["skip"] : 0;
 
 if (!empty($_id)) {
     $_ids = explode(',', trim($_id, '[]'));

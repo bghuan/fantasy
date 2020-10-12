@@ -24,68 +24,84 @@
         .form-control:focus {
             box-shadow: none;
         }
-
-        body {
-            overflow-x: hidden;
-        }
     </style>
     <script>
         let globalWebsocket
         const websocketLifePeriod = () => {
-            var webSocket = new WebSocket("wss://api.buguoheng.com/ws");
-            // var webSocket = new WebSocket("ws://127.0.0.1:8091");
+            // var webSocket = new WebSocket("wss://api.buguoheng.com/ws");
+            var webSocket = new WebSocket("ws://127.0.0.1:8091");
+            const sockState = () => ['未连接', '连接成功，可通讯', '正在关闭', '连接已关闭或无法打开'][webSocket.readyState]
             globalWebsocket = webSocket
 
-            webSocket.onerror = function (err) {
-                console.log(err);
-            };
-
-            webSocket.onopen = function (event) {
-                console.log("open:" + sockState());
+            webSocket.onopen = function(event) {
                 document.getElementsByTagName("span")[0].innerHTML = "Connected";
                 document.getElementsByTagName("span")[0].className = "text-primary"
                 document.getElementsByTagName("span")[1].innerHTML = "Close"
                 document.getElementsByTagName("span")[1].onclick = close
             };
 
-            webSocket.onmessage = function (event) {
-                if (typeof event.data == "string")
-                    data = event.data;
-                else if (typeof event.data == "object")
-                    data = unzip(event.data);
-
-                    
-                document.getElementById("msg").innerHTML += "<p>" + event.data + "</p>"
-                document.getElementById("footer").scrollIntoView()
+            webSocket.onmessage = function(event) {
+                if (typeof event.data == "string") {
+                    write(event.data)
+                } else if (typeof event.data == "object") {
+                    writeImage(event.data)
+                }
             };
 
-            webSocket.onclose = function (event) {
+            webSocket.onclose = function(event) {
                 document.getElementsByTagName("span")[0].innerHTML = "Disconnect";
                 document.getElementsByTagName("span")[0].className = "text-danger"
             }
-            function sockState() {
-                var status = ['未连接', '连接成功，可通讯', '正在关闭', '连接已关闭或无法打开'];
-                return status[webSocket.readyState];
-            }
+
+            webSocket.onerror = (err) => console.log(err)
+
             function send(msg) {
-                if (!msg)
-                    msg = document.getElementById('text').value;
+                if (typeof msg == "object") {
+                    let reader = new FileReader()
+                    reader.readAsArrayBuffer(msg.items[0].getAsFile())
+                    reader.onload = () => globalWebsocket.send(reader.result)
+                    writeImage(msg.items[0].getAsFile())
+                    return
+                }
+                if (!msg) msg = document.getElementById('text').value;
                 document.getElementById('text').value = '';
                 globalWebsocket.send(msg);
-                document.getElementById("msg").innerHTML += "<p class='" + (globalWebsocket.readyState == 1 ? '' : ' text-danger') + "'>" + msg + "</p>"
-                document.getElementById("footer").scrollIntoView()
-                document.getElementById('text').focus()
-            };
+                write(msg)
+            }
+
             function close() {
                 webSocket.close();
                 document.getElementsByTagName("span")[1].innerHTML = 'Open'
                 document.getElementsByTagName("span")[1].onclick = websocketLifePeriod
             }
 
+            const write = (msg) => {
+                document.getElementById("msg").innerHTML += "<p class='" + (globalWebsocket.readyState == 1 ? '' : ' text-danger') + "'>" + msg + "</p>"
+                writeFinaly()
+            }
+
+            const writeImage = function(msg) {
+                let reader = new FileReader()
+                reader.onload = function(e) {
+                    var img = new Image()
+                    img.src = e.target.result
+                    document.getElementById("msg").appendChild(img)
+                    document.getElementById("footer").scrollIntoView()
+                    writeFinaly()
+                };
+                reader.readAsDataURL(new Blob([msg]))
+            }
+
+            const writeFinaly = () => {
+                document.getElementById("footer").scrollIntoView()
+                document.getElementById('text').focus()
+            }
+
             document.getElementById('text').focus()
-            document.addEventListener("keyup", event => { if (event.keyCode == 13) { send() } })
-            document.getElementsByTagName("span")[1].onclick = close
+            document.addEventListener("keyup", event => event.keyCode == 13 ? send() : '')
             document.getElementById("send").addEventListener("click", (event) => send(event.data))
+            document.getElementById("text").addEventListener("paste", (event) => send(event.clipboardData))
+            document.getElementsByTagName("span")[1].addEventListener("click", () => close())
             document.getElementsByTagName("span")[2].addEventListener("click", () => location.reload())
         }
 

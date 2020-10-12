@@ -1,13 +1,17 @@
 package com.bghuan.fantasy;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.webkit.JsResult;
+import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -33,6 +37,26 @@ public class MainActivity extends AppCompatActivity {
 
         webView.setWebViewClient(webViewClient); // webView监听url跳转事件
         webView.setVisibility(View.VISIBLE);
+
+
+//        webView.setWebChromeClient(new WebChromeClient() {
+//            @Override
+//            public boolean onJsAlert(WebView view, String url, String message, final JsResult result) {
+//                AlertDialog.Builder b = new AlertDialog.Builder(MainActivity.this);
+//                b.setTitle("Alert");
+//                b.setMessage(message);
+//                b.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        result.confirm();
+//                    }
+//                });
+//                b.setCancelable(false);
+//                b.create().show();
+//                return true;
+//            }
+//        });
+
     }
 
     private WebViewClient webViewClient = new WebViewClient() {
