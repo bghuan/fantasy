@@ -13,13 +13,10 @@
         <input type="text" class="form-control" id="text">
         <div class="input-group-append dropup btn-group">
             <button class="btn btn-primary" id="write">Send</button>
-            <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false">
-                <span class="visually-hidden">Toggle Dropdown</span>
-            </button>
-            <div class="dropdown-menu dropdown-menu-right border-0 form-file">
+            <div class="form-file">
                 <input type="file" class="form-file-input" id="file">
                 <label class="form-file-label" for="file">
-                    <span class="form-file-text">Choose file</span>
+                    <span class="form-file-button">Choose file</span>
                 </label>
             </div>
         </div>
@@ -66,43 +63,46 @@
             }
 
             const write = (data, flag) => {
-                console.log(!data, flag)
-                if (flag)
-                    globalWebsocket.send(data)
-                if (!data) {
-                    data = document.getElementById('text').value
-                    document.getElementById('text').value = ''
-                }
+                data = data || document.getElementById('text').value
+                if (!flag) webSocket.send(data)
                 if (typeof data == "string") {
                     let node = document.createElement('p')
                     node.className = globalWebsocket.readyState == 1 ? '' : ' text-danger'
                     node.innerHTML = data
                     writeFinaly(node)
                 } else if (typeof data == "object") {
-                    // saveShareContent(event.data, "re.md")
                     let reader = new FileReader()
                     reader.readAsDataURL(new Blob([data]))
                     reader.onload = function(e) {
                         var img = new Image()
+                        img.style.maxWidth = "1296px"
                         img.src = e.target.result
-                        writeFinaly(img)
+                        let timer = setInterval(function() {
+                            if (img.complete) {
+                                img = (img.fileSize <= 0 || (img.width <= 0 && img.height <= 0)) ? saveShareContent(data, 'unnamed.txt') : img
+                                writeFinaly(img)
+                                clearInterval(timer)
+                            }
+                        }, 50)
                     }
                 }
             }
 
-            const writeFinaly = (node) => {
-                document.getElementById("msg").appendChild(node)
-                document.getElementById("footer").scrollIntoView()
-                document.getElementById('text').focus()
-            }
-
             const saveShareContent = (content, fileName) => {
                 let downLink = document.createElement('a')
+                downLink.className = 'd-block'
                 downLink.download = fileName
                 let blob = new Blob([content])
                 downLink.href = URL.createObjectURL(blob)
                 downLink.innerHTML = fileName
-                document.getElementById("msg").appendChild(downLink)
+                return downLink
+            }
+
+            const writeFinaly = (node) => {
+                document.getElementById('text').value = ''
+                document.getElementById("msg").appendChild(node)
+                document.getElementById("footer").scrollIntoView()
+                document.getElementById('text').focus()
             }
 
             document.getElementById('text').focus()
@@ -113,6 +113,7 @@
             document.getElementById("text").addEventListener("paste", (event) => write(event.clipboardData.items[0].getAsFile()))
             document.querySelector('#file').addEventListener('change', (event) => write(event.target.files[0]))
         }
+
         websocketLifePeriod()
     </script>
     <script src="../js/bootstrap.bundle.min.js"></script>
