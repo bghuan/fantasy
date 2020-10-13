@@ -1,112 +1,121 @@
 <!doctype html>
-<html lang="en">
+<html lang="zn">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1, user-scalable=no">
     <link rel="stylesheet" href="../css/bootstrap.min.css">
-    <title>websocket</title>
+    <title>WebSocket</title>
 </head>
 
-<body class=" container-lg">
+<body class="container-lg">
     <div class="input-group mb-3 fixed-bottom container-lg">
         <input type="text" class="form-control" id="text">
-        <div class="input-group-append">
-            <a class="input-group-text btn btn-primary" id="send">Send</a>
+        <div class="input-group-append dropup btn-group">
+            <button class="btn btn-primary" id="write">Send</button>
+            <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false">
+                <span class="visually-hidden">Toggle Dropdown</span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-right border-0 form-file">
+                <input type="file" class="form-file-input" id="file">
+                <label class="form-file-label" for="file">
+                    <span class="form-file-text">Choose file</span>
+                </label>
+            </div>
         </div>
     </div>
-    <span>Connecting</span>
-    <span class="btn text-primary float-right">Close</span>
-    <span class="btn text-primary float-right">Refresh</span>
+
+    <span class="btn text-primary" id="connectingSpan" style="margin-left: -15px">Connecting</span>
+    <span class="btn text-primary float-right" id="closeSpan">Close</span>
+    <span class="btn text-primary float-right" id="refreshSpan">Refresh</span>
     <div id="msg" style="margin-bottom:100px"></div>
     <div id="footer"></div>
     <style>
         .form-control:focus {
-            box-shadow: none;
+            box-shadow: none
         }
     </style>
     <script>
         let globalWebsocket
         const websocketLifePeriod = () => {
-            var webSocket = new WebSocket("wss://api.buguoheng.com/ws");
-            // var webSocket = new WebSocket("ws://127.0.0.1:8091");
+            var webSocket = new WebSocket("wss://api.buguoheng.com/ws")
+                // var webSocket = new WebSocket("ws://127.0.0.1:8091")
             const sockState = () => ['未连接', '连接成功，可通讯', '正在关闭', '连接已关闭或无法打开'][webSocket.readyState]
             globalWebsocket = webSocket
 
             webSocket.onopen = function(event) {
-                document.getElementsByTagName("span")[0].innerHTML = "Connected";
-                document.getElementsByTagName("span")[0].className = "text-primary"
-                document.getElementsByTagName("span")[1].innerHTML = "Close"
-                document.getElementsByTagName("span")[1].onclick = close
-            };
+                document.getElementById("connectingSpan").innerHTML = "Connected"
+                document.getElementById("connectingSpan").className = "btn text-primary"
+                document.getElementById("closeSpan").innerHTML = "Close"
+                document.getElementById("closeSpan").onclick = close
+            }
 
-            webSocket.onmessage = function(event) {
-                if (typeof event.data == "string") {
-                    write(event.data)
-                } else if (typeof event.data == "object") {
-                    writeImage(event.data)
-                }
-            };
+            webSocket.onmessage = (event) => write(event.data, true)
 
             webSocket.onclose = function(event) {
-                document.getElementsByTagName("span")[0].innerHTML = "Disconnect";
-                document.getElementsByTagName("span")[0].className = "text-danger"
+                document.getElementById("connectingSpan").innerHTML = "Disconnect"
+                document.getElementById("connectingSpan").className = "btn text-primary"
             }
 
             webSocket.onerror = (err) => console.log(err)
 
-            function send(msg) {
-                if (typeof msg == "object") {
-                    let reader = new FileReader()
-                    reader.readAsArrayBuffer(msg.items[0].getAsFile())
-                    reader.onload = () => globalWebsocket.send(reader.result)
-                    writeImage(msg.items[0].getAsFile())
-                    return
+            const close = () => {
+                webSocket.close()
+                document.getElementById("closeSpan").innerHTML = 'Open'
+                document.getElementById("closeSpan").onclick = websocketLifePeriod
+            }
+
+            const write = (data, flag) => {
+                console.log(!data, flag)
+                if (flag)
+                    globalWebsocket.send(data)
+                if (!data) {
+                    data = document.getElementById('text').value
+                    document.getElementById('text').value = ''
                 }
-                if (!msg) msg = document.getElementById('text').value;
-                document.getElementById('text').value = '';
-                globalWebsocket.send(msg);
-                write(msg)
+                if (typeof data == "string") {
+                    let node = document.createElement('p')
+                    node.className = globalWebsocket.readyState == 1 ? '' : ' text-danger'
+                    node.innerHTML = data
+                    writeFinaly(node)
+                } else if (typeof data == "object") {
+                    // saveShareContent(event.data, "re.md")
+                    let reader = new FileReader()
+                    reader.readAsDataURL(new Blob([data]))
+                    reader.onload = function(e) {
+                        var img = new Image()
+                        img.src = e.target.result
+                        writeFinaly(img)
+                    }
+                }
             }
 
-            function close() {
-                webSocket.close();
-                document.getElementsByTagName("span")[1].innerHTML = 'Open'
-                document.getElementsByTagName("span")[1].onclick = websocketLifePeriod
-            }
-
-            const write = (msg) => {
-                document.getElementById("msg").innerHTML += "<p class='" + (globalWebsocket.readyState == 1 ? '' : ' text-danger') + "'>" + msg + "</p>"
-                writeFinaly()
-            }
-
-            const writeImage = function(msg) {
-                let reader = new FileReader()
-                reader.onload = function(e) {
-                    var img = new Image()
-                    img.src = e.target.result
-                    document.getElementById("msg").appendChild(img)
-                    document.getElementById("footer").scrollIntoView()
-                    writeFinaly()
-                };
-                reader.readAsDataURL(new Blob([msg]))
-            }
-
-            const writeFinaly = () => {
+            const writeFinaly = (node) => {
+                document.getElementById("msg").appendChild(node)
                 document.getElementById("footer").scrollIntoView()
                 document.getElementById('text').focus()
             }
 
-            document.getElementById('text').focus()
-            document.addEventListener("keyup", event => event.keyCode == 13 ? send() : '')
-            document.getElementById("send").addEventListener("click", (event) => send(event.data))
-            document.getElementById("text").addEventListener("paste", (event) => send(event.clipboardData))
-            document.getElementsByTagName("span")[1].addEventListener("click", () => close())
-            document.getElementsByTagName("span")[2].addEventListener("click", () => location.reload())
-        }
+            const saveShareContent = (content, fileName) => {
+                let downLink = document.createElement('a')
+                downLink.download = fileName
+                let blob = new Blob([content])
+                downLink.href = URL.createObjectURL(blob)
+                downLink.innerHTML = fileName
+                document.getElementById("msg").appendChild(downLink)
+            }
 
+            document.getElementById('text').focus()
+            document.addEventListener("keyup", event => event.keyCode == 13 ? write() : null)
+            document.getElementById("closeSpan").addEventListener("click", () => close())
+            document.getElementById("refreshSpan").addEventListener("click", () => location.reload())
+            document.getElementById("write").addEventListener("click", () => write())
+            document.getElementById("text").addEventListener("paste", (event) => write(event.clipboardData.items[0].getAsFile()))
+            document.querySelector('#file').addEventListener('change', (event) => write(event.target.files[0]))
+        }
         websocketLifePeriod()
     </script>
+    <script src="../js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
