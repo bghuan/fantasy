@@ -4,35 +4,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1, user-scalable=no">
-    <link rel="stylesheet" href="../css/bootstrap.min.css">
     <title>WebSocket</title>
 </head>
 
-<body class="container-lg">
+<body>
     <div class="fixed-bottom container-lg">
         <div class="input-group mb-3">
-            <input type="text" class="form-control" id="text">
-            <button class="btn btn-outline-secondary" id="write">Send</button>
-            <input type="file" class="d-none" id="file">
-            <label class="form-file-button btn  btn-outline-secondary" for="file">File</label>
+            <input type="text" class="form-control" id="text" style="background-color:transparent">
+            <label class="btn btn-danger" id="write">Send</label>
+            <input type="file" id="file" style="display: none;">
+            <label class="form-file-button btn btn-outline-primary" for="file">File</label>
         </div>
     </div>
 
-    <span class="btn text-primary" id="connectingSpan" style="margin-left: -15px">Connecting</span>
-    <span class="btn text-primary float-right" id="closeSpan">Close</span>
-    <span class="btn text-primary float-right" id="refreshSpan">Refresh</span>
+    <div style="display: none;">
+        <span class="btn text-primary" id="connectingSpan" style="margin-left: -15px">Connecting</span>
+        <span class="btn text-primary float-right" id="closeSpan">Close</span>
+        <span class="btn text-primary float-right" id="refreshSpan">Refresh</span>
+    </div>
+
     <div id="msg" style="margin-bottom:100px"></div>
     <div id="footer"></div>
-    <style>
-        .form-control:focus {
-            box-shadow: none
-        }
-    </style>
     <script>
         let globalWebsocket
         const websocketLifePeriod = () => {
-            var webSocket = new WebSocket("wss://api.buguoheng.com/ws")
-                // var webSocket = new WebSocket("ws://127.0.0.1:8091")
+            // var webSocket = new WebSocket("wss://api.buguoheng.com/ws")
+            var webSocket = new WebSocket("ws://127.0.0.1:8091")
             const sockState = () => ['未连接', '连接成功，可通讯', '正在关闭', '连接已关闭或无法打开'][webSocket.readyState]
             globalWebsocket = webSocket
 
@@ -41,13 +38,15 @@
                 document.getElementById("connectingSpan").className = "btn text-primary"
                 document.getElementById("closeSpan").innerHTML = "Close"
                 document.getElementById("closeSpan").onclick = close
+                document.getElementById("write").className = "btn btn-outline-primary"
             }
 
             webSocket.onmessage = (event) => write(event.data, true)
 
             webSocket.onclose = function(event) {
                 document.getElementById("connectingSpan").innerHTML = "Disconnect"
-                document.getElementById("connectingSpan").className = "btn text-primary"
+                document.getElementById("connectingSpan").className = "btn text-danger"
+                document.getElementById("write").className = "btn btn-danger"
             }
 
             webSocket.onerror = (err) => console.log(err)
@@ -58,9 +57,10 @@
                 document.getElementById("closeSpan").onclick = websocketLifePeriod
             }
 
-            const write = (data, flag) => {
+            const write = (data, DontSend) => {
+                if (DontSend && !data) return
                 data = data || document.getElementById('text').value
-                if (!flag) webSocket.send(data)
+                if (!DontSend) globalWebsocket.send(data)
                 if (typeof data == "string") {
                     let node = document.createElement('p')
                     node.className = globalWebsocket.readyState == 1 ? '' : ' text-danger'
@@ -71,11 +71,11 @@
                     reader.readAsDataURL(new Blob([data]))
                     reader.onload = function(e) {
                         var img = new Image()
-                        img.style.maxWidth = "1296px"
+                            // img.style.maxWidth = "1296px"
                         img.src = e.target.result
                         let timer = setInterval(function() {
                             if (img.complete) {
-                                img = (img.fileSize <= 0 || (img.width <= 0 && img.height <= 0)) ? saveShareContent(data, 'unnamed.txt') : img
+                                img = (img.fileSize <= 0 || (img.width <= 0 && img.height <= 0)) ? saveFile(data, 'unnamed.txt') : img
                                 writeFinaly(img)
                                 clearInterval(timer)
                             }
@@ -84,7 +84,7 @@
                 }
             }
 
-            const saveShareContent = (content, fileName) => {
+            const saveFile = (content, fileName) => {
                 let downLink = document.createElement('a')
                 downLink.className = 'd-block'
                 downLink.download = fileName
@@ -103,16 +103,36 @@
 
             document.getElementById('text').focus()
             document.addEventListener("keyup", event => event.keyCode == 13 ? write() : null)
-            document.getElementById("closeSpan").addEventListener("click", () => close())
+            document.getElementById("closeSpan").onclick = close
             document.getElementById("refreshSpan").addEventListener("click", () => location.reload())
             document.getElementById("write").addEventListener("click", () => write())
-            document.getElementById("text").addEventListener("paste", (event) => write(event.clipboardData.items[0].getAsFile()))
             document.querySelector('#file').addEventListener('change', (event) => write(event.target.files[0]))
+            document.getElementById("text").addEventListener("paste", (event) => (event.clipboardData.items.length && event.clipboardData.items[0].type.indexOf("image") !== -1) ? write(event.clipboardData.items[0].getAsFile()) : null)
         }
 
         websocketLifePeriod()
     </script>
-    <script src="../js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://buguoheng.com/static/css/bootstrap.min.css">
+    <script src="https://buguoheng.com/static/js/bootstrap.bundle.min.js"></script>
+    <link rel="icon" href="https://buguoheng.com/favicon.ico" type="image/gif">
+    <style>
+        .form-control:focus {
+            box-shadow: none
+        }
+        
+        .btn-outline-primary {
+            color: #0d6efd;
+            border-color: #8bbafe;
+        }
+        
+         ::-webkit-scrollbar {
+            width: 0px;
+        }
+        
+        body {
+            overflow-x: hidden;
+        }
+    </style>
 </body>
 
 </html>
