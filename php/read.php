@@ -29,7 +29,7 @@ if (!empty($_id)) {
             ['$match' => ['a' => $a, 'b' => ['$exists' => true, '$nin' =>  [null, '', [], [''], [[]]]]]],
             ['$group' => ['_id' => '$b', 'id_temp' => ['$first' => '$_id'], 'count' => ['$sum' => 1]]],
             ['$sort' => ['id_temp' => -1]],
-            ['$project' => ['_id' => '$id_temp', 'a' => '$_id']]
+            ['$project' => ['_id' => 0, 'a' => '$_id']]
         ],
         'cursor' => new stdClass,
     ]);
@@ -47,7 +47,7 @@ if (!empty($_id)) {
             ['$match' => ['a' => ['$exists' => true], 'b' => ['$exists' => true, '$nin' =>  [null, '', [], [''], [[]]]]]],
             ['$group' => ['_id' => '$b', 'a' =>  ['$first' => '$a'], 'id_temp' => ['$first' => '$_id']]],
             ['$sort' => ['id_temp' => -1]],
-            ['$project' => ['_id' => '$id_temp', 'a' => '$a', 'b' => '$_id']]
+            ['$project' => ['_id' => 0, 'a' => '$a', 'b' => '$_id']]
         ],
         'cursor' => new stdClass,
     ]);

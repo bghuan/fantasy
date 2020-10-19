@@ -18,148 +18,8 @@
             <label class="form-file-button btn btn-outline-primary disabled" for="file" id="lableFile">File</label>
         </div>
     </div>
-
-    <div style="display: none;">
-        <span class="btn text-primary" id="connectingSpan" style="margin-left: -15px">Connecting</span>
-        <span class="btn text-primary float-right" id="closeSpan">Close</span>
-        <span class="btn text-primary float-right" id="refreshSpan">Refresh</span>
-    </div>
-
     <div id="msg" style="margin-bottom:100px"></div>
     <div id="footer"></div>
-    <script>
-        let globalWebsocket
-        const websocketLifePeriod = () => {
-            var webSocket = new WebSocket("wss://api.buguoheng.com/ws")
-                // var webSocket = new WebSocket("ws://127.0.0.1:8091")
-            const sockState = () => ['未连接', '连接成功，可通讯', '正在关闭', '连接已关闭或无法打开'][webSocket.readyState]
-            const reg = /\.(png|jpg|gif|jpeg|webp|ico|svg)$/;
-            const regSvg = /\.(svg)$/;
-            globalWebsocket = webSocket
-
-            //Websocket listen method
-            webSocket.onopen = function(event) {
-                document.getElementById("connectingSpan").innerHTML = "Connected"
-                document.getElementById("connectingSpan").className = "btn text-primary"
-                document.getElementById("closeSpan").innerHTML = "Close"
-                document.getElementById("closeSpan").onclick = close
-                document.getElementById("send").className = "btn btn-outline-primary"
-                document.getElementById("lableFile").className = "form-file-button btn btn-outline-primary"
-            }
-            webSocket.onmessage = (event) => {
-                if (typeof event.data == "string")
-                    onmessageString(event.data)
-                else if (typeof event.data == "object")
-                    onmessageBinary(event.data)
-            }
-            webSocket.onclose = function(event) {
-                document.getElementById("connectingSpan").innerHTML = "Disconnect"
-                document.getElementById("connectingSpan").className = "btn text-danger"
-                document.getElementById("send").className = "btn btn-outline-primary disabled"
-                document.getElementById("lableFile").className = "form-file-button btn btn-outline-primary disabled"
-            }
-            webSocket.onerror = (err) => console.log(err)
-
-            //location method
-            const close = () => {
-                webSocket.close()
-                document.getElementById("closeSpan").innerHTML = 'Open'
-                document.getElementById("closeSpan").onclick = websocketLifePeriod
-            }
-            const send = (data) => globalWebsocket.send(data)
-
-            const onmessageString = (data) => {
-                if (currentFile) {
-                    currentFile.name = data
-                    setFile(currentFile)
-                    currentFile = null
-                } else {
-                    setString(data)
-                }
-            }
-            const onmessageBinary = (data) => {
-                currentFile = data
-            }
-
-            const sendString = (data) => {
-                send(data)
-                setString(data)
-            }
-            const setString = (data) => {
-                let node = document.createElement('p')
-                node.className = globalWebsocket.readyState == 1 ? '' : ' text-danger'
-                node.innerHTML = data
-                writeFinaly(node)
-            }
-
-            //paste image or not
-            const paste = (data) => {
-                if (data.length && data[0].type.indexOf('image') >= 0)
-                    sendFile(data[0].getAsFile())
-            }
-
-            const sendFile = (data) => {
-                send(data)
-                send(data.name)
-                setFile(data)
-            }
-            const setFile = (data) => {
-                reg.test(data.name) ? setImage(data) : setFile3(data)
-            }
-
-            const setImage = (data) => {
-                let reader = new FileReader()
-                if (regSvg.test(data.name)) {
-                    reader.readAsText(new Blob([data]))
-                    reader.onload = (e) => writeFinaly(e.target.result)
-                } else {
-                    reader.readAsDataURL(new Blob([data]))
-                    reader.onload = function(e) {
-                        var img = new Image()
-                        img.src = e.target.result
-                        writeFinaly(img)
-                    }
-                }
-            }
-            const setFile3 = (data) => {
-                writeFinaly(createFileLink(data, data.name))
-            }
-
-            const createFileLink = (content, fileName) => {
-                let downLink = document.createElement('a')
-                downLink.className = 'd-block'
-                downLink.download = fileName
-                let blob = new Blob([content])
-                downLink.href = URL.createObjectURL(blob)
-                downLink.innerHTML = fileName
-                return downLink
-            }
-
-            const writeFinaly = (node) => {
-                document.getElementById('text').value = ''
-                typeof node == "object" ? document.getElementById("msg").appendChild(node) : document.getElementById("msg").innerHTML += node
-                document.getElementById("footer").scrollIntoView()
-                document.getElementById('text').focus()
-            }
-
-            //ui
-            document.getElementById('text').focus()
-            document.getElementById("closeSpan").onclick = close
-            document.getElementById("refreshSpan").addEventListener("click", () => location.reload())
-
-            //send message
-            document.getElementById("send").addEventListener("click", () => sendString(document.getElementById('text').value))
-            document.addEventListener("keyup", event => event.keyCode == 13 ? sendString(document.getElementById('text').value) : null)
-
-            //send image/file
-            document.querySelector('#file').addEventListener('change', (event) => sendFile(event.target.files[0]))
-            document.getElementById("text").addEventListener("paste", (event) => paste(event.clipboardData.items))
-        }
-
-        let currentFile
-        websocketLifePeriod()
-    </script>
-    <script src="https://buguoheng.com/static/js/bootstrap.bundle.min.js"></script>
     <style>
         .form-control:focus {
             box-shadow: none
@@ -178,6 +38,117 @@
             overflow-x: hidden;
         }
     </style>
+    <script>
+        let globalWebsocket
+        const websocketLifePeriod = () => {
+            var webSocket = new WebSocket("wss://api.buguoheng.com/ws")
+                // var webSocket = new WebSocket("ws://127.0.0.1:8091")
+            const sockState = () => ['未连接', '连接成功，可通讯', '正在关闭', '连接已关闭或无法打开'][webSocket.readyState]
+            const reg = /\.(png|jpg|gif|jpeg|webp|ico|svg)$/;
+            const regSvg = /\.(svg)$/;
+            let currentFile
+            globalWebsocket = webSocket
+
+            //Websocket listen method
+            webSocket.onopen = function(event) {
+                document.getElementById("send").className = "btn btn-outline-primary"
+                document.getElementById("lableFile").className = "form-file-button btn btn-outline-primary"
+            }
+            webSocket.onmessage = (event) => {
+                if (typeof event.data == "string")
+                    onmessageString(event.data)
+                else if (typeof event.data == "object")
+                    onmessageBinary(event.data)
+            }
+            webSocket.onclose = function(event) {
+                document.getElementById("send").className = "btn btn-outline-primary disabled"
+                document.getElementById("lableFile").className = "form-file-button btn btn-outline-primary disabled"
+            }
+            webSocket.onerror = (err) => console.log(err)
+
+            const send = (data) => globalWebsocket.send(data)
+
+            const onmessageString = (data) => {
+                if (currentFile) {
+                    currentFile.name = data
+                    setFile(currentFile)
+                    currentFile = null
+                } else if (data) {
+                    setString(data)
+                }
+            }
+            const onmessageBinary = (data) => currentFile = data
+
+            const sendString = (data) => {
+                send(data)
+                setString(data)
+            }
+            const setString = (data) => {
+                let node = document.createElement('p')
+                node.innerHTML = data
+                writeFinaly(node)
+            }
+
+            //file/image
+            const setFile = (data) => reg.test(data.name) ? setImage(data) : setFile3(data)
+            const setImage = (data) => {
+                let reader = new FileReader()
+                if (regSvg.test(data.name)) {
+                    reader.readAsText(new Blob([data]))
+                    reader.onload = (e) => writeFinaly(e.target.result)
+                } else {
+                    reader.readAsDataURL(new Blob([data]))
+                    reader.onload = function(e) {
+                        var img = new Image()
+                        img.src = e.target.result
+                        writeFinaly(img)
+                    }
+                }
+            }
+            const setFile3 = (data) => {
+                writeFinaly(createFileLink(data, data.name))
+            }
+
+            //paste image or not
+            const paste = (data) => (data.length && data[0].type.indexOf('image') >= 0) ? sendFile(data[0].getAsFile()) : null
+
+            const sendFile = (data) => {
+                send(data)
+                send(data.name)
+                setFile(data)
+            }
+
+            const createFileLink = (content, fileName) => {
+                let downLink = document.createElement('a')
+                downLink.className = 'd-block'
+                downLink.download = fileName
+                let blob = new Blob([content])
+                downLink.href = URL.createObjectURL(blob)
+                downLink.innerHTML = fileName
+                return downLink
+            }
+
+            const writeFinaly = (node) => {
+                typeof node == "object" ? document.getElementById("msg").appendChild(node) : document.getElementById("msg").innerHTML += node
+                document.getElementById('text').value = ''
+                document.getElementById('text').focus()
+                document.getElementById("footer").scrollIntoView()
+            }
+
+            //ui
+            document.getElementById('text').focus()
+
+            //send message
+            document.getElementById("send").addEventListener("click", () => sendString(document.getElementById('text').value))
+            document.addEventListener("keyup", event => event.keyCode == 13 ? sendString(document.getElementById('text').value) : null)
+
+            //send image/file
+            document.querySelector('#file').addEventListener('change', (event) => sendFile(event.target.files[0]))
+            document.getElementById("text").addEventListener("paste", (event) => paste(event.clipboardData.items))
+        }
+
+        websocketLifePeriod()
+    </script>
 </body>
 
 </html>
