@@ -44,9 +44,9 @@ public class MainActivity extends AppCompatActivity {
 
         webView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR); // 状态栏文字黑色
 
+        webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
         webView.setWebViewClient(webViewClient); // webView监听url跳转事件
 //        webView.setWebChromeClient(new MyChromeClient());
-        webView.setVisibility(View.VISIBLE);
     }
 
     private void openFileChooserActivity() {

@@ -10,39 +10,50 @@
 </head>
 
 <body>
-    <div class="fixed-bottom container-fluid">
-        <div class="input-group mb-3">
+    <div class="fixed-bottom">
+        <div class="input-group">
             <input type="text" class="form-control" id="text" style="background-color:transparent">
             <label class="btn btn-outline-primary disabled" id="send">Send</label>
             <input type="file" id="file" style="display: none;">
             <label class="form-file-button btn btn-outline-primary disabled" for="file" id="lableFile">File</label>
         </div>
     </div>
-    <div id="msg" style="margin-bottom:100px"></div>
+    <div id="msg" style="margin-bottom:0.1px"></div>
     <div id="footer"></div>
     <style>
         .form-control:focus {
             box-shadow: none
         }
-        
+
         .btn-outline-primary {
             color: #0d6efd;
             border-color: #8bbafe;
         }
-        
-         ::-webkit-scrollbar {
+
+        ::-webkit-scrollbar {
             width: 0px;
         }
-        
+
         body {
             overflow-x: hidden;
         }
     </style>
     <script>
+        const bgi = [
+            "repeating-linear-gradient(90deg, rgb(95, 152, 225) 0px, rgb(95, 152, 225) 10px,rgb(115, 164, 229) 10px, rgb(115, 164, 229) 20px,rgb(135, 175, 233) 20px, rgb(135, 175, 233) 30px,rgb(214, 222, 250) 30px, rgb(214, 222, 250) 40px,rgb(174, 199, 242) 40px, rgb(174, 199, 242) 50px,rgb(155, 187, 238) 50px, rgb(155, 187, 238) 60px,rgb(194, 210, 246) 60px, rgb(194, 210, 246) 70px)",
+            "repeating-linear-gradient(0deg, hsla(346, 18%, 76%, 0.09) 0px, hsla(346, 18%, 76%, 0.09) 1px, transparent 1px, transparent 9px), repeating-linear-gradient(90deg, hsla(346, 18%, 76%, 0.09) 0px, hsla(346, 18%, 76%, 0.09) 1px, transparent 1px, transparent 9px), linear-gradient(90deg, hsl(253, 39%, 53%), hsl(253, 39%, 53%))",
+        ]
+        let ad = Math.round(Math.random() * (bgi.length - 1))
+        document.body.style.backgroundImage = bgi[ad];
+    </script>
+    <script>
+        let asd
+        const cl = console.log
+
         let globalWebsocket
         const websocketLifePeriod = () => {
             var webSocket = new WebSocket("wss://api.buguoheng.com/ws")
-                // var webSocket = new WebSocket("ws://127.0.0.1:8091")
+            // var webSocket = new WebSocket("ws://127.0.0.1:8091")
             const sockState = () => ['未连接', '连接成功，可通讯', '正在关闭', '连接已关闭或无法打开'][webSocket.readyState]
             const reg = /\.(png|jpg|gif|jpeg|webp|ico|svg)$/;
             const regSvg = /\.(svg)$/;
@@ -50,7 +61,7 @@
             globalWebsocket = webSocket
 
             //Websocket listen method
-            webSocket.onopen = function(event) {
+            webSocket.onopen = function (event) {
                 document.getElementById("send").className = "btn btn-outline-primary"
                 document.getElementById("lableFile").className = "form-file-button btn btn-outline-primary"
             }
@@ -60,7 +71,7 @@
                 else if (typeof event.data == "object")
                     onmessageBinary(event.data)
             }
-            webSocket.onclose = function(event) {
+            webSocket.onclose = function (event) {
                 document.getElementById("send").className = "btn btn-outline-primary disabled"
                 document.getElementById("lableFile").className = "form-file-button btn btn-outline-primary disabled"
             }
@@ -98,7 +109,7 @@
                     reader.onload = (e) => writeFinaly(e.target.result)
                 } else {
                     reader.readAsDataURL(new Blob([data]))
-                    reader.onload = function(e) {
+                    reader.onload = function (e) {
                         var img = new Image()
                         img.src = e.target.result
                         writeFinaly(img)
@@ -106,24 +117,30 @@
                 }
             }
             const setFile3 = (data) => {
-                writeFinaly(createFileLink(data, data.name))
+                writeFinaly(createFileLink(data.name, data))
             }
 
             //paste image or not
             const paste = (data) => (data.length && data[0].type.indexOf('image') >= 0) ? sendFile(data[0].getAsFile()) : null
 
             const sendFile = (data) => {
+                if (data.type == "change") data = data.target.files[0]
                 send(data)
                 send(data.name)
                 setFile(data)
             }
 
-            const createFileLink = (content, fileName) => {
+            const createFileLink = (fileName, file) => {
                 let downLink = document.createElement('a')
                 downLink.className = 'd-block'
                 downLink.download = fileName
-                let blob = new Blob([content])
-                downLink.href = URL.createObjectURL(blob)
+                if (file) {
+                    let blob = new Blob([file])
+                    downLink.href = URL.createObjectURL(blob)
+                }
+                else {
+                    downLink.href = fileName
+                }
                 downLink.innerHTML = fileName
                 return downLink
             }
@@ -135,7 +152,6 @@
                 document.getElementById("footer").scrollIntoView()
             }
 
-            //ui
             document.getElementById('text').focus()
 
             //send message
@@ -143,11 +159,57 @@
             document.addEventListener("keyup", event => event.keyCode == 13 ? sendString(document.getElementById('text').value) : null)
 
             //send image/file
-            document.querySelector('#file').addEventListener('change', (event) => sendFile(event.target.files[0]))
+            document.getElementById('file').addEventListener('change', sendFile)
+            // document.getElementById('file').removeEventListener('change', sendFile)
             document.getElementById("text").addEventListener("paste", (event) => paste(event.clipboardData.items))
+
+            //oss
+            const setClient = (json) => {
+                let client = new OSS({
+                    region: 'oss-cn-hangzhou',
+                    accessKeyId: json['Credentials']['AccessKeyId'],
+                    accessKeySecret: json['Credentials']['AccessKeySecret'],
+                    stsToken: json['Credentials']['SecurityToken'],
+                    bucket: 'bgh-open'
+                    // secure: true
+                });
+                /*将元素节点类型字符串化*/
+                function stringIze(obj) {
+                    var o = document.createElement("div");
+                    o.appendChild(obj);
+                    return o.innerHTML;
+                }
+                const put = (data) => {
+                    if (data.type == "change") data = data.target.files[0]
+                    if (data.size < (1024 * 1024 * 3)) return sendFile(data)
+                    client.put(data.name, data).then(function (r1) {
+                        let link = createFileLink(r1.url)
+                        sendString(stringIze(link))
+                    }).catch(function (err) {
+                        console.error(err);
+                    });
+                }
+
+                document.querySelector('#file').removeEventListener('change', sendFile)
+                document.querySelector('#file').addEventListener('change', put)
+                console.log('oss is ready')
+            }
+
+            const HttpGetPure = (str, callBack) => {
+                let xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP")
+                xmlhttp.onreadystatechange = () => { if (xmlhttp.readyState == 4 && xmlhttp.status == 200) { callBack(xmlhttp.responseText) } }
+                xmlhttp.open("GET", str, true)
+                xmlhttp.send()
+            }
+
+            HttpGetPure('https://api.buguoheng.com/php/sts.php', (res) => setClient(JSON.parse(res)))
         }
 
         websocketLifePeriod()
+    </script>
+
+    <script src="https://buguoheng.com/static/js/aliyun-oss-sdk-6.8.0.min.js"></script>
+    <script>
     </script>
 </body>
 
