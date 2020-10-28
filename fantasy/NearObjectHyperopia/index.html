@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>光线经过离开定宽介质折射模型</title>
+</head>
+
+<body>
+    <canvas id="canvas" width="1500" height="950" style="background:#FFF;border:#000 1px solid"></canvas>
+    <a href="index.html">1</a>
+    <a href="index2.1.html">2</a>
+    <a href="index2.2.html">3</a>
+</body>
+<script src="./main.js"></script>
+<script>
+    var width0 = document.documentElement.clientWidth
+    var height0 = document.documentElement.clientHeight
+    var canvas = document.getElementById("canvas")
+    var line = canvas.getContext("2d")
+    line.fillStyle = "#CCFFFF"
+    line.fillRect(500, 0, 500, 1000)
+    init()
+
+    canvas.onmousedown = () => down = true
+    canvas.onmouseup = () => down = false
+    canvas.onmousemove = function (e) {
+        if (!down) return
+        let width = 500
+        // if (e.layerX > width + 50) return
+        clean()
+
+        let points = []
+        points[0] = new Point(0, height0 / 2)
+        points[1] = new Point(e.layerX, e.layerY)
+        points[1] = endPoint(points[0], points[1], width - e.layerX)
+        points[2] = nextPoint(points[0], points[1], width)
+        points[3] = nextPoint(points[1], points[2], width, true)
+
+        drwaLine(points, line)
+    }
+    function init() {
+        let width = 500
+        clean()
+        let points = []
+        points[0] = new Point(0, height0 / 2)
+        points[1] = new Point(width, 300)
+        points[2] = nextPoint(points[0], points[1], width)
+        points[3] = nextPoint(points[1], points[2], width, true)
+        drwaLine(points, line)
+    }
+    function _clean() {
+        line.clearRect(0, 0, 500, 1000)
+        line.fillRect(500, 0, 500, 1000)
+        line.clearRect(1000, 0, 500, 1000)
+        line.beginPath()
+    }
+</script>
+
+</html>
