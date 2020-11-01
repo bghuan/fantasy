@@ -1,10 +1,11 @@
 <?php
-
-require __DIR__ . '/vendor/autoload.php';
-
+//https://help.aliyun.com/document_detail/53111.html?spm=a2c4g.11186623.2.13.75594e2fOTsH2M#concept-b43-j4j-zdb
 header('Access-Control-Allow-Origin:*');
 header('Content-type: application/json; charset=utf-8');
+
+require __DIR__ . '/vendor/autoload.php';
 include 'config.php';
+
 
 use AlibabaCloud\Client\AlibabaCloud;
 use AlibabaCloud\Client\Exception\ClientException;

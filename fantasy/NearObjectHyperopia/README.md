@@ -25,3 +25,6 @@ y/x=k,y/x(线)*k(圆)=-1,k=x/y
 3. 光在多角度成像点的唯一确定
 4. 光的成像
 5. 光的成像清晰
+
+光的折射
+https://ricktu288.github.io/ray-optics

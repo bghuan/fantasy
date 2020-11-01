@@ -44,7 +44,7 @@ if (!empty($_id)) {
     $cmd = new MongoDB\Driver\Command([
         'aggregate' => $db_document,
         'pipeline' => [
-            ['$match' => ['a' => ['$exists' => true], 'b' => ['$exists' => true, '$nin' =>  [null, '', [], [''], [[]]]]]],
+            ['$match' => ['a' => ['$exists' => true], 'a' => ['$ne' => 'test'], 'b' => ['$exists' => true, '$nin' =>  [null, '', [], [''], [[]]]]]],
             ['$group' => ['_id' => '$b', 'a' =>  ['$first' => '$a'], 'id_temp' => ['$first' => '$_id']]],
             ['$sort' => ['id_temp' => -1]],
             ['$project' => ['_id' => 0, 'a' => '$a', 'b' => '$_id']]

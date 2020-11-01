@@ -18,7 +18,7 @@
             <label class="form-file-button btn btn-outline-primary disabled" for="file" id="lableFile">File</label>
         </div>
     </div>
-    <div id="msg" style="margin-bottom:0.1px"></div>
+    <div id="msg"></div>
     <div id="footer"></div>
     <style>
         .form-control:focus {
@@ -38,14 +38,8 @@
             overflow-x: hidden;
         }
     </style>
-    <script>
-        const bgi = [
-            "repeating-linear-gradient(90deg, rgb(95, 152, 225) 0px, rgb(95, 152, 225) 10px,rgb(115, 164, 229) 10px, rgb(115, 164, 229) 20px,rgb(135, 175, 233) 20px, rgb(135, 175, 233) 30px,rgb(214, 222, 250) 30px, rgb(214, 222, 250) 40px,rgb(174, 199, 242) 40px, rgb(174, 199, 242) 50px,rgb(155, 187, 238) 50px, rgb(155, 187, 238) 60px,rgb(194, 210, 246) 60px, rgb(194, 210, 246) 70px)",
-            "repeating-linear-gradient(0deg, hsla(346, 18%, 76%, 0.09) 0px, hsla(346, 18%, 76%, 0.09) 1px, transparent 1px, transparent 9px), repeating-linear-gradient(90deg, hsla(346, 18%, 76%, 0.09) 0px, hsla(346, 18%, 76%, 0.09) 1px, transparent 1px, transparent 9px), linear-gradient(90deg, hsl(253, 39%, 53%), hsl(253, 39%, 53%))",
-        ]
-        let ad = Math.round(Math.random() * (bgi.length - 1))
-        document.body.style.backgroundImage = bgi[ad];
-    </script>
+    <script src="https://buguoheng.com/static/js/three.min.js"></script>
+    <script src="https://buguoheng.com/static/js/gsap.js"></script>
     <script>
         let asd
         const cl = console.log
@@ -72,8 +66,8 @@
                     onmessageBinary(event.data)
             }
             webSocket.onclose = function (event) {
-                document.getElementById("send").className = "btn btn-outline-primary disabled"
-                document.getElementById("lableFile").className = "form-file-button btn btn-outline-primary disabled"
+                document.getElementById("send").className = "btn btn-danger disabled"
+                document.getElementById("lableFile").className = "form-file-button btn btn-danger disabled"
             }
             webSocket.onerror = (err) => console.log(err)
 
@@ -146,10 +140,13 @@
             }
 
             const writeFinaly = (node) => {
-                typeof node == "object" ? document.getElementById("msg").appendChild(node) : document.getElementById("msg").innerHTML += node
+                document.getElementById("msg").appendChild(node)
                 document.getElementById('text').value = ''
                 document.getElementById('text').focus()
-                document.getElementById("footer").scrollIntoView()
+                var timer = setInterval(() => {
+                    if (node.complete == undefined || node.complete) clearInterval(timer)
+                    document.getElementById("footer").scrollIntoView()
+                }, 10)
             }
 
             document.getElementById('text').focus()
@@ -163,9 +160,11 @@
             // document.getElementById('file').removeEventListener('change', sendFile)
             document.getElementById("text").addEventListener("paste", (event) => paste(event.clipboardData.items))
 
+
             //oss
+            let client
             const setClient = (json) => {
-                let client = new OSS({
+                client = new OSS({
                     region: 'oss-cn-hangzhou',
                     accessKeyId: json['Credentials']['AccessKeyId'],
                     accessKeySecret: json['Credentials']['AccessKeySecret'],
@@ -173,27 +172,30 @@
                     bucket: 'bgh-open'
                     // secure: true
                 });
-                /*将元素节点类型字符串化*/
-                function stringIze(obj) {
-                    var o = document.createElement("div");
-                    o.appendChild(obj);
-                    return o.innerHTML;
-                }
-                const put = (data) => {
-                    if (data.type == "change") data = data.target.files[0]
-                    if (data.size < (1024 * 1024 * 3)) return sendFile(data)
-                    client.put(data.name, data).then(function (r1) {
-                        let link = createFileLink(r1.url)
-                        sendString(stringIze(link))
-                    }).catch(function (err) {
-                        console.error(err);
-                    });
-                }
-
-                document.querySelector('#file').removeEventListener('change', sendFile)
-                document.querySelector('#file').addEventListener('change', put)
-                console.log('oss is ready')
             }
+            const put = (data) => {
+                if (data.type == "change") data = data.target.files[0]
+                if (data.size < (1024 * 1024 * 3)) return sendFile(data)
+                loadJS('https://buguoheng.com/static/js/aliyun-oss-sdk-6.8.0.min.js', () => {
+                    if (!client) HttpGetPure('https://api.buguoheng.com/php/sts.php', (res) => {
+                        setClient(JSON.parse(res))
+                        clientPut(data)
+                    })
+                    else clientPut(data)
+                })
+            }
+            const clientPut = (data) => {
+                var index = data.name.lastIndexOf(".") == -1 ? data.name.length : data.name.lastIndexOf(".");
+                let name = data.name.slice(0, index) + '-' + Date.now() + data.name.slice(index)
+                client.put(name, data).then(function (r1) {
+                    let link = createFileLink(r1.url)
+                    sendString(stringIze(link))
+                }).catch(function (err) {
+                    console.error(err);
+                });
+            }
+            document.querySelector('#file').removeEventListener('change', sendFile)
+            document.querySelector('#file').addEventListener('change', put)
 
             const HttpGetPure = (str, callBack) => {
                 let xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP")
@@ -201,15 +203,137 @@
                 xmlhttp.open("GET", str, true)
                 xmlhttp.send()
             }
-
-            HttpGetPure('https://api.buguoheng.com/php/sts.php', (res) => setClient(JSON.parse(res)))
+            /*将元素节点类型字符串化*/
+            function stringIze(obj) {
+                var o = document.createElement("div");
+                o.appendChild(obj);
+                return o.innerHTML;
+            }
+            const loadJS = function (url, callback) {
+                let script = document.createElement('script')
+                script.src = url
+                script.type = "text/javascript"
+                if (script.onreadystatechange) {
+                    script.onreadystatechange = function () {
+                        if (this.readyState == "complete" || this.readyState == "loaded") {
+                            script.onreadystatechange = null
+                            callback()
+                        }
+                    }
+                } else {
+                    script.onload = () => callback()
+                }
+                document.body.appendChild(script)
+            }//HTML反转义
+            function HTMLDecode(text) {
+                var temp = document.createElement("div");
+                temp.innerHTML = text;
+                var output = temp.innerText || temp.textContent;
+                temp = null;
+                return output;
+            }
         }
 
         websocketLifePeriod()
     </script>
-
-    <script src="https://buguoheng.com/static/js/aliyun-oss-sdk-6.8.0.min.js"></script>
     <script>
+        // console.clear();
+        var scene = new THREE.Scene();
+        var camera = new THREE.PerspectiveCamera(
+            75,
+            window.innerWidth / window.innerHeight,
+            0.1,
+            1000
+        );
+
+        var renderer = new THREE.WebGLRenderer({
+            antialias: true
+        });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.domElement.id = "bgCanvas"
+        renderer.domElement.className = "fixed-top"
+        renderer.domElement.style.zIndex = "-10"
+        document.body.appendChild(renderer.domElement);
+
+
+        var group = new THREE.Group();
+
+        var light = new THREE.PointLight(0xffffff, 1.8, 80);
+        scene.add(light);
+
+        var spotLight = new THREE.SpotLight(0xffffff);
+        spotLight.position.set(0, 100, 0);
+        scene.add(spotLight);
+
+        var geometry = new THREE.CubeGeometry(30, 30, 30);
+        var texture = new THREE.TextureLoader().load('../image/rainbowPattern.png');
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.wrapT = THREE.RepeatWrapping;
+        gsap.to(texture.offset, {
+            y: 1,
+            duration: 5,
+            repeat: -1,
+            ease: "none"
+        });
+        var material = new THREE.MeshStandardMaterial({
+            color: 0xffffff,
+            side: THREE.BackSide,
+            alphaTest: 0.6,
+            depthTest: true,
+            map: texture
+        });
+
+        for (let i = 0; i < 10; i++) {
+            var ball = new THREE.Mesh(geometry, material);
+            ball.scale.x = ((i + 1) / 5) * 1.5;
+            ball.scale.y = ((i + 1) / 5) * 1.5;
+            ball.scale.z = ((i + 1) / 5) * 1.5;
+            ball.rotation.x = i % 2 == 0 ? -Math.PI : 0;
+            ball.rotation.y = i % 2 == 0 ? -Math.PI : 0;
+            group.add(ball);
+        }
+        scene.add(group);
+
+        camera.position.z = 40;
+
+        gsap.to(group.rotation, {
+            y: Math.PI * 2,
+            duration: 100,
+            ease: "none",
+            repeat: -1
+        });
+        gsap.to(group.rotation, {
+            z: Math.PI * 2,
+            duration: 15,
+            ease: "power2.inOut",
+            yoyo: true,
+            repeat: -1
+        });
+        camera.position.z = 5;
+        gsap.to(camera.position, {
+            z: 60,
+            duration: 15,
+            ease: "power2.inOut",
+            repeat: -1,
+            yoyo: true
+        });
+
+        var animate = function () {
+            requestAnimationFrame(animate);
+
+            renderer.render(scene, camera);
+        };
+
+        window.addEventListener("resize", onWindowResize, false);
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        animate();
     </script>
 </body>
 
