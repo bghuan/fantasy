@@ -9,7 +9,7 @@
     <title>WebSocket</title>
 </head>
 
-<body>
+<body style="background-image: url(https://api.buguoheng.com/php/bing.php);">
     <div class="fixed-bottom">
         <div class="input-group">
             <input type="text" class="form-control" id="text" style="background-color:transparent">
@@ -38,16 +38,13 @@
             overflow-x: hidden;
         }
     </style>
-    <script src="https://buguoheng.com/static/js/three.min.js"></script>
-    <script src="https://buguoheng.com/static/js/gsap.js"></script>
     <script>
         let asd
         const cl = console.log
 
         let globalWebsocket
-        const websocketLifePeriod = () => {
-            var webSocket = new WebSocket("wss://api.buguoheng.com/ws")
-            // var webSocket = new WebSocket("ws://127.0.0.1:8091")
+        const websocketLifePeriod = (websocketUrl) => {
+            var webSocket = new WebSocket(websocketUrl)
             const sockState = () => ['未连接', '连接成功，可通讯', '正在关闭', '连接已关闭或无法打开'][webSocket.readyState]
             const reg = /\.(png|jpg|gif|jpeg|webp|ico|svg)$/;
             const regSvg = /\.(svg)$/;
@@ -58,6 +55,7 @@
             webSocket.onopen = function (event) {
                 document.getElementById("send").className = "btn btn-outline-primary"
                 document.getElementById("lableFile").className = "form-file-button btn btn-outline-primary"
+                document.getElementById('text').disabled = false
             }
             webSocket.onmessage = (event) => {
                 if (typeof event.data == "string")
@@ -68,6 +66,7 @@
             webSocket.onclose = function (event) {
                 document.getElementById("send").className = "btn btn-danger disabled"
                 document.getElementById("lableFile").className = "form-file-button btn btn-danger disabled"
+                document.getElementById('text').disabled = true
             }
             webSocket.onerror = (err) => console.log(err)
 
@@ -157,9 +156,7 @@
 
             //send image/file
             document.getElementById('file').addEventListener('change', sendFile)
-            // document.getElementById('file').removeEventListener('change', sendFile)
             document.getElementById("text").addEventListener("paste", (event) => paste(event.clipboardData.items))
-
 
             //oss
             let client
@@ -176,20 +173,17 @@
             const put = (data) => {
                 if (data.type == "change") data = data.target.files[0]
                 if (data.size < (1024 * 1024 * 3)) return sendFile(data)
-                loadJS('https://buguoheng.com/static/js/aliyun-oss-sdk-6.8.0.min.js', () => {
-                    if (!client) HttpGetPure('https://api.buguoheng.com/php/sts.php', (res) => {
-                        setClient(JSON.parse(res))
-                        clientPut(data)
-                    })
-                    else clientPut(data)
-                })
+                if (typeof OSS != "undefined") clientPut(data)
+                else loadJS('https://buguoheng.com/static/js/aliyun-oss-sdk-6.8.0.min.js', () => HttpGetPure('https://api.buguoheng.com/php/sts.php', (res) => clientPut(data, setClient(JSON.parse(res)))))
             }
             const clientPut = (data) => {
                 var index = data.name.lastIndexOf(".") == -1 ? data.name.length : data.name.lastIndexOf(".");
                 let name = data.name.slice(0, index) + '-' + Date.now() + data.name.slice(index)
                 client.put(name, data).then(function (r1) {
                     let link = createFileLink(r1.url)
-                    sendString(stringIze(link))
+                    let div = document.createElement("div")
+                    div.append(link)
+                    sendString(div.innerHTML)
                 }).catch(function (err) {
                     console.error(err);
                 });
@@ -203,137 +197,16 @@
                 xmlhttp.open("GET", str, true)
                 xmlhttp.send()
             }
-            /*将元素节点类型字符串化*/
-            function stringIze(obj) {
-                var o = document.createElement("div");
-                o.appendChild(obj);
-                return o.innerHTML;
-            }
             const loadJS = function (url, callback) {
                 let script = document.createElement('script')
                 script.src = url
                 script.type = "text/javascript"
-                if (script.onreadystatechange) {
-                    script.onreadystatechange = function () {
-                        if (this.readyState == "complete" || this.readyState == "loaded") {
-                            script.onreadystatechange = null
-                            callback()
-                        }
-                    }
-                } else {
-                    script.onload = () => callback()
-                }
+                script.onload = () => callback()
                 document.body.appendChild(script)
-            }//HTML反转义
-            function HTMLDecode(text) {
-                var temp = document.createElement("div");
-                temp.innerHTML = text;
-                var output = temp.innerText || temp.textContent;
-                temp = null;
-                return output;
             }
         }
 
-        websocketLifePeriod()
-    </script>
-    <script>
-        // console.clear();
-        var scene = new THREE.Scene();
-        var camera = new THREE.PerspectiveCamera(
-            75,
-            window.innerWidth / window.innerHeight,
-            0.1,
-            1000
-        );
-
-        var renderer = new THREE.WebGLRenderer({
-            antialias: true
-        });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.domElement.id = "bgCanvas"
-        renderer.domElement.className = "fixed-top"
-        renderer.domElement.style.zIndex = "-10"
-        document.body.appendChild(renderer.domElement);
-
-
-        var group = new THREE.Group();
-
-        var light = new THREE.PointLight(0xffffff, 1.8, 80);
-        scene.add(light);
-
-        var spotLight = new THREE.SpotLight(0xffffff);
-        spotLight.position.set(0, 100, 0);
-        scene.add(spotLight);
-
-        var geometry = new THREE.CubeGeometry(30, 30, 30);
-        var texture = new THREE.TextureLoader().load('../image/rainbowPattern.png');
-        texture.wrapS = THREE.RepeatWrapping;
-        texture.wrapT = THREE.RepeatWrapping;
-        gsap.to(texture.offset, {
-            y: 1,
-            duration: 5,
-            repeat: -1,
-            ease: "none"
-        });
-        var material = new THREE.MeshStandardMaterial({
-            color: 0xffffff,
-            side: THREE.BackSide,
-            alphaTest: 0.6,
-            depthTest: true,
-            map: texture
-        });
-
-        for (let i = 0; i < 10; i++) {
-            var ball = new THREE.Mesh(geometry, material);
-            ball.scale.x = ((i + 1) / 5) * 1.5;
-            ball.scale.y = ((i + 1) / 5) * 1.5;
-            ball.scale.z = ((i + 1) / 5) * 1.5;
-            ball.rotation.x = i % 2 == 0 ? -Math.PI : 0;
-            ball.rotation.y = i % 2 == 0 ? -Math.PI : 0;
-            group.add(ball);
-        }
-        scene.add(group);
-
-        camera.position.z = 40;
-
-        gsap.to(group.rotation, {
-            y: Math.PI * 2,
-            duration: 100,
-            ease: "none",
-            repeat: -1
-        });
-        gsap.to(group.rotation, {
-            z: Math.PI * 2,
-            duration: 15,
-            ease: "power2.inOut",
-            yoyo: true,
-            repeat: -1
-        });
-        camera.position.z = 5;
-        gsap.to(camera.position, {
-            z: 60,
-            duration: 15,
-            ease: "power2.inOut",
-            repeat: -1,
-            yoyo: true
-        });
-
-        var animate = function () {
-            requestAnimationFrame(animate);
-
-            renderer.render(scene, camera);
-        };
-
-        window.addEventListener("resize", onWindowResize, false);
-
-        function onWindowResize() {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        }
-
-        animate();
+        websocketLifePeriod("wss://api.buguoheng.com/ws")
     </script>
 </body>
 
