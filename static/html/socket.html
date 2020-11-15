@@ -39,8 +39,6 @@
         }
     </style>
     <script>
-        document.onmousedown = () => document.documentElement.webkitRequestFullScreen()
-
         let asd
         const cl = console.log
 
@@ -118,11 +116,18 @@
             //paste image or not
             const paste = (data) => (data.length && data[0].type.indexOf('image') >= 0) ? sendFile(data[0].getAsFile()) : null
 
-            const sendFile = (data) => {
+            let sendFile = (data) => {
                 if (data.type == "change") data = data.target.files[0]
+                else if (data.type == "drop") {
+                    if (data.dataTransfer.files[0])
+                        data = data.dataTransfer.files[0]
+                    else return false
+                }
+                if (!data) return false
                 send(data)
                 send(data.name)
                 setFile(data)
+                return false
             }
 
             const createFileLink = (fileName, file) => {
@@ -141,6 +146,7 @@
             }
 
             const writeFinaly = (node) => {
+                node.style.fontSize = "36px"
                 document.getElementById("msg").appendChild(node)
                 document.getElementById('text').value = ''
                 document.getElementById('text').focus()
@@ -149,16 +155,6 @@
                     document.getElementById("footer").scrollIntoView()
                 }, 10)
             }
-
-            document.getElementById('text').focus()
-
-            //send message
-            document.getElementById("send").addEventListener("click", () => sendString(document.getElementById('text').value))
-            document.addEventListener("keyup", event => event.keyCode == 13 ? sendString(document.getElementById('text').value) : null)
-
-            //send image/file
-            document.getElementById('file').addEventListener('change', sendFile)
-            document.getElementById("text").addEventListener("paste", (event) => paste(event.clipboardData.items))
 
             //oss
             let client
@@ -172,11 +168,18 @@
                     // secure: true
                 });
             }
-            const put = (data) => {
+            let put = (data) => {
                 if (data.type == "change") data = data.target.files[0]
+                else if (data.type == "drop") {
+                    if (data.dataTransfer.files[0])
+                        data = data.dataTransfer.files[0]
+                    else return false
+                }
+                if (!data) return false
                 if (data.size < (1024 * 1024 * 3)) return sendFile(data)
                 if (typeof OSS != "undefined") clientPut(data)
                 else loadJS('https://buguoheng.com/static/js/aliyun-oss-sdk-6.8.0.min.js', () => HttpGetPure('https://api.buguoheng.com/php/sts.php', (res) => clientPut(data, setClient(JSON.parse(res)))))
+                return false
             }
             const clientPut = (data) => {
                 var index = data.name.lastIndexOf(".") == -1 ? data.name.length : data.name.lastIndexOf(".");
@@ -190,25 +193,37 @@
                     console.error(err);
                 });
             }
-            document.querySelector('#file').removeEventListener('change', sendFile)
-            document.querySelector('#file').addEventListener('change', put)
 
-            const HttpGetPure = (str, callBack) => {
-                let xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP")
-                xmlhttp.onreadystatechange = () => { if (xmlhttp.readyState == 4 && xmlhttp.status == 200) { callBack(xmlhttp.responseText) } }
-                xmlhttp.open("GET", str, true)
-                xmlhttp.send()
-            }
-            const loadJS = function (url, callback) {
-                let script = document.createElement('script')
-                script.src = url
-                script.type = "text/javascript"
-                script.onload = () => callback()
-                document.body.appendChild(script)
-            }
+            document.getElementById('text').focus()
+
+            //send message
+            document.getElementById("send").addEventListener("click", () => sendString(document.getElementById('text').value))
+            document.addEventListener("keyup", event => event.keyCode == 13 ? sendString(document.getElementById('text').value) : null)
+
+            //send image/file
+            document.getElementById('file').addEventListener('change', put)
+            document.getElementById("text").addEventListener("paste", (event) => paste(event.clipboardData.items))
+
+            // 拖入文件发送,进入子集的时候 会触发ondragover 频繁触发 不给ondrop机会
+            document.ondragover = () => false
+            document.ondrop = put
+        }
+        const HttpGetPure = (str, callBack) => {
+            let xmlhttp = new XMLHttpRequest() || new ActiveXObject("Microsoft.XMLHTTP")
+            xmlhttp.onreadystatechange = () => { if (xmlhttp.readyState == 4 && xmlhttp.status == 200) { callBack(xmlhttp.responseText) } }
+            xmlhttp.open("GET", str, true)
+            xmlhttp.send()
+        }
+        const loadJS = function (url, callback) {
+            let script = document.createElement('script')
+            script.src = url
+            script.type = "text/javascript"
+            script.onload = () => callback()
+            document.body.appendChild(script)
         }
 
         websocketLifePeriod("wss://api.buguoheng.com/ws")
+        // document.onmousedown = () => document.documentElement.webkitRequestFullScreen()
     </script>
 </body>
 
