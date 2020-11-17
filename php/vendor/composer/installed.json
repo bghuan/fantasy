@@ -146,17 +146,17 @@
         },
         {
             "name": "alibabacloud/sdk",
-            "version": "1.8.573",
-            "version_normalized": "1.8.573.0",
+            "version": "1.8.627",
+            "version_normalized": "1.8.627.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aliyun/openapi-sdk-php.git",
-                "reference": "94f4d04058379c08c32a5b66126aa61fc1aaddd5"
+                "reference": "22c2441d2ac57a0d5ea0dc183b52cb8e9aea220b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aliyun/openapi-sdk-php/zipball/94f4d04058379c08c32a5b66126aa61fc1aaddd5",
-                "reference": "94f4d04058379c08c32a5b66126aa61fc1aaddd5",
+                "url": "https://api.github.com/repos/aliyun/openapi-sdk-php/zipball/22c2441d2ac57a0d5ea0dc183b52cb8e9aea220b",
+                "reference": "22c2441d2ac57a0d5ea0dc183b52cb8e9aea220b",
                 "shasum": ""
             },
             "require": {
@@ -350,7 +350,7 @@
             "suggest": {
                 "ext-sockets": "To use client-side monitoring"
             },
-            "time": "2020-10-28T09:50:12+00:00",
+            "time": "2020-11-13T09:46:06+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -384,6 +384,54 @@
                 "source": "https://github.com/aliyun/openapi-sdk-php"
             },
             "install-path": "../alibabacloud/sdk"
+        },
+        {
+            "name": "aliyuncs/oss-sdk-php",
+            "version": "v2.4.1",
+            "version_normalized": "2.4.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aliyun/aliyun-oss-php-sdk.git",
+                "reference": "492866331b7bafaac09506cf42f351b7e9e63766"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aliyun/aliyun-oss-php-sdk/zipball/492866331b7bafaac09506cf42f351b7e9e63766",
+                "reference": "492866331b7bafaac09506cf42f351b7e9e63766",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0",
+                "satooshi/php-coveralls": "~1.0"
+            },
+            "time": "2020-09-29T06:23:57+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "OSS\\": "src/OSS"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Aliyuncs",
+                    "homepage": "http://www.aliyun.com"
+                }
+            ],
+            "description": "Aliyun OSS SDK for PHP",
+            "homepage": "http://www.aliyun.com/product/oss/",
+            "support": {
+                "issues": "https://github.com/aliyun/aliyun-oss-php-sdk/issues",
+                "source": "https://github.com/aliyun/aliyun-oss-php-sdk/tree/v2.4.1"
+            },
+            "install-path": "../aliyuncs/oss-sdk-php"
         },
         {
             "name": "clagiordano/weblibs-configmanager",

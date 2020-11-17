@@ -1,5 +1,222 @@
 # CHANGELOG
 
+## 1.8.627 - 2020-11-13
+- Update Imageaudit.
+
+
+## 1.8.626 - 2020-11-13
+- Add DeccribeEngineVersion DescribeTasks DescribeInstanceConfig and more APIs.
+
+
+## 1.8.625 - 2020-11-13
+- Update DetectLungNodule.
+
+
+## 1.8.624 - 2020-11-13
+- Fix GetBranchInfo and DeleteBranch API 404 error.
+- Add ListRepositoryBranches and GetGroupDetail API.
+
+
+## 1.8.623 - 2020-11-13
+- Release ErasePerson.
+
+
+## 1.8.622 - 2020-11-13
+- Release DetectCardScreenshot RecognizePoiName.
+
+
+## 1.8.621 - 2020-11-13
+- Release GenerateHumanAnimeStyle CountCrowd.
+
+
+## 1.8.620 - 2020-11-13
+- Release SegmentHDSky SegmentHDCommonImage.
+
+
+## 1.8.619 - 2020-11-12
+- Support drm.
+
+
+## 1.8.618 - 2020-11-12
+- Fixed the display problem of the repo page.
+
+
+## 1.8.617 - 2020-11-12
+- Generated 2019-06-01 for `smc`.
+
+
+## 1.8.616 - 2020-11-12
+- Update new version.
+
+
+## 1.8.615 - 2020-11-12
+- Add API OpenOnsService which can active ons service.
+
+
+## 1.8.614 - 2020-11-12
+- Update Scdn API.
+
+
+## 1.8.613 - 2020-11-12
+- Support execute database script via open api.
+
+
+## 1.8.612 - 2020-11-12
+- Generated 2014-05-26 for `Ecs`.
+
+
+## 1.8.611 - 2020-11-12
+- Update cert API.
+
+
+## 1.8.610 - 2020-11-12
+- Update cert API.
+
+
+## 1.8.609 - 2020-11-12
+- Release latest features.
+
+
+## 1.8.608 - 2020-11-12
+- Update data API.
+
+
+## 1.8.607 - 2020-11-12
+- Add API OpenOnsService which can active ons service.
+
+
+## 1.8.606 - 2020-11-12
+- Add SaveTraceAppConfig api.
+
+
+## 1.8.605 - 2020-11-12
+- Update HasRenewChangeOrder type to Boolean in DescribeInstances.
+
+
+## 1.8.604 - 2020-11-12
+- Generated 2018-12-12 for `vs`.
+
+
+## 1.8.603 - 2020-11-12
+- Add Pipeline Member api.
+
+
+## 1.8.602 - 2020-11-12
+- Generated 2020-05-18 for `dataworks-public`.
+
+
+## 1.8.601 - 2020-11-12
+- Generated 2016-11-01 for `live`.
+
+
+## 1.8.600 - 2020-11-12
+- Sync cdn APIs.
+
+
+## 1.8.599 - 2020-11-12
+- Add Content.
+
+
+## 1.8.598 - 2020-11-12
+- Generated 2014-05-26 for `Ecs`.
+
+
+## 1.8.597 - 2020-11-12
+- Minor update for r-kvstore.
+
+
+## 1.8.596 - 2020-11-12
+- Generated 2018-06-01 for `dataworks-public`.
+
+
+## 1.8.595 - 2020-11-12
+- Generated 2016-11-01 for `live`.
+
+
+## 1.8.594 - 2020-11-12
+- GetTitleIntelligence add interface.
+
+
+## 1.8.593 - 2020-11-12
+- Fix bug.
+
+
+## 1.8.592 - 2020-11-12
+- Support Sampling for jaeger.
+
+
+## 1.8.591 - 2020-11-12
+- Add alarm notification language settings.
+
+
+## 1.8.590 - 2020-11-12
+- Generated 2018-06-01 for `dataworks-public`.
+
+
+## 1.8.589 - 2020-11-12
+- Generated 2018-07-13 for `Ft`.
+
+
+## 1.8.588 - 2020-11-12
+- Supported Open Api.
+
+
+## 1.8.587 - 2020-11-12
+- Support OpenAPI.
+
+
+## 1.8.586 - 2020-11-12
+- Generated 2018-07-13 for `Ft`.
+
+
+## 1.8.585 - 2020-11-12
+- Update DescribeTrails Response.
+
+
+## 1.8.584 - 2020-11-5
+- Support modifyInstnaceType.
+
+
+## 1.8.583 - 2020-11-4
+- Generated 2019-01-01 for `Cassandra`.
+
+
+## 1.8.582 - 2020-11-4
+- Support modifyInstnaceType.
+
+
+## 1.8.581 - 2020-11-4
+- Generated 2019-01-01 for `Cassandra`.
+
+
+## 1.8.580 - 2020-11-4
+- Support modifyInstnaceType.
+
+
+## 1.8.579 - 2020-11-4
+- Generated 2018-07-13 for `Ft`.
+
+
+## 1.8.578 - 2020-11-4
+- Generated 2018-07-13 for `Ft`.
+
+
+## 1.8.577 - 2020-11-3
+- Minor update for r-kvstore.
+
+
+## 1.8.576 - 2020-11-3
+- Update data API.
+
+
+## 1.8.575 - 2020-11-2
+- Support create serverless by day price type.
+
+
+## 1.8.574 - 2020-11-1
+- Supported All Console APIs.
+
+
 ## 1.8.573 - 2020-10-28
 - Support GetParameters, GetParametersByPath, GetSecretParameters, GetSecretParametersByPath.
 
