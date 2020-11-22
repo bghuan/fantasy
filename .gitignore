@@ -3,10 +3,11 @@
 node_modules/
 php/config.php
 
-### properties ###
+### justAuth ###
 justAuth/src/main/resources/application.properties
 justAuth/target/
 
+### android ###
 android/.gradle/
 android/.idea/
 android/build/
@@ -14,3 +15,5 @@ android/app/build/
 android/app/release/
 android/app/debug/
 android/app/release/app-release.apk
+
+static/android/
