@@ -3,7 +3,7 @@ let asd, cl = console.log, useOss = false
 let regPicture = /\.(png|jpg|gif|jpeg|webp|ico|svg)$/, regSvg = /\.(svg)$/
 
 // webSocket, use global/locate can reload webSocket
-const connect = (websocketUrl = "wss://api.buguoheng.com/ws") => {
+const connect = (websocketUrl = "wss://buguoheng.com/ws") => {
     var webSocket = new WebSocket(websocketUrl)
     globalWebSocket = webSocket
 
@@ -100,6 +100,11 @@ const createFileLink = (fileName, file) => {
     else downLink.href = fileName
     downLink.innerHTML = fileName.replace("http://bgh-open.oss-cn-hangzhou.aliyuncs.com/", "")
     return downLink
+}
+function HTMLEncode(html) {
+    var temp = document.createElement("div")
+    temp.textContent != null ? (temp.textContent = html) : (temp.innerText = html)
+    return temp.innerHTML
 }
 
 // listenning

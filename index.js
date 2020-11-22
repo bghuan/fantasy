@@ -1,6 +1,6 @@
 let a, b, a_Collapse, b_Collapse, isGoBack, localStorageBackup = 'fantasy.',
     stopServiceIfDateNineIsNeedRefresh = false, asd
-const api = "https://api.buguoheng.com"
+const api = "https://buguoheng.com"
 const getMyDate = (date = new Date()) => (date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()).toString()
 const readPath = '/php/read.php'
 const createPath = '/php/create.php'
