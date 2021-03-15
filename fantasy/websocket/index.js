@@ -1,5 +1,5 @@
 let globalWebSocket, currentFile, client
-let asd, cl = console.log, useOss = false
+let asd, cl = console.log
 let regPicture = /\.(png|jpg|gif|jpeg|webp|ico|svg)$/, regSvg = /\.(svg)$/
 
 // webSocket, use global/locate can reload webSocket
@@ -127,24 +127,34 @@ let putFile = data => {
     else loadJS(() => HttpGet(res => ossPut(data, setClient(JSON.parse(res)))))
     return false
 }
-const ossPut = data => {
-    client.put(data.name, data).then(function (r1) {
-        let link = createFileLink(r1.url)
+
+async function ossPut(data) {
+    try {
+        let result = await client.multipartUpload(data.name, data, {
+            progress: function (p, checkpoint) {
+                sendString(parseFloat(Number(p * 100).toFixed(2)) + '%')
+            },
+        })
+        let url = result.res.requestUrls[0]
+        if (url.indexOf('?uploadId') > 0)
+            url = url.substr(0, url.indexOf('?uploadId'))
+        let link = createFileLink(url)
         let div = document.createElement("div")
         link.className += "text-light"
         div.append(link)
-        sendString(div.innerHTML, true)
-    }).catch(function (err) {
-        console.error(err);
-    });
+        sendString(decodeURI(div.innerHTML), true)
+    } catch (e) {
+        cl(e)
+    }
 }
+
 let listOssObject = () => client.list().then(res => res.objects.map(obj => write(createFileLink(obj.url))))
 let initOssClient = (func, data) => loadJS(() => HttpGet(res => func(data, setClient(JSON.parse(res)))))
 
 // common
 const HttpGet = (callBack, str = 'https://buguoheng.com/php/sts.php') => {
     let xmlhttp = new XMLHttpRequest() || new ActiveXObject("Microsoft.XMLHTTP")
-    xmlhttp.onreadystatechange = () => { if (xmlhttp.readyState == 4 && xmlhttp.status == 200) { callBack(xmlhttp.responseText) } }
+    xmlhttp.onreadystatechange = () => { if (xmlhttp.readyState == 4 && xmlhttp.status == 200) callBack(xmlhttp.responseText) }
     xmlhttp.open("GET", str, true)
     xmlhttp.send()
 }
@@ -204,9 +214,6 @@ let myCatch = cmd => {
             writeString("")
             document.querySelector("#msg").className = "float-right"
             return true
-        }
-        case 'terminal': {
-            return false
         }
     }
 }
