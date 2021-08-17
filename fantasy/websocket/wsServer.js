@@ -1,23 +1,47 @@
 const WebSocket = require('ws');
-var wss = new WebSocket.Server({ port: 8091 });
-const warnMessage = 'room.clients.length > 2, connection is closed, please refresh page and change a room'
+var server = new WebSocket.Server({ port: 8091 });
+const room = 'room'
+const blankSpace = ' '
+let allRoom = {}
+let allRoomLengthLimit = 10000
+let allRoomMaxLimit = 4
 
-wss.on('connection', ws => {
-    ws.on('message', data => broadcast(data, ws))
-    ws.on("binary", data => broadcast(data, ws))
-    ws.on('close', () => wss.clients.delete(ws))
-    ws.on('error', () => wss.clients.delete(ws))
+server.on('connection', client => {
+    client.on('message', data => broadcast(data, client))
+    client.on("binary", data => broadcast(data, client))
+    client.on('close', () => server.clients.delete(client))
+    client.on('error', () => server.clients.delete(client))
 });
 
 const broadcast = (data, ws) => {
+    let flag = false
+    if (ws && data && data.split && data.split(blankSpace)[0] == room) {
+        ws[room] = data.split(blankSpace)[1]
+        let length = data.split(blankSpace)[2]
+        if (length) {
+            let i = 0; for (let a in allRoom) { i++ }
+            if (length.length && length.length < allRoomMaxLimit && parseInt(length) != NaN && i < allRoomLengthLimit) {
+                allRoom[room] = length
+            }
+            else {
+                flag = true
+            }
+        }
+    }
     let clients = []
-    if (data?.indexOf('room') === 0 && ws) ws.room = data.slice(4).trim()
-    wss.clients.forEach(client => {
-        if (!ws || (client != ws && ((!client.room && !ws.room) || client.room == ws.room)))
+    server.clients.forEach(client => {
+        if (client[room] == ws[room] || (!client[room] && !ws[room])) {
             clients.push(client)
+        }
     })
-    if (ws?.room && clients.length > 1) clients.push(ws)
-    clients.forEach(client => (ws?.room && clients.length > 1) ? client.close(client.send(warnMessage)) : client.send(data))
+    clients.forEach(client => {
+        if ((ws[room] && allRoom[room] && allRoom[room] < clients.length) || flag) {
+            client.close()
+        }
+        else if (ws != client) {
+            client.send(data)
+        }
+    })
 }
 
-setInterval(() => broadcast('', null), 50000)
+setInterval(() => broadcast('', {}), 50000)

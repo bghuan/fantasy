@@ -186,8 +186,12 @@ document.ondrop = putFile
 
 connect()
 
-let myCatch = cmd => {
-    switch (cmd) {
+let myCatch = arg => {
+    if (typeof arg == "string") {
+        var arr = arg.split(' ')
+        arg = arr[0]
+    }
+    switch (arg) {
         case 'list': {
             if (typeof OSS != "undefined") listOssObject()
             else initOssClient(listOssObject)
@@ -200,7 +204,8 @@ let myCatch = cmd => {
         }
         case 'black': {
             writeString("")
-            document.body.style.backgroundImage = null
+            // document.body.style.backgroundImage = null
+            document.body.style.backgroundImage = "url()"
             document.body.style.backgroundColor = "#000"
             document.body.style.color = "#fff"
             return true
@@ -214,6 +219,8 @@ let myCatch = cmd => {
             writeString("")
             document.querySelector("#msg").className = "float-right"
             return true
+        }
+        case 'room': {
         }
     }
 }
