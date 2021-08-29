@@ -7,6 +7,9 @@ let allRoomLengthLimit = 10000
 let allRoomMaxLimit = 4
 
 server.on('connection', client => {
+    if(client.protocol){
+        client[room] = client.protocol
+    }
     client.on('message', data => broadcast(data, client))
     client.on("binary", data => broadcast(data, client))
     client.on('close', () => server.clients.delete(client))

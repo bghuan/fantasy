@@ -3,8 +3,12 @@ let asd, cl = console.log
 let regPicture = /\.(png|jpg|gif|jpeg|webp|ico|svg)$/, regSvg = /\.(svg)$/
 
 // webSocket, use global/locate can reload webSocket
-const connect = (websocketUrl = "wss://buguoheng.com/ws") => {
-    var webSocket = new WebSocket(websocketUrl)
+const connect = (websocketUrl, room = "") => {
+    if(room){
+        var webSocket = new WebSocket(websocketUrl, room)
+    }else{
+        var webSocket = new WebSocket(websocketUrl)
+    }
     globalWebSocket = webSocket
 
     webSocket.onopen = function (event) {
@@ -184,7 +188,9 @@ document.getElementById("text").addEventListener("paste", (event) => paste(event
 document.ondragover = () => false
 document.ondrop = putFile
 
-connect()
+let room = decodeURI(location.search).split('room=')[1] || ''
+connect("wss://buguoheng.com/ws", room)
+// connect('ws://127.0.0.1:8091', room)
 
 let myCatch = arg => {
     if (typeof arg == "string") {
