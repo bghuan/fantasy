@@ -3,6 +3,8 @@ let card = document.getElementById('card');
 let right = document.getElementById('right');
 let rate = document.getElementById('rate');
 let witness = document.getElementById('witness');
+let right_single = document.getElementById('right_single');
+let btn1 = document.getElementById('btn1');
 let children = card.children
 let refresh = true
 let count = 0
@@ -65,8 +67,12 @@ run_a_thousand = (num = 1) => {
         let pick_one = get_random()
         let one_of_wrong = rondom_except_right(pick_one);
         let one_of_last = the_last(pick_one, one_of_wrong);
-        show_right(one_of_last)
+        let is_right = right_array[one_of_last] == 1
+        right_count += is_right ? 1 : 0
+        count++
     }
+    rate.innerText = right_count + '/' + count + '---------' + (right_count / count * 100).toFixed(2) + '%'
+    right_single.innerText = count_0 + ' ' + count_1 + ' ' + count_2
 }
 
 the_last = (var1, var2) => {
@@ -77,11 +83,13 @@ the_last = (var1, var2) => {
     }
 }
 
+let count_0 = count_1 = count_2 = 0
 get_random = () => {
-    let result = Math.floor(Math.random() * 10);
-    if (result == 0 || result == 1 || result == 2) {
-        return result
-    }
+    let result = Math.floor(Math.random() * 3);
+    count_0 += result == 0 ? 1 : 0
+    count_1 += result == 1 ? 1 : 0
+    count_2 += result == 2 ? 1 : 0
+    return result
 }
 
 webSocket = new WebSocket("wss://buguoheng.com/ws", room)
@@ -90,12 +98,12 @@ create_new_right_array()
 for (let i = 0; i < children.length; i++) {
     children[i].onclick = () => {
         if (refresh) {
-            send_the_true()
             children[i].children[0].innerText = '是否更换选择'
             one_of_wrong = rondom_except_right(i);
             children[one_of_wrong].children[0].innerText = '0'
             refresh_div(one_of_wrong, class_disable)
             refresh = false
+            send_the_true()
         } else {
             show_right(i)
             create_new_right_array()
@@ -108,4 +116,7 @@ for (let i = 0; i < children.length; i++) {
             refresh = true
         }
     }
+}
+btn1.onclick = () => {
+    run_a_thousand(1000)
 }

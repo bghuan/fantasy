@@ -12,19 +12,20 @@
     <div class="container px-4">
         <a id="rate">0/0---------0%</a>
         <a class="float-end" href="https://ws.buguoheng.com" target="_blank" id="witness">请复制此链接至其他设备打开以同步获取正确结果</a>
-        <div class="row gx-3 fs-1 text-center" id="card">
+        <div class="row gx-3 fs-1 text-center" id="card" style="margin-bottom: 10px;">
             <div class="col">
-                <div class="p-3 border bg-light">?</div>
+                <div class="bg-light" style="height: 400px;">?</div>
             </div>
             <div class="col">
-                <div class="p-3 border bg-light">?</div>
+                <div class="bg-light" style="height: 400px;">?</div>
             </div>
             <div class="col">
-                <div class="p-3 border bg-light">?</div>
+                <div class="bg-light" style="height: 400px;">?</div>
             </div>
         </div>
-        <button class="btn btn-light" id="btn1" onclick="run_a_thousand(1000)">自动选择1000次</button>
-        <div class="fs-1" id="right"> </div>
+        <button class="btn btn-light" id="btn1">自动选择1000次</button>
+        <span id="right_single"> </span>
+        <div id="right"> </div>
     </div>
     <script src="index.js"></script>
 </body>
