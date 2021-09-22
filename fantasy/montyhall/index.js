@@ -10,10 +10,10 @@ let refresh = true
 let count = 0
 let right_count = 0
 let room = 'MontyHall-' + new Date().getMilliseconds()
-let class_right = 'p-3 border bg-primary'
-let class_wrong = 'p-3 border bg-danger'
-let class_disable = 'p-3 border bg-dark'
-let class_normal = 'p-3 border bg-light'
+let class_right = 'border bg-primary'
+let class_wrong = 'border bg-danger'
+let class_disable = 'border bg-dark'
+let class_normal = 'border bg-light'
 let refresh_time = 1000
 
 let right_array = [0, 1, 0];
@@ -73,6 +73,8 @@ run_a_thousand = (num = 1) => {
     }
     rate.innerText = right_count + '/' + count + '---------' + (right_count / count * 100).toFixed(2) + '%'
     right_single.innerText = count_0 + ' ' + count_1 + ' ' + count_2
+    cl(rate.innerText)
+    cl(right_single.innerText)
 }
 
 the_last = (var1, var2) => {
@@ -85,7 +87,7 @@ the_last = (var1, var2) => {
 
 let count_0 = count_1 = count_2 = 0
 get_random = () => {
-    let result = Math.floor(Math.random() * 3);
+    let result = Math.floor(Math.random() * 3)
     count_0 += result == 0 ? 1 : 0
     count_1 += result == 1 ? 1 : 0
     count_2 += result == 2 ? 1 : 0
@@ -93,7 +95,7 @@ get_random = () => {
 }
 
 webSocket = new WebSocket("wss://buguoheng.com/ws", room)
-witness.href += '?room=' + room
+witness.href = 'https://ws.buguoheng.com?room=' + room
 create_new_right_array()
 for (let i = 0; i < children.length; i++) {
     children[i].onclick = () => {

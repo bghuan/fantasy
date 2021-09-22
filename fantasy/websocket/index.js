@@ -4,9 +4,9 @@ let regPicture = /\.(png|jpg|gif|jpeg|webp|ico|svg)$/, regSvg = /\.(svg)$/
 
 // webSocket, use global/locate can reload webSocket
 const connect = (websocketUrl, room = "") => {
-    if(room){
+    if (room) {
         var webSocket = new WebSocket(websocketUrl, room)
-    }else{
+    } else {
         var webSocket = new WebSocket(websocketUrl)
     }
     globalWebSocket = webSocket
@@ -127,6 +127,7 @@ let putFile = data => {
     }
     if (!data) return false
     if (data.size < (1024 * 1024 * 3)) return sendFile(data)
+    if (room) return sendFile(data)
     if (typeof OSS != "undefined") ossPut(data)
     else loadJS(() => HttpGet(res => ossPut(data, setClient(JSON.parse(res)))))
     return false
@@ -227,6 +228,7 @@ let myCatch = arg => {
             return true
         }
         case 'room': {
+            location.href = '?room=' + arr[1]
         }
     }
 }
