@@ -1,16 +1,13 @@
-let a, b, a_Collapse, b_Collapse, isGoBack, localStorageBackup = 'fantasy.',
-    stopServiceIfDateNineIsNeedRefresh = false, asd
-const api = "https://buguoheng.com"
-const getMyDate = (date = new Date()) => (date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()).toString()
+let a, b, a_Collapse, b_Collapse, isGoBack, stop_service, asd, cache = {}
+const api = ''
 const readPath = '/php/read.php'
 const createPath = '/php/create.php'
 
 document.addEventListener("DOMContentLoaded", (function () {
     if (stopServiceIfDateNine()) return
-    HttpGet(location.hash.slice(1), (res) => {
+    if (zzz) queryCallBack(zzz)
+    else HttpGet(location.hash.slice(1), (res) => {
         queryCallBack(res)
-        document.getElementById('loading').style.display = 'none'
-        document.getElementById('afterLoading').style.display = 'block'
     })
     window.addEventListener('hashchange', query_onhashchange, false)
     a_Collapse = new bootstrap.Collapse(document.getElementById('collapsea'), { toggle: false })
@@ -24,7 +21,6 @@ const HttpGet = (str, callBack, standard) => {
     xmlhttp.onreadystatechange = () => {
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
             try {
-                localStorage.setItem(localStorageBackup + a, xmlhttp.responseText)
                 callBack(JSON.parse(xmlhttp.responseText))
             } catch (e) {
                 callBack(xmlhttp.responseText)
@@ -51,9 +47,8 @@ const query_onhashchange = () => {
     if (isGoBack) {
         b_Collapse.hide()
         a_Collapse.hide()
-        let temp = localStorage.getItem(localStorageBackup + a)
-        if (temp != null && temp.length > 0 && isJSON(temp)) {
-            queryCallBack(JSON.parse(localStorage.getItem(localStorageBackup + a)))
+        if (cache[a]) {
+            queryCallBack(cache[a])
             return
         }
     }
@@ -83,7 +78,7 @@ const query = (str, purpose) => {
             window.location.hash = url
     }
 }
-const create = obj => {
+const create = () => {
     rmcollapseb()
     a = document.getElementById("a").value
     b = document.getElementById("b").value
@@ -107,7 +102,6 @@ const queryCallBack = (json) => {
     hide_id_edit()
     let div_query = document.getElementById("div_query")
     div_query.innerHTML = ''
-    let i = 0
     let div, fantasy, content
     for (j in json) {
         div = document.createElement("div")
@@ -115,15 +109,18 @@ const queryCallBack = (json) => {
         content = document.createElement("a")
         fantasy.innerHTML = json[j]['a'] || ''
         content.innerHTML = (json[j]['b'] == null || json[j]['b'] == '' ? '' : json[j]['b'] + ' - ')
-        let ahtml = fantasy.innerHTML
-        fantasy.onclick = function () { query(this.innerHTML) }
-        content.onclick = function () { query(ahtml) }
-        fantasy.style = content.innerHTML != '' ? "font-size:0.6em" : ""
-        div.style = " margin:8px 0 4px 0px"
-        div.appendChild(content)
+        if (content.innerHTML)
+            div.appendChild(content)
         div.appendChild(fantasy)
         div_query.appendChild(div)
     }
+    for (let item = 0; item < div_query.children.length; item++) {
+        div_query.children[item].onclick = function () {
+            query(div_query.children[item].children.length > 1 ? div_query.children[item].children[1].innerHTML : div_query.children[item].children[0].innerHTML)
+        }
+    }
+    if (!isGoBack)
+        cache[a || ''] = json
 }
 var json1 = [
     { a: 'a', b: '<image src="https://bghuan.oss-cn-shenzhen.aliyuncs.com/image/d6a3950e0566aa2a8b71e6e37e1271e.png" />', _id: { $id: 123 } }
@@ -293,9 +290,9 @@ const slideout = (obj) => {
 
 const stopServiceIfDateNine = () => {
     if (new Date().getDate() == '9') {
-        document.body.innerHTML = new Date() + '<br />' + '每月9号不收集幻想'
-        stopServiceIfDateNineIsNeedRefresh = true
-    } else if (stopServiceIfDateNineIsNeedRefresh)
+        document.body.innerHTML = new Date() + '<br />' + '每月9号不收集展示幻想'
+        stop_service = true
+    } else if (stop_service)
         window.location.reload()
     else return false
     setTimeout(stopServiceIfDateNine, 100)

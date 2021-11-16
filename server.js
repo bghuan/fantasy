@@ -5,17 +5,17 @@ const mine = { "css": "text/css", "gif": "image/gif", "html": "text/html", "ico"
 const path = require('path');
 
 let documentRoot = './';
-let app = function(req, res) {
+let app = function (req, res) {
     let pathname = url.parse(req.url).pathname;
     let realPath = path.join(documentRoot, pathname);
     let ext = path.extname(realPath);
     ext = ext ? ext.slice(1) : 'unknown';
-    fs.readFile(realPath, function(err, data) {
+    fs.readFile(realPath, function (err, data) {
         if (err) {
             res.writeHeader(404, {
                 'content-type': 'text/html;charset="utf-8"'
             });
-            res.write('<h1>404错误 by bu</h1><p>你要找的页面不存在</p><br /><a href="http://127.0.0.1/index.html">index.html<a/>"');
+            res.write('<h1>404错误 by bu</h1><p>你要找的页面不存在</p><br /><a href='+_url+'>index.html<a/>"');
             res.end();
         } else {
             let contentType = mine[ext] || "text/plain";
@@ -27,6 +27,7 @@ let app = function(req, res) {
         }
     });
 };
-http.createServer(app).listen(80);
-const _url = 'http://127.0.0.1:80/index.html';
+let port = 8766;
+http.createServer(app).listen(port);
+const _url = 'http://127.0.0.1:' + port + '/index.html';
 console.log('Server running at ' + _url);

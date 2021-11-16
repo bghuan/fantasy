@@ -28,3 +28,16 @@ $redis->connect('127.0.0.1', 6379);
 $emailUserName = "";
 $emailAccount = "";
 $emailPassword = "";
+
+// common function
+function decodeUnicode($str)
+{
+    return preg_replace_callback('/\\\\u([0-9a-f]{4})/i', function ($matches) {
+        return iconv("UCS-2BE", "UTF-8", pack("H*", $matches[1]));
+    }, $str);
+}
+
+function json_encode2($str)
+{
+    return decodeUnicode(json_encode($str));
+}

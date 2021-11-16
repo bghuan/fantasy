@@ -20,7 +20,7 @@ if (!empty($_id)) {
     $filter = ['_id' => ['$in' => $arr]];
     $options = ['sort' => ['_id' => -1]];
     $query = new MongoDB\Driver\Query($filter, $options);
-    echo gzencode(json_encode($manager->executeQuery($db_name . '.' . $db_document, $query)->toArray()));
+    echo gzencode(json_encode2($manager->executeQuery($db_name . '.' . $db_document, $query)->toArray()));
     exit;
 } else if (!empty($a)) {
     $cmd = new MongoDB\Driver\Command([
@@ -34,7 +34,7 @@ if (!empty($_id)) {
         'cursor' => new stdClass,
     ]);
     try {
-        echo gzencode(json_encode($manager->executeCommand($db_name, $cmd)->toArray()));
+        echo gzencode(json_encode2($manager->executeCommand($db_name, $cmd)->toArray()));
         exit;
     } catch (MongoDB\Driver\Exception $e) {
         echo $e->getMessage(), "\n";
@@ -52,7 +52,7 @@ if (!empty($_id)) {
         'cursor' => new stdClass,
     ]);
     try {
-        $json = json_encode($manager->executeCommand($db_name, $cmd)->toArray());
+        $json = json_encode2($manager->executeCommand($db_name, $cmd)->toArray());
         echo gzencode($json);
         exit;
     } catch (MongoDB\Driver\Exception $e) {
