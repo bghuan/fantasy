@@ -17,3 +17,5 @@ android/app/debug/
 android/app/release/app-release.apk
 
 static/download/
+
+*config.php*

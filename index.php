@@ -1,45 +1,4 @@
 <?php
-function jjj()
-{
-    include 'php/config.php';
-
-    $limit = 10000;
-    $skip = 0;
-    $a = $_GET["a"];
-    $_id = $_GET["id"];
-    if ($a || $_id) {
-        exit;
-    }
-
-    $cmd = new MongoDB\Driver\Command([
-        'aggregate' => $db_document,
-        'pipeline' => [
-            ['$match' => ['a' => ['$exists' => true], 'a' => ['$ne' => 'test'], 'b' => ['$exists' => true, '$nin' =>  [null, '', [], [''], [[]]]]]],
-            ['$group' => ['_id' => '$b', 'a' =>  ['$first' => '$a'], 'id_temp' => ['$first' => '$_id']]],
-            ['$sort' => ['id_temp' => -1]],
-            ['$project' => ['_id' => 0, 'a' => '$a', 'b' => '$_id']],
-            ['$limit' => $limit],
-            ['$skip' => $skip]
-        ],
-        'cursor' => new stdClass,
-    ]);
-    try {
-        $jsons = $manager->executeCommand($db_name, $cmd)->toArray();
-        foreach ($jsons as $value) {
-            if (is_array($value->b)) {
-                echo '<div><a>' . implode(",", $value->b) . ' - </a><a>' . $value->a . '</a></div>';
-            } else {
-                echo '<div><a>' . $value->b . ' - </a><a>' . $value->a . '</a></div>';
-            }
-        }
-        echo "<script>if(location.href.indexOf('a=')>=0){document.getElementById('div_query').innerHTML=''}else{let div_query = document.getElementById('div_query');for(let item in div_query.children){ div_query.children[item].onclick=function(){query(div_query.children[item].children[1].innerHTML)} }}</script>";
-    } catch (MongoDB\Driver\Exception $e) {
-        // echo $e->getMessage(), "\n";
-        exit;
-    }
-}
-?>
-<?php
 function zzz()
 {
     include 'php/config.php';

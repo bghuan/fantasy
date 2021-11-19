@@ -1,5 +1,6 @@
-let url_read = 'https://dev.buguoheng.com/fantasy/editor/read.php'
-let url_create = 'https://dev.buguoheng.com/fantasy/editor/create.php'
+let url_read = 'read.php'
+let url_create = 'create.php'
+let url_backup = 'backup.php'
 let E
 let editorConfig
 let editor
@@ -90,3 +91,10 @@ let callBack_read = function (data) {
 }
 
 HttpPost(url_read, null, callBack_read)
+
+document.addEventListener('keydown', function (e) {
+    if (e.key == 's' && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
+        e.preventDefault();
+        HttpPost(url_backup, null, console.log)
+    }
+});
