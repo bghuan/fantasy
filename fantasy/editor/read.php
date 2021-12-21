@@ -1,13 +1,11 @@
 <?php
 header('Access-Control-Allow-Origin:*');
 header('Content-type: application/json; charset=utf-8');
-header("Content-Encoding: gzip");
+// header("Content-Encoding: gzip");
 include 'config.php';
 
-$key = $_SERVER['QUERY_STRING'];
-
-$result = $redis->get('editor');
+$result = $redis->get($key);
 if ($result)
-    echo gzencode($result);
+    echo ($result);
 else
     echo '[{"type":"paragraph","children":[{"text":""}]}]';

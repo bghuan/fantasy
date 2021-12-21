@@ -10,18 +10,18 @@ if (is_file(__DIR__ . '/../../php/vendor/autoload.php')) {
 use OSS\OssClient;
 use OSS\Core\OssException;
 
-$objectName = $objectDir . 'editor.json';
-$result = json_encode2($redis->get('editor'));
+$objectName = $objectDir . $key .'.json';
+$result = json_encode2($redis->get($key));
 
-if ($redis->get("is_editor_backuped")) {
+if ($redis->get($is_backup)) {
     die;
 }
 
 try {
-    $result = json_encode2($redis->get('editor'));
     $ossClient = new OssClient($accessKeyId, $accessKeySecret, $endpoint);
     $ossClient->putObject($bucket, $objectName, $result);
     $redis->set("is_editor_backuped", true);
+    echo 123;
     exit;
 } catch (OssException $e) {
     printf(__FUNCTION__ . ": FAILED\n");

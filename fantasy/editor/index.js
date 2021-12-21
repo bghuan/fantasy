@@ -1,6 +1,6 @@
-let url_read = 'read.php'
-let url_create = 'create.php'
-let url_backup = 'backup.php'
+let url_read = 'read.php' + window.location.search
+let url_create = 'create.php' + window.location.search
+let url_backup = 'backup.php' + window.location.search
 let E
 let editorConfig
 let editor
@@ -68,12 +68,18 @@ let callBack_read = function (data) {
     // editorConfig.onChange = onChange
     editorConfig.onFocus = onFocus
 
-
-    editor = E.createEditor({
-        selector: '#editor-text-area',
-        content: JSON.parse(data),
-        config: editorConfig
-    })
+    if (data) {
+        editor = E.createEditor({
+            selector: '#editor-text-area',
+            content: JSON.parse(data),
+            config: editorConfig
+        })
+    } else {
+        editor = E.createEditor({
+            selector: '#editor-text-area',
+            config: editorConfig
+        })
+    }
 
     toolbar = E.createToolbar({
         editor,
