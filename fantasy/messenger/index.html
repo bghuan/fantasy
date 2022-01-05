@@ -2,7 +2,8 @@
 <html lang="zn">
 
 <head>
-    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="UTF-8" name="viewport" content="width=device-width,
+            initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://buguoheng.com/static/css/bootstrap.min.css">
     <title>信使</title>
 </head>
@@ -16,6 +17,9 @@
         <span class="input-group-text" id="basic-addon3">附加数据</span>
         <input type="text" class="form-control" id="target" aria-describedby="basic-addon3">
     </div>
+    <div id="info">
+
+    </div>
 
     <script>
         const cl = console.log
@@ -27,26 +31,56 @@
                 }
             }
             xmlhttp.open("POST", url, true)
-            xmlhttp.send(JSON.stringify(data))
+            xmlhttp.send(data)
         }
-        const read = (data) => {
-            let url = 'https://buguoheng.com/fantasy/messenger/read.php';
-            let param = { "asd": data }
+        let fff = function (url, data, callBack) {
+            fetch(url, {
+                method: 'POST',
+                body: JSON.stringify(data)
+            })
+                .then(response => response.text())
+                .then(json => {
+                    callBack(json)
+                })
+        }
+        const read = () => {
+            let url = '/fantasy/messenger/read.php';
+            var formData=  new FormData();
+              formData.set('a',source.value)
+              formData.set('b',target.value)
             let callBack = (data) => {
-                data = (data)
+                data=JSON.parse(data)
                 cl(data)
+                    let info = document.querySelector("#info");
+                    info.innerHTML="";
+                for(var i=0;i<data.length;i++){
+                    let info = document.querySelector("#info");
+                    info.innerHTML+=data[i]['b']+'<br />'
+                }
             }
-            HttpPost(url, param, callBack)
+            HttpPost(url, formData, callBack)
+        }
+        const write = () => {
+            let url = '/fantasy/messenger/create.php';
+            var formData=  new FormData();
+              formData.set('a',source.value)
+              formData.set('b',target.value)
+            let callBack = (data) => {
+                cl(data)
+                read()
+            }
+            HttpPost(url, formData, callBack)
         }
         let source = document.querySelector("#source");
         let target = document.querySelector("#target");
         source.onkeyup = (event) => {
             if (event.key == "Enter") {
-                read(source.value)
+                read()
             }
         }
         target.onkeyup = (event) => {
             if (event.key == "Enter") {
+                write()
             }
         }
     </script>

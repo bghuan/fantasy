@@ -1,7 +1,24 @@
 <?php
 header('Access-Control-Allow-Origin:*');
-header('Content-type: application/json; charset=utf-8');
-// header("Content-Encoding: gzip");
 include 'config.php';
 
-print_r($_GET);
+// $a = $_GET["a"];
+// $b = $_GET["b"];
+
+$a = $_POST["a"];
+
+if (empty($a)) {
+    exit;
+}
+
+$bulk = new MongoDB\Driver\BulkWrite;
+$document = [
+    '_id' => new MongoDB\BSON\ObjectID,
+    'a' => $a,
+    'b' => $b
+];
+
+$filter = ['a' => ['$eq' => $a]];
+$options = ['sort' => ['_id' => -1]];
+$query = new MongoDB\Driver\Query($filter, $options);
+echo (json_encode2($manager->executeQuery($db_name . '.' . $db_document, $query)->toArray()));

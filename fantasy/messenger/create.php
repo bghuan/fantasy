@@ -2,10 +2,13 @@
 header('Access-Control-Allow-Origin:*');
 include 'config.php';
 
-$a = $_GET["a"];
-$b = $_GET["b"];
+// $a = $_GET["a"];
+// $b = $_GET["b"];
 
-if (empty($a)) {
+$a = $_POST["a"];
+$b = $_POST["b"];
+
+if (empty($a)||empty($b)) {
     exit;
 }
 
@@ -20,5 +23,4 @@ $writeConcern = new MongoDB\Driver\WriteConcern(MongoDB\Driver\WriteConcern::MAJ
 $result = $manager->executeBulkWrite($db_name . '.' . $db_document, $bulk, $writeConcern);
 if ($result) {
     echo $document["_id"];
-    $redis->set("isBuckuped", false);
 }
