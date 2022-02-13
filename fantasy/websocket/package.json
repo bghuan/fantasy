@@ -2,6 +2,6 @@
   "requires": true,
   "lockfileVersion": 1,
   "dependencies": {
-    "ws":">=7.4.6"
-  } 
+    "ws": "^8.4.0"
+  }
 }
