@@ -1,6 +1,6 @@
-let a, b, a_Collapse, b_Collapse, isGoBack, stop_service, asd, cache = {}
-const api = 'https://dev.buguoheng.com'
-const readPath = '/php/read.php'
+let a, b, a_Collapse, b_Collapse, isGoBack, stop_service, asd, cache = {}, filter_jump
+const api = 'https://buguoheng.com'
+const readPath = '/php/readd.php'
 const createPath = '/php/create.php'
 
 document.addEventListener("DOMContentLoaded", (function () {
@@ -15,22 +15,24 @@ document.addEventListener("DOMContentLoaded", (function () {
     loginCallback()
 }))
 
-const HttpGet = (str, callBack, standard) => {
+function HttpGet(str, callBack, standard) {
     let url = standard ? str : api + (str || readPath)
-    let xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP")
-    xmlhttp.onreadystatechange = () => {
-        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-            try {
-                callBack(JSON.parse(xmlhttp.responseText))
-            } catch (e) {
-                callBack(xmlhttp.responseText)
-            } finally {
-                isGoBack = true
-            }
-        }
-    }
-    xmlhttp.open("GET", url, true)
-    xmlhttp.send()
+    fetch(url)
+        .then(response => response.json())
+        .then(json => {
+            callBack(json)
+            isGoBack = true
+        })
+}
+
+function HttpGet2(str, callBack, standard) {
+    let url = standard ? str : api + (str || readPath)
+    fetch(url)
+        .then(response => response.text())
+        .then(json => {
+            callBack(json)
+            isGoBack = true
+        })
 }
 const HttpGetPure = (str, callBack) => {
     let xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP")
@@ -43,6 +45,7 @@ const HttpGetPure = (str, callBack) => {
     xmlhttp.send()
 }
 const query_onhashchange = () => {
+    if (filter_jump) return
     a = decodeURI(location.href).split('a=')[1] || ''
     if (isGoBack) {
         b_Collapse.hide()
@@ -75,6 +78,8 @@ const query = (str, purpose) => {
             window.location.hash = url
             break
         default:
+            if(str.indexOf('jump')>=0)
+            window.location.href = 'http://'+str.split(' ')[1]
             window.location.hash = url
     }
 }
@@ -84,6 +89,10 @@ const create = () => {
     b = document.getElementById("b").value
     if ((a + b).trim().length == 0 || (a == 'fantasy' && b.length == 0)) return
     if (a == '') a = 'fantasy'
+    if(!b&&a != 'fantasy'){
+        b=document.getElementById("a").value;
+       a = 'fantasy'
+    }
     let url = createPath + '?a=' + a + '&b=' + JSON.stringify(typeof b == "string" ? b.split(",") : [])
     url = createPath + '?a=' + a + '&b=' + b
     let callBack = create_id => {
@@ -92,7 +101,7 @@ const create = () => {
         }
         query('', 'force')
     }
-    HttpGet(url, callBack)
+    HttpGet2(url, callBack)
 }
 //card1.style.height=window.innerHeight-card.style.marginTop.replace('px','')-document.getElementById('as').style.height+'px'
 const queryCallBack = (json) => {
@@ -106,6 +115,9 @@ const queryCallBack = (json) => {
     for (j in json) {
         div = document.createElement("div")
         fantasy = document.createElement("a")
+        let id = document.createElement("a")
+        id.innerHTML = new Date(parseInt(json[j]['_id']['$oid'].substr(0,8),16)*1000)
+        div.appendChild(id)
         content = document.createElement("a")
         fantasy.innerHTML = json[j]['a'] || ''
         content.innerHTML = (json[j]['b'] == null || json[j]['b'] == '' ? '' : json[j]['b'] + ' - ')
@@ -119,8 +131,20 @@ const queryCallBack = (json) => {
             query(div_query.children[item].children.length > 1 ? div_query.children[item].children[1].innerHTML : div_query.children[item].children[0].innerHTML)
         }
     }
-    if (!isGoBack)
+    if (!isGoBack && !filter_jump && json && json.length)
         cache[a || ''] = json
+}
+// fetch
+filter = function (str) {
+    let data = cache[a || ''].filter(function (item) {
+        return JSON.stringify(item).indexOf(str) > -1
+    })
+    filter_jump = true
+    queryCallBack(data)
+    query(str)
+    setTimeout(() => {
+        filter_jump = false
+    }, 1000);
 }
 var json1 = [
     { a: 'a', b: '<image src="https://bghuan.oss-cn-shenzhen.aliyuncs.com/image/d6a3950e0566aa2a8b71e6e37e1271e.png" />', _id: { $id: 123 } }
@@ -266,26 +290,6 @@ const loadJS = function (url, callback) {
         script.onload = () => callback()
     }
     document.body.appendChild(script)
-}
-
-function isJSON(str) {
-    if (typeof str == 'string')
-        try {
-            var obj = JSON.parse(str);
-            if (typeof obj == 'object' && obj) return true;
-            else return false;
-        } catch (e) {
-            return false;
-        }
-}
-
-const slideout = (obj) => {
-    if (obj.style.opacity == null || obj.style.opacity == '') obj.style.opacity = 1
-    var opac = parseFloat(obj.style.opacity)
-    if (opac > 0) {
-        obj.style.opacity = opac - 0.01 - opac * 0.05
-        setTimeout(function () { slideout(obj) }, 20)
-    }
 }
 
 const stopServiceIfDateNine = () => {

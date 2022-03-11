@@ -4,19 +4,6 @@ let path_create = path_api + '/create.php'
 let path_updatetime = path_api + '/updatetime.php'
 let cl = console.log
 
-
-let fn_hashchange = () => _fun_read(my_convert(location.hash.slice(1)))
-let my_convert = (str) => {
-    if (!str || (str.indexOf && str.indexOf('=')) < 0) {
-        return str
-    }
-    var result = {}
-    let list = str.split('&')
-    for (let i = 0; i < list.length; i++) {
-        result[list[i].split('=')[0]] = list[i].split('=')[1]
-    }
-    return result
-}
 let HttpPost = (url, data, callBack) => {
     fetch(url, { method: 'POST', body: Form(data) })
         .then(response => response.text())
@@ -37,10 +24,6 @@ let Form = (data) => {
 }
 
 let fun_read = (data) => {
-    window.location.hash = data || ''
-}
-
-let _fun_read = (data) => {
     let callBack = function (json) {
         json = typeof json == 'object' ? json : typeof json == 'string' ? JSON.parse(json) : []
         let innerHTML = ""
@@ -57,7 +40,7 @@ let _fun_read = (data) => {
         }
         content.innerHTML = ""
         content.innerHTML = innerHTML
-        // location.hash = Math.random()
+        location.hash = Math.random()
     }
     HttpPost(path_read, data, callBack)
 }
@@ -113,12 +96,10 @@ let fun_content_filter = (keywords) => {
 
 query_button.onclick = () => fun_read(query_key.value)
 create_button.onclick = () => fun_create()
-query_button_personal.onclick = () => fun_read('id=' + localStorage.id)
+query_button_personal.onclick = () => fun_read({ 'id': localStorage.id })
 query_button_home.onclick = () => fun_read()
 query_button_refresh.onclick = () => fun_read()
 content.onclick = fun_content_click
 query_filter_button.onclick = () => { fun_content_filter(query_key.value) }
 
-_fun_read()
-
-window.addEventListener('hashchange', fn_hashchange, false)
+fun_read()

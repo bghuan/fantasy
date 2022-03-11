@@ -1,6 +1,8 @@
 let globalWebSocket, currentFile, client
 let asd, cl = console.log
 let regPicture = /\.(png|jpg|gif|jpeg|webp|ico|svg)$/, regSvg = /\.(svg)$/
+let ossForce = 0
+let use_oss = false
 
 // webSocket, use global/locate can reload webSocket
 const connect = (websocketUrl, room = "") => {
@@ -16,6 +18,9 @@ const connect = (websocketUrl, room = "") => {
         document.getElementById("lableFile").className = "form-file-button btn btn-outline-primary"
         document.getElementById('text').disabled = false
         document.getElementById('text').focus()
+        setInterval(() => {
+            globalWebSocket.send('')
+        }, 50000);
     }
     webSocket.onclose = event => {
         document.getElementById("send").className = "btn btn-danger disabled"
@@ -126,10 +131,14 @@ let putFile = data => {
         else return false
     }
     if (!data) return false
-    if (data.size < (1024 * 1024 * 3)) return sendFile(data)
-    if (room) return sendFile(data)
-    if (typeof OSS != "undefined") ossPut(data)
-    else loadJS(() => HttpGet(res => ossPut(data, setClient(JSON.parse(res)))))
+    if (use_oss) {
+        if (typeof OSS != "undefined")
+            ossPut(data)
+        else
+            loadJS(() => HttpGet(res => ossPut(data, setClient(JSON.parse(res)))))
+    } else {
+        sendFile(data)
+    }
     return false
 }
 
@@ -179,7 +188,7 @@ function HTMLEncode(html) {
 // listenning
 // send message
 document.getElementById("send").addEventListener("click", () => sendString(document.getElementById('text').value))
-document.addEventListener("keyup", event => event.keyCode == 13 ? sendString(document.getElementById('text').value) : null)
+document.addEventListener("keyup", event => event.key == 'ENTER' ? sendString(document.getElementById('text').value) : null)
 
 // send image/file
 document.getElementById('file').addEventListener('change', putFile)
@@ -189,9 +198,7 @@ document.getElementById("text").addEventListener("paste", (event) => paste(event
 document.ondragover = () => false
 document.ondrop = putFile
 
-let room = decodeURI(location.search).split('room=')[1] || ''
-connect("wss://buguoheng.com/ws", room)
-// connect('ws://127.0.0.1:8091', room)
+let room = decodeURI(location.search).replace('?', '')
 
 let myCatch = arg => {
     if (typeof arg == "string") {
@@ -228,7 +235,23 @@ let myCatch = arg => {
             return true
         }
         case 'room': {
-            location.href = '?room=' + arr[1]
+            location.href = '?' + arr[1]
+            return true
+        }
+        case 'oss': {
+            writeString("")
+            ossForce = 1
+            use_oss = true
+            return true
+        }
+        case 'nooss': {
+            writeString("")
+            ossForce = 2
+            use_oss = false
+            return true
         }
     }
 }
+// connect("wss://buguoheng.com/ws", room)
+connect('ws://127.0.0.1:8091', room)
+myCatch(room)
