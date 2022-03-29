@@ -4,19 +4,6 @@ let path_create = path_api + '/create.php'
 let path_updatetime = path_api + '/updatetime.php'
 let cl = console.log
 
-
-let fn_hashchange = () => _fun_read(my_convert(location.hash.slice(1)))
-let my_convert = (str) => {
-    if (!str || (str.indexOf && str.indexOf('=')) < 0) {
-        return str
-    }
-    var result = {}
-    let list = str.split('&')
-    for (let i = 0; i < list.length; i++) {
-        result[list[i].split('=')[0]] = list[i].split('=')[1]
-    }
-    return result
-}
 let HttpPost = (url, data, callBack) => {
     fetch(url, { method: 'POST', body: Form(data) })
         .then(response => response.text())
@@ -26,7 +13,7 @@ let HttpPost = (url, data, callBack) => {
 let Form = (data) => {
     let formdata = new FormData()
     if (typeof data == 'object') {
-        for (var key in data) {
+        for (let key in data) {
             formdata.set(key, data[key])
         }
     }
@@ -36,28 +23,29 @@ let Form = (data) => {
     return formdata
 }
 
-let fun_read = (data) => {
-    window.location.hash = data || ''
-}
-
-let _fun_read = (data) => {
+let fun_read = (data, flag) => {
+    if (!flag) {
+        return window.location.hash = data || ''
+    }
     let callBack = function (json) {
         json = typeof json == 'object' ? json : typeof json == 'string' ? JSON.parse(json) : []
         let innerHTML = ""
-        for (var item in json) {
+        content.innerHTML = innerHTML
+        for (let item in json) {
             let checked = localStorage.id?.indexOf(json[item]._id['$oid']) > -1 ? "checked=\"checked\"" : ""
             let value = " value=\"" + json[item]['_id']['$oid'] + "\" "
-            var text = ""
-            for (var i in json[item]) {
+            let text = ""
+            for (let i in json[item]) {
                 if (i != '_id' && i != 'date') {
                     text += i + ':' + json[item][i] + ''
                 }
             }
-            innerHTML += '<p><input type="checkbox"' + checked + value + ' />' + text + '</p>'
+            if (text)
+                innerHTML += '<p><input type="checkbox"' + checked + value + ' />' + text + '</p>'
         }
-        content.innerHTML = ""
-        content.innerHTML = innerHTML
-        // location.hash = Math.random()
+        setTimeout(() => {
+            content.innerHTML = innerHTML
+        }, 20);
     }
     HttpPost(path_read, data, callBack)
 }
@@ -73,14 +61,32 @@ let fun_check = (id, checked) => {
         localStorage.id = localStorage.id?.replaceAll(id, '').replaceAll(',,', ',')
     }
 }
+
+let create_dur = (e) => {
+    if (e && e.target && e.target.id.indexOf('create') >= 0) {
+        query_key.style.display = 'none'
+        create_key.style.display = 'inline'
+        create_value.style.display = 'inline'
+    }
+    else {
+        window.removeEventListener('click', create_dur)
+        query_key.style.display = 'inline'
+        create_key.style.display = 'none'
+        create_value.style.display = 'none'
+    }
+}
 let fun_create = () => {
+    if (create_key.style.display == 'none') {
+        return window.addEventListener('click', create_dur)
+    }
     let fun_create_callBack = (id) => {
         localStorage.id = (localStorage.id ? (localStorage.id + ',') : '') + id
-        fun_read()
+        fun_read(create_key.value)
     }
     let key = create_key.value
     let value = create_value.value
-    var data = { key, value }
+    let data = {}
+    data[key] = value
     HttpPost(path_create, data, fun_create_callBack)
 }
 
@@ -111,14 +117,30 @@ let fun_content_filter = (keywords) => {
     content.innerHTML = innerHTML
 }
 
-query_button.onclick = () => fun_read(query_key.value)
+let fn_hashchange = () => fun_read(my_querystring, true)
+let my_convert = (str) => {
+    if (!str || (str.indexOf && str.indexOf('=')) < 0) {
+        return str
+    }
+    let result = {}
+    let list = str.split('&')
+    for (let i = 0; i < list.length; i++) {
+        result[list[i].split('=')[0]] = list[i].split('=')[1]
+    }
+    return result
+}
+
+content.onclick = (e) => fun_content_click(e)
 create_button.onclick = () => fun_create()
+query_button.onclick = () => fun_read(query_key.value)
 query_button_personal.onclick = () => fun_read('id=' + localStorage.id)
 query_button_home.onclick = () => fun_read()
-query_button_refresh.onclick = () => fun_read()
-content.onclick = fun_content_click
+query_button_refresh.onclick = () => fun_read(my_querystring, true)
 query_filter_button.onclick = () => { fun_content_filter(query_key.value) }
-
-_fun_read()
-
 window.addEventListener('hashchange', fn_hashchange, false)
+window.__defineGetter__('my_querystring', () => { return my_convert(location.hash.slice(1)) });
+
+fun_read(my_querystring, true)
+create_key.style.display = 'none'
+create_value.style.display = 'none'
+//id过长,querystring放不下,map,post真实传值的sha256hash放到querystring上?

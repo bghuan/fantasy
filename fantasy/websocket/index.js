@@ -57,7 +57,7 @@ const sendString = (data, flag) => {
     if (!flag) data = HTMLEncode(data)
     if (myCatch(data)) return
     send(data)
-    writeString(data)
+    // writeString(data)
 }
 const setFileOrImage = data => regPicture.test(data.name) ? setImage(data) : setFile(data)
 const setImage = data => {
@@ -77,7 +77,22 @@ const setImage = data => {
 const setFile = data => {
     write(createFileLink(data.name, data))
 }
-const paste = data => (data.length && data[0].type.indexOf('image') >= 0) ? sendFile(data[0].getAsFile()) : null
+const paste = data => {
+    if (data && data.length > 0) {
+        for (let i = 0; i < data.length; i++) {
+            if (data[i].kind == 'file') {
+                sendFile(data[i].getAsFile())
+            }
+            else if (data[i].kind == 'string') {
+                data[i].getAsString((str) => {
+                    sendString(str)
+                })
+            }
+        }
+    }
+    return
+    (data.length && data[0].type.indexOf('image') >= 0) ? sendFile(data[0].getAsFile()) : null
+}
 const sendFile = data => {
     if (data.type == "change") data = data.target.files[0]
     else if (data.type == "drop") {
@@ -88,7 +103,7 @@ const sendFile = data => {
     if (!data) return false
     send(data)
     send(data.name)
-    setFileOrImage(data)
+    // setFileOrImage(data)
     return false
 }
 const write = node => {
@@ -188,7 +203,7 @@ function HTMLEncode(html) {
 // listenning
 // send message
 document.getElementById("send").addEventListener("click", () => sendString(document.getElementById('text').value))
-document.addEventListener("keyup", event => event.key == 'ENTER' ? sendString(document.getElementById('text').value) : null)
+document.addEventListener("keyup", event => event.key == 'Enter' ? sendString(document.getElementById('text').value) : null)
 
 // send image/file
 document.getElementById('file').addEventListener('change', putFile)
@@ -198,7 +213,7 @@ document.getElementById("text").addEventListener("paste", (event) => paste(event
 document.ondragover = () => false
 document.ondrop = putFile
 
-let room = decodeURI(location.search).replace('?', '')
+let room = decodeURI(location.search).replace('?', '').replaceAll('=', '-')
 
 let myCatch = arg => {
     if (typeof arg == "string") {
@@ -252,6 +267,6 @@ let myCatch = arg => {
         }
     }
 }
-// connect("wss://buguoheng.com/ws", room)
-connect('ws://127.0.0.1:8091', room)
+connect("wss://buguoheng.com/ws", room)
+// connect('ws://127.0.0.1:8091', room)
 myCatch(room)

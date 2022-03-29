@@ -3,13 +3,16 @@
 
 <head>
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="index.css">
     <title>fantasy</title>
 </head>
 
 <body>
     <div id="header">
         <div id="query_div">
-            <input id="query_key">
+            <input placeholder="key" id="query_key">
+            <input placeholder="key" id="create_key">
+            <input placeholder="value" id="create_value">
             <button id="query_button">查询</button>
             <button id="create_button">创建</button>
             <button id="query_filter_button">过滤</button>
@@ -17,16 +20,21 @@
             <button id="query_button_home">首页</button>
             <button id="query_button_refresh">刷新</button>
         </div>
-        <div id="create_div">
-            <input id="create_key">
-            <input id="create_value">
-        </div>
-        <div id="query_button_div">
-        </div>
+        <div id="query_button_div"></div>
     </div>
     <div id="content"></div>
+    <div id="websocket_div">
+        <div id="websocket_header">websocket</div>
+        <div id="websocket_content"></div>
+        <div id="websocket_footer"></div>
+        <div id="websocket_local">
+            <input placeholder="content" id="websocket_text">
+            <button id="websocket_button">发送</button>
+        </div>
+    </div>
 
     <script src="index.js"></script>
+    <script src="websocket.js"></script>
 </body>
 
 </html>

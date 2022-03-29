@@ -3,6 +3,7 @@ let url_create = 'create.php' + window.location.search
 let url_backup = 'backup.php' + window.location.search
 let E
 let editorConfig
+let SlateTransforms
 let editor
 let toolbar
 let onFocus_ed = false
@@ -61,6 +62,7 @@ let scroll_bottom = (flag) => {
 
 let callBack_read = function (data) {
     E = window.wangEditor
+    SlateTransforms = E.SlateTransforms
 
     editorConfig = { MENU_CONF: {} }
     editorConfig.scroll = false
@@ -101,6 +103,50 @@ HttpPost(url_read, null, callBack_read)
 document.addEventListener('keydown', function (e) {
     if (e.key == 's' && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
         e.preventDefault();
-        HttpPost(url_backup, null, console.log)
+        var callBack = function (result) {
+            console.log(result)
+            if (result == '123')
+                alert('保存成功')
+        }
+        HttpPost(url_backup, null, callBack)
     }
 });
+document.addEventListener('keydown', function (e) {
+    if (e.key == 'r' && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
+        e.preventDefault();
+        var callBack = function (data) {
+            editor.select([])
+            editor.deleteFragment()
+            E.SlateTransforms.insertNodes(editor, data)
+        }
+        write = null
+        setInterval(() => {
+            fetch(url_read)
+                .then(response => response.json())
+                .then(json => callBack(json))
+        }, 1000);
+    }
+});
+rtrim=function(data){
+    return data<10?'0'+data:data
+}
+var getDate = function (date = new Date()) {
+    return date.getFullYear() + '-' + rtrim(date.getMonth() + 1) + '-' + rtrim(date.getDate()) + ' ' + rtrim(date.getHours()) + ":" + rtrim(date.getMinutes()) + ":" + rtrim(date.getSeconds())
+}
+document.addEventListener('keydown', function (e) {
+    if (((navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey))) {
+        if (e.key == 'b') {
+            e.preventDefault();
+            document.getElementById('w-e-textarea-1').style.backgroundColor = '#000'
+            document.getElementById('w-e-textarea-1').style.color = "#FFF"
+        }
+        if (e.key == 'Enter') {
+            e.preventDefault();
+            E.SlateTransforms.insertNodes(editor, [{ type: 'paragraph', children: [{ text: getDate() + ' ' }] }])
+        }
+        if (e.key == 'q') {
+            location.href='https://buguoheng.com/fantasy/editor/all.php'
+        }
+    }
+});
+document.title=window.location.search.replace('?','')
