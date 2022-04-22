@@ -55,7 +55,8 @@ let onFocus = () => {
 let scroll_bottom = (flag) => {
     setTimeout(() => {
         if (flag || (editor.getSelectionPosition().bottom && editor.getSelectionPosition().bottom == '28px')) {
-            document.body.scrollTop = document.documentElement.scrollTop = document.body.scrollHeight;
+            if (editor.children.length > 10)
+                document.documentElement.scrollTop = document.body.scrollHeight;
         }
     }, 10);
 }
@@ -127,8 +128,8 @@ document.addEventListener('keydown', function (e) {
         }, 1000);
     }
 });
-rtrim=function(data){
-    return data<10?'0'+data:data
+rtrim = function (data) {
+    return data < 10 ? '0' + data : data
 }
 var getDate = function (date = new Date()) {
     return date.getFullYear() + '-' + rtrim(date.getMonth() + 1) + '-' + rtrim(date.getDate()) + ' ' + rtrim(date.getHours()) + ":" + rtrim(date.getMinutes()) + ":" + rtrim(date.getSeconds())
@@ -145,8 +146,8 @@ document.addEventListener('keydown', function (e) {
             E.SlateTransforms.insertNodes(editor, [{ type: 'paragraph', children: [{ text: getDate() + ' ' }] }])
         }
         if (e.key == 'q') {
-            location.href='https://buguoheng.com/fantasy/editor/all.php'
+            location.href = 'https://buguoheng.com/fantasy/editor/all.php'
         }
     }
 });
-document.title=window.location.search.replace('?','')
+document.title = window.location.search.replace('?', '')
