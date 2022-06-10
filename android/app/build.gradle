@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 32
     buildToolsVersion "30.0.2"
 
     defaultConfig {
         applicationId "com.bghuan.fantasy"
         minSdkVersion 19
-        targetSdkVersion 28
+        targetSdkVersion 32
         versionCode 1
         versionName "1.0"
 

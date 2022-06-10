@@ -1,0 +1,167 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="author" content="http://www.softwhy.com/" />
+    <title>蚂蚁部落</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        canvas {
+            background-color: #ccc;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas" width="1175" height="1000"></canvas>
+    <script>
+        var canvas = document.getElementById("canvas"),
+            context = canvas.getContext("2d"),
+            isDragging = false,
+            radius = 12;
+        /*先设置圆的四个点参数*/
+        circles = [{
+            x: 200,
+            y: 250,
+            isSelected: false
+        }, {
+            x: 280,
+            y: 120,
+            isSelected: false
+        }, {
+            x: 380,
+            y: 120,
+            isSelected: false
+        }, {
+            x: 450,
+            y: 250,
+            isSelected: false
+        }];
+
+        canvas.onmousedown = canvasClick;
+        canvas.onmouseup = stopDragging;
+        canvas.onmouseout = stopDragging;
+        canvas.onmousemove = moveDraw;
+
+
+        /*控制圆是否可以拖动*/
+        function stopDragging() {
+            isDragging = false;
+        }
+
+        /*设置一个暂存点击圆参数*/
+        var previousCircle;
+
+        /*点击canvas*/
+        function canvasClick(e) {
+            var clickX = e.pageX - canvas.offsetLeft;
+            var clickY = e.pageY - canvas.offsetTop;
+            for (i = circles.length - 1; i >= 0; i--) {
+                var circle = circles[i];
+                var distance = Math.sqrt(Math.pow(circle.x - clickX, 2) + Math.pow(circle.y - clickY, 2));
+                if (distance <= radius) {
+                    if (previousCircle != null) {
+                        previousCircle.isSelected = false;
+                    }
+                    previousCircle = circle;
+                    isDragging = true;
+                    drawCircle();
+                    return;
+                }
+
+            }
+
+        }
+
+
+        /*鼠标拖动圆点或者鼠标选择圆点*/
+        function moveDraw(e) {
+            var moveX = e.pageX - canvas.offsetLeft;
+            var moveY = e.pageY - canvas.offsetTop;
+            if (isDragging == true) {
+                previousCircle.x = moveX;
+                previousCircle.y = moveY;
+                drawCircle();
+            } else {
+                canvas.style.cursor = "default";
+                for (i = circles.length - 1; i >= 0; i--) {
+                    var circle = circles[i];
+                    var distance = Math.sqrt(Math.pow(circle.x - moveX, 2) + Math.pow(circle.y - moveY, 2));
+                    if (distance <= radius) {
+                        circle.isSelected = true;
+                        canvas.style.cursor = "move";
+                    } else {
+                        circle.isSelected = false;
+
+                    }
+                }
+                drawCircle();
+            }
+
+        }
+
+
+
+        /*绘制圆、线条、曲线*/
+        drawCircle()
+
+        function drawCircle() {
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            context.globalAlpha = 0.85;
+            //连线
+            context.beginPath();
+            context.moveTo(circles[0].x, circles[0].y);
+            context.lineTo(circles[1].x, circles[1].y);
+            context.lineTo(circles[2].x, circles[2].y);
+            context.lineTo(circles[3].x, circles[3].y);
+            context.lineWidth = 3;
+            context.strokeStyle = "#ffffff";
+            context.stroke();
+
+            for (i = 0; i < circles.length; i++) {
+                var circle = circles < i >
+                    //画圆
+                    context.beginPath();
+                context.arc(circle.x, circle.y, radius, 0, Math.PI * 2);
+                context.strokeStyle = "#ffffff";
+                context.lineWidth = 4;
+                if (circle.isSelected == true) {
+                    context.fillStyle = "#00ff00";
+                } else {
+                    context.fillStyle = "#ff0000";
+                }
+                context.fill();
+                context.stroke();
+            }
+            /*二次贝塞尔曲线*/
+            context.beginPath();
+            context.moveTo(circles[0].x, circles[0].y);
+            context.bezierCurveTo(circles[1].x, circles[1].y, circles[2].x, circles[2].y, circles[3].x, circles[3].y);
+            context.lineWidth = 4.5;
+            context.strokeStyle = 'yellow';
+            context.stroke();
+            xy_text()
+        }
+
+        /*绘制坐标*/
+        function xy_text() {
+            console.log(circles)
+            for (i = 0; i < circles.length; i++) {
+                context.beginPath();
+                context.font = '12pt Arial';
+                context.fillStyle = "#0000ff";
+                var x_text = Math.floor(circles[i].x);
+                var y_text = Math.floor(circles[i].y);
+                context.fillText(x_text + "," + y_text, circles[i].x, circles[i].y + 30);
+                context.closePath();
+            }
+        }
+    </script>
+</body>
+
+</html>

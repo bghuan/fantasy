@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>光线经过离开圆形介质折射模型</title>
+</head>
+
+<body>
+    <canvas id="canvas" width="1500" height="950" style="background:#FFF;border:#000 1px solid"></canvas>
+    <a href="index.html">1</a>
+    <a href="index2.1.html">2</a>
+    <a href="index2.2.html">3</a>
+</body>
+<script src="./main.js"></script>
+<script>
+    var width0 = document.documentElement.clientWidth
+    var height0 = document.documentElement.clientHeight
+    var canvas = document.getElementById("canvas")
+    var line = canvas.getContext("2d")
+    line.fillStyle = "#CCFFFF"
+    var circle = new Circle(800, 500, 300)
+        let width = 1500
+    init()
+    canvas.onmousedown = () => down = true
+    canvas.onmouseup = () => down = false
+    canvas.onmousemove = function (e) {
+        if (!down) return
+        clean()
+
+        let points = []
+        points[0] = new Point(0, 500)
+        points[1] = new Point(e.layerX, e.layerY)
+        points[1] = endPoint(points[0], points[1], width)
+        draw(points)
+    }
+
+    function draw(points) {
+        let _points = getCirclePoint(points[0], points[1], circle)
+        if (!_points[0].isBlank()) {
+            points[1] = _points[0]
+
+            let angle = angleByCirclePoint(points[1], circle)
+            points[2] = nextPoint(points[0], points[1], 600, false, angle)
+
+            _points = getCirclePoint(points[1], points[2], circle)
+            if (!_points[1].isBlank()) points[2] = _points[1]
+
+            angle = angleByCirclePoint(points[2], circle)
+            points[3] = nextPoint(points[1], points[2], 600, true, angle)
+        }
+        drwaLine(points, line)
+    }
+
+    function init() {
+        clean()
+        
+        let points = []
+        points[0] = new Point(0, 500)
+        points[1] = new Point(300, 400)
+        points[1] = endPoint(points[0], points[1], width)
+        draw(points)
+    }
+
+    function _clean() {
+        line.clearRect(0, 0, 1500, 1500)
+        line.beginPath();
+        line.arc(circle.x, circle.y, circle.r, 0, 2 * Math.PI);
+        line.fill()
+        line.stroke()
+        line.beginPath();
+        line.arc(circle.x, circle.y, 0.5, 0, 2 * Math.PI);
+        line.stroke()
+    }
+</script>
+
+</html>

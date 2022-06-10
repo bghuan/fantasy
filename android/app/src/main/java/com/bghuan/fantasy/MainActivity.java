@@ -3,13 +3,18 @@ package com.bghuan.fantasy;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.ClipData;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -35,18 +40,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        webView = findViewById(R.id.fullscreen_content);
-        webView.loadUrl("https://www.buguoheng.com"); // 加载url
-
-        WebSettings webSettings = webView.getSettings();
-        webSettings.setJavaScriptEnabled(true); // 允许使用 js
-        webSettings.setDomStorageEnabled(true); // 允许使用 LocalStorage
-
+        webView = findViewById(R.id.fullscreen_content);        // 设置允许访问文件数据
         webView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR); // 状态栏文字黑色
 
+        WebSettings webSettings = webView.getSettings();
+        webSettings.setAllowFileAccess(true);
+        webSettings.setAllowContentAccess(true);
+        webSettings.setJavaScriptEnabled(true); // 允许使用 js
+        webSettings.setDomStorageEnabled(true); // 允许使用 LocalStorage
         webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
+
+//        webView.loadUrl("https://buguoheng.com"); // 加载url
+        webView.loadUrl("file:///android_asset/fantasy/index.html"); // 加载url
         webView.setWebViewClient(webViewClient); // webView监听url跳转事件
-//        webView.setWebChromeClient(new MyChromeClient());
     }
 
     private void openFileChooserActivity() {
