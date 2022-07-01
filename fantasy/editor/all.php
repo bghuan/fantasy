@@ -2,17 +2,12 @@
 header('Access-Control-Allow-Origin:*');
 include 'config.php';
 $arList = $redis->keys("editor.*");
-echo '<link href="milligram.css" rel="stylesheet">';
-echo "<ul>";
+$i = 0;
 foreach ($arList as $item) {
-    $host=$_SERVER['HTTP_HOST'];
-    $item=str_replace('editor.','',urldecode($item));
-    $url=str_replace('all.php','?'.$item,$_SERVER['PHP_SELF']);
-    echo "<li><a href='https://$host$url'>$item</a></li>";
+    $value = str_replace('editor.', '', urldecode($item));
+    if (!empty($value)) $array[$i++] = $value;
 }
-echo "</ul>";
-exit;
-echo '<script>let list=' . json_encode2($arList) . '</script>';
+echo '<script>let list=' . json_encode2($array) . '</script>';
 ?>
 <!DOCTYPE html>
 <html lang="zh">
@@ -23,18 +18,42 @@ echo '<script>let list=' . json_encode2($arList) . '</script>';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>fantasy editor</title>
     <link href="milligram.css" rel="stylesheet">
-    <!-- <link href="index.css" rel="stylesheet"> -->
 </head>
 
 <body>
-    <ul id="ul"> </ul>
     <script>
         list.sort()
-        let text = ""
-        list.forEach(function(item) {
-            text += "<li>" + item + "</li>"
-        })
-        ul.innerHTML = text
+        let li_array = []
+        for (let i = 0; i < list.length; i++) {
+            var _item = list[i].replace('editor.', '')
+            if (!_item) continue
+            let li = document.createElement('li')
+            let a = document.createElement('a')
+            a.href = './?' + _item
+            a.innerText = _item
+            li.appendChild(a)
+            li_array.push(li)
+        }
+        let ul
+        for (let i = 0; i < li_array.length; i++) {
+            if (i % 18 == 0) {
+                ul = document.createElement('ul')
+                ul.style.float = 'left'
+                ul.style.marginRight = '10px'
+                ul.style.width = '200px'
+                document.body.appendChild(ul)
+            }
+            let li = li_array[i]
+            ul.appendChild(li)
+        }
+        // list.sort()
+        // let li_array = []
+        // list = list.filter(item => item.replace('editor.', ''))
+        // for (let i = 0; i < list.length; i++) {
+        //     var _item = list[i].replace('editor.', '')
+        //     li_array.push("<li><a href='./?" + _item + "'>" + _item + "<a/></li>")
+        //     ul.innerHTML += "<li><a href='./?" + _item + "'>" + _item + "<a/></li>"
+        // }
     </script>
 </body>
 
