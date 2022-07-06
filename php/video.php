@@ -1,8 +1,8 @@
 <?php
 
-if (is_file(__DIR__ . '/vendor/autoload.php')) {
-    require_once __DIR__ . '/vendor/autoload.php';
-}
+//https://github.com/aliyun/aliyun-oss-php-sdk/releases/download/v2.5.0/aliyun-oss-php-sdk-2.5.0.phar
+require_once 'aliyun-oss-php-sdk-2.5.0.phar';
+require_once 'aliysun-oss-php-sdk-2.5.0.phar/../autoload.php';
 include 'config.php';
 
 

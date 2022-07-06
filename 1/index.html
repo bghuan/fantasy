@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zn">
+
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="index.css">
+    <title>fantasy-bgh</title>
+</head>
+
+<body>
+    <header>
+        <span>fantasy</span>
+        <button>query</button>
+    </header>
+    <main>
+        123
+    </main>
+    <footer>
+        <input id='content' type="text">
+        <button id="send">send</button>
+    </footer>
+
+    <script>
+        let create_url = 'https://buguoheng.com/php/save'+'?namespave=123'
+        send.onclick = function () {
+            var content_value = content.value
+            fetch(create_url + content_value)
+        }
+    </script>
+</body>
+
+</html>
