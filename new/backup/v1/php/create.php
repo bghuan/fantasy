@@ -1,8 +1,8 @@
 <?php
 include 'config.php';
 
-$key = $_POST["key"] ? $_POST["key"] : $_GET["key"];
-$value = $_POST["value"] ? $_POST["value"] : $_GET["value"];
+$key =  querystring('key');;
+$value =  querystring('value');;
 
 $bulk = new MongoDB\Driver\BulkWrite;
 $document = [

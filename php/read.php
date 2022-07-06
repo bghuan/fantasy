@@ -4,10 +4,10 @@ header('Content-type: application/json; charset=utf-8');
 header("Content-Encoding: gzip");
 include 'config.php';
 
-$a = $_GET["a"];
-$_id = $_GET["id"];
-$limit = $_GET["limit"] ? $_GET["limit"] : 1000;
-$skip = $_GET["skip"] ? $_GET["skip"] : 0;
+$a =  querystring('a');
+$_id =  querystring('id');
+$limit = querystring('limit',1000);
+$skip = querystring('skip',0);
 
 if (!empty($_id)) {
     $_ids = explode(',', trim($_id, '[]'));

@@ -41,3 +41,10 @@ function json_encode2($str)
 {
     return decodeUnicode(json_encode($str));
 }
+
+function querystring($str, $dafault = '')
+{
+    if (isset($_POST[$str])) return $_POST[$str];
+    else if (isset($_GET[$str])) return $_GET[$str];
+    else return $dafault;
+}

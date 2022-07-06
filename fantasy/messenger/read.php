@@ -2,21 +2,11 @@
 header('Access-Control-Allow-Origin:*');
 include 'config.php';
 
-// $a = $_GET["a"];
-// $b = $_GET["b"];
-
-$a = $_POST["a"];
+$a =  querystring('a');;
 
 if (empty($a)) {
     exit;
 }
-
-$bulk = new MongoDB\Driver\BulkWrite;
-$document = [
-    '_id' => new MongoDB\BSON\ObjectID,
-    'a' => $a,
-    'b' => $b
-];
 
 $filter = ['a' => ['$eq' => $a]];
 $options = ['sort' => ['_id' => -1]];

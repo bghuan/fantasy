@@ -2,13 +2,10 @@
 header('Access-Control-Allow-Origin:*');
 include 'config.php';
 
-// $a = $_GET["a"];
-// $b = $_GET["b"];
+$a = querystring('a');
+$b = querystring('b');
 
-$a = $_POST["a"];
-$b = $_POST["b"];
-
-if (empty($a)||empty($b)) {
+if (empty($a) || empty($b)) {
     exit;
 }
 

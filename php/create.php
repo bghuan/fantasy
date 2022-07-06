@@ -2,8 +2,8 @@
 header('Access-Control-Allow-Origin:*');
 include 'config.php';
 
-$a = $_GET["a"];
-$b = $_GET["b"];
+$a = querystring('a');;
+$b = querystring('b');;
 
 if (empty($a)) {
     exit;
