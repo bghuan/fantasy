@@ -44,7 +44,7 @@
                 })
         }
         const read = () => {
-            let url = '/fantasy/messenger/read.php';
+            let url = '/fantasy/messenger/read';
             var formData = new FormData();
             formData.set('a', source.value)
             formData.set('b', target.value)
@@ -61,7 +61,7 @@
             HttpPost(url, formData, callBack)
         }
         const write = () => {
-            let url = '/fantasy/messenger/create.php';
+            let url = '/fantasy/messenger/create';
             var formData = new FormData();
             formData.set('a', source.value)
             formData.set('b', target.value)

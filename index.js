@@ -1,7 +1,7 @@
 let a, b, a_Collapse, b_Collapse, isGoBack, stop_service, asd, cache = {}, filter_jump
 const api = 'https://buguoheng.com'
-const readPath = '/php/readd.php'
-const createPath = '/php/create.php'
+const readPath = '/api/read'
+const createPath = '/api/create'
 
 document.addEventListener("DOMContentLoaded", (function () {
     if (stopServiceIfDateNine()) return

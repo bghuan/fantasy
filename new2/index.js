@@ -1,7 +1,7 @@
 let path_api = 'https://dev.buguoheng.com/new/php'
-let path_read = path_api + '/read.php'
-let path_create = path_api + '/create.php'
-let path_updatetime = path_api + '/updatetime.php'
+let path_read = path_api + '/read'
+let path_create = path_api + '/create'
+let path_updatetime = path_api + '/updatetime'
 let cl = console.log
 
 let HttpPost = (url, data, callBack) => {

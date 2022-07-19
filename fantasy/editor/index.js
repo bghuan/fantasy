@@ -1,6 +1,6 @@
-let url_read = 'read.php' + window.location.search
-let url_create = 'create.php' + window.location.search
-let url_backup = 'backup.php' + window.location.search
+let url_read = 'read' + window.location.search
+let url_create = 'create' + window.location.search
+let url_backup = 'backup' + window.location.search
 let E
 let editorConfig
 let SlateTransforms
@@ -149,7 +149,7 @@ document.addEventListener('keydown', function (e) {
             E.SlateTransforms.insertNodes(editor, [{ type: 'paragraph', children: [{ text: getDate() + ' ' }] }])
         }
         if (e.key == 'q') {
-            location.href = 'https://buguoheng.com/fantasy/editor/all.php'
+            location.href = 'https://buguoheng.com/fantasy/editor/all'
         }
     } else if (e.key == 'Enter') {
         editor.moveReverse(1) // 反向移动 2 个字符

@@ -1,7 +1,7 @@
 <?php 
 function load()
 {
-    include 'php/config.php';
+    include 'api/config.php';
     $limit = 100;
     $skip = 0;
     $cmd = new MongoDB\Driver\Command([

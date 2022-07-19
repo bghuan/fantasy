@@ -181,7 +181,7 @@ let listOssObject = () => client.list().then(res => res.objects.map(obj => write
 let initOssClient = (func, data) => loadJS(() => HttpGet(res => func(data, setClient(JSON.parse(res)))))
 
 // common
-const HttpGet = (callBack, str = 'https://buguoheng.com/php/sts.php') => {
+const HttpGet = (callBack, str = 'https://buguoheng.com/api/sts') => {
     let xmlhttp = new XMLHttpRequest() || new ActiveXObject("Microsoft.XMLHTTP")
     xmlhttp.onreadystatechange = () => { if (xmlhttp.readyState == 4 && xmlhttp.status == 200) callBack(xmlhttp.responseText) }
     xmlhttp.open("GET", str, true)

@@ -34,7 +34,7 @@ const broadcast = (data, ws) => {
     server.clients.forEach(client => client.send(data))
     if(data) {
         history= history.concat([data])
-        require("https").get('https://buguoheng.com/php/save.php?key=websocket2&value='+(new Date().getTime()));
+        require("https").get('https://buguoheng.com/api/save?key=websocket2&value='+(new Date().getTime()));
     }
 }
 

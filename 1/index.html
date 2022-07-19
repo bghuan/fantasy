@@ -10,23 +10,22 @@
 <body>
     <header>
         <span>fantasy</span>
-        <button>query</button>
     </header>
     <main>
-        123
+        <input id='content' type="text">
+        <button id="get">query</button>
+        <button id="send">send</button>
+        <br>
+        <textarea name="" id="aaa" rows="8" cols="40"></textarea>
+        <div id="inputs"></div>
+        <button id="add">+</button>
+        <button id="inputs_send">inputs_send</button>
+        <button id="inputs_get">inputs_get</button>
     </main>
     <footer>
-        <input id='content' type="text">
-        <button id="send">send</button>
     </footer>
 
-    <script>
-        let create_url = 'https://buguoheng.com/php/save'+'?namespave=123'
-        send.onclick = function () {
-            var content_value = content.value
-            fetch(create_url + content_value)
-        }
-    </script>
+    <script src="index.js"></script>
 </body>
 
 </html>
