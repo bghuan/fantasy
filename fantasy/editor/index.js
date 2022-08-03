@@ -1,6 +1,8 @@
-let url_read = 'read' + window.location.search
-let url_create = 'create' + window.location.search
-let url_backup = 'backup' + window.location.search
+let path='/fantasy/editor/'
+
+let url_read = path+'read.php' + window.location.search
+let url_create = path+'create.php' + window.location.search
+let url_backup = path+'backup.php' + window.location.search
 let E
 let editorConfig
 let SlateTransforms
@@ -97,6 +99,8 @@ let callBack_read = function (data) {
         }
     })
     scroll_bottom(1)
+    
+document.getElementById('w-e-textarea-1').style.marginLeft='200px'
 }
 
 HttpPost(url_read, null, callBack_read)
@@ -128,14 +132,14 @@ document.addEventListener('keydown', function (e) {
         }, 1000);
     }
 });
-rtrim = function (data) {
-    return data < 10 ? '0' + data : data
+rtrim=function(data){
+    return data<10?'0'+data:data
 }
 var getDate = function (date = new Date()) {
-    return date.getFullYear() + '-' + rtrim(date.getMonth() + 1) + '-' + rtrim(date.getDate() + ' ')
+    return date.getFullYear() + '-' + rtrim(date.getMonth() + 1) + '-' + rtrim(date.getDate()) 
 }
 var getTime = function (date = new Date()) {
-    return rtrim(date.getHours()) + ":" + rtrim(date.getMinutes()) + ":" + rtrim(date.getSeconds() + ' ')
+    return rtrim(date.getHours()) + ":" + rtrim(date.getMinutes()) + ":" + rtrim(date.getSeconds())
 }
 document.addEventListener('keydown', function (e) {
     if (((navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey))) {
@@ -144,17 +148,22 @@ document.addEventListener('keydown', function (e) {
             document.getElementById('w-e-textarea-1').style.backgroundColor = '#000'
             document.getElementById('w-e-textarea-1').style.color = "#FFF"
         }
-        if (e.key == 'Enter') {
+        if (e.key == 'd' || e.key == 'Enter') {
             e.preventDefault();
             E.SlateTransforms.insertNodes(editor, [{ type: 'paragraph', children: [{ text: getDate() + ' ' }] }])
         }
         if (e.key == 'q') {
-            location.href = 'https://buguoheng.com/fantasy/editor/all'
+            location.href='https://buguoheng.com/fantasy/editor/all.php'
         }
-    } else if (e.key == 'Enter') {
+    }
+    else if (e.key == 'Enter') {
         editor.moveReverse(1) // 反向移动 2 个字符
-        var flag = editor.getText().indexOf(getDate()) != -1
-        E.SlateTransforms.insertNodes(editor, [{ type: 'paragraph', children: [{ text: (!flag ? getDate() : getTime()) + ' ' }] }])
+        var flag=editor.getText().indexOf(getDate())!=-1
+            E.SlateTransforms.insertNodes(editor, [{ type: 'paragraph', children: [{ text:(!flag? getDate():getTime() )+ ' ' }] }])
     }
 });
-document.title = window.location.search.replace('?', '')
+document.title=window.location.search.replace('?','')
+
+if(window.location.search=="?all"){
+  location.href='/fantasy/editor/all'
+}

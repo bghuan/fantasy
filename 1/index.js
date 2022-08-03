@@ -1,9 +1,28 @@
 let create_url = 'https://buguoheng.com/api/save'
 let url_id = 'buguoheng'
 
+let get_url = function (obj, array) {
+    if (Array.isArray(obj)) {
+        array = [].concat(obj)
+        obj = {}
+    } else {
+        obj = obj ?? {}
+        array = array ?? []
+    }
+    obj.namespace = url_id
+    let keys = Object.keys(obj)
+    let data = []
+    for (let i = keys.length - 1; i >= 0; i--) {
+        data.push(keys[i] + '=' + obj[keys[i]])
+    }
+    for (let i = 0; i < array.length; i++) {
+        data.push(array[i])
+    }
+    let str = data.join('&')
+    return create_url + '?' + str
+}
 let send_message = function () {
-    let content_value = '?namespace=' + url_id + '&content=' + (content.value)
-    fetch(create_url + content_value).then(response => response.text()).then(text => get.click())
+    fetch(get_url({ content: content.value })).then(response => response.text()).then(text => get.click())
 }
 send.onclick = send_message
 get.onclick = function () {
@@ -11,7 +30,7 @@ get.onclick = function () {
     let callBack = function (data) {
         content.value = data
     }
-    fetch(create_url + content_value)
+    fetch(get_url({ key: 'content' }))
         .then(response => response.text())
         .then(json => {
             callBack(json)
@@ -27,7 +46,7 @@ aaa.onkeyup = function (event) {
     let callBack = function (data) {
         aaa.hohoho = false
     }
-    fetch(create_url + content_value).then(response => response.text()).then(text => { callBack() })
+    fetch(get_url({ content2: aaa.value })).then(response => response.text()).then(text => { callBack() })
 }
 
 let tick = 1000
@@ -42,7 +61,7 @@ let tick_func = function () {
         tick = 100
         aaa.value = data
     }
-    fetch(create_url + content_value2)
+    fetch(get_url({ key: 'content2' }))
         .then(response => response.text())
         .then(json => {
             callBack2(json)
@@ -82,3 +101,12 @@ inputs_get.onclick = function (event) {
     fetch(create_url + content_value).then(response => response.json()).then(json => { callBack(json) })
 }
 inputs_get.click()
+
+asd = function () {
+    if (aaa.width == aaa.style.width && aaa.height == aaa.style.height) return
+    aaa.width = aaa.style.width
+    aaa.height = aaa.style.height
+    let url = get_url({ width: aaa.style.width, height: aaa.style.height })
+    fetch(url)
+}
+aaa.onmouseup = asd

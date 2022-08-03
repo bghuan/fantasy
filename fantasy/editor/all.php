@@ -5,7 +5,9 @@ $arList = $redis->keys("editor.*");
 $i = 0;
 foreach ($arList as $item) {
     $value = str_replace('editor.', '', urldecode($item));
-    if (!empty($value)) $array[$i++] = $value;
+    $result = $redis->get($item);
+    $is_empty = $result == '[{"type":"paragraph","children":[{"text":""}]}]';
+    if (!empty($value) && !$is_empty) $array[$i++] = $value;
 }
 echo '<script>let list=' . json_encode2($array) . '</script>';
 ?>

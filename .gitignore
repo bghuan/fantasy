@@ -3,5 +3,7 @@
 node_modules/
 
 static/download/
+static/project/android/
+static/project/justAuth/
 
 *config.php*

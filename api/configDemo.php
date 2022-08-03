@@ -48,3 +48,38 @@ function querystring($str, $dafault = '')
     else if (isset($_GET[$str])) return $_GET[$str];
     else return $dafault;
 }
+
+
+function write_index()
+{
+    global $db_document;
+    global $manager;
+    global $db_name;
+    $list = '';
+    $cmd = new MongoDB\Driver\Command([
+        'aggregate' => $db_document,
+        'pipeline' => [
+            ['$match' => ['a' => ['$exists' => true], 'a' => ['$ne' => 'test'], 'b' => ['$exists' => true, '$nin' =>  [null, '', [], [''], [[]]]]]],
+            ['$group' => ['_id' => '$b', 'a' =>  ['$last' => '$a'], 'id_temp' => ['$last' => '$_id']]],
+            ['$sort' => ['id_temp' => -1]],
+            ['$project' => ['_id' => 0, 'a' => '$a', 'b' => '$_id']]
+        ],
+        'cursor' => new stdClass,
+    ]);
+    $jsons = $manager->executeCommand($db_name, $cmd)->toArray();
+    foreach (($jsons) as $index => $item) {
+        $key = ($item->a);
+        if (is_array($item->b))
+            $value = implode(',', $item->b);
+        else
+            $value = ($item->b);
+        $list = $list . "<div><a>$value</a> - <a>$key</a></div>";
+    }
+
+    $f = fopen("../index.html", "w");
+    $text = file_get_contents('../index.html.template');
+    $find_place = "<div class='card-body' id='fantasy_content'>";
+    $text = str_replace($find_place, $find_place . $list, $text);
+    fwrite($f, $text);
+    fclose($f);
+}

@@ -1,0 +1,53 @@
+body {
+    overflow-y: scroll;
+}
+
+.form-control:focus {
+    box-shadow: none;
+}
+
+#fantasy_content div {
+    margin: 8px 0 4px 0px;
+}
+
+#fantasy_content div a:nth-child(2) {
+    font-size: 0.6em;
+}
+
+#footer {
+    height: 32px;
+    margin-top: -3px;
+    padding: 0
+}
+
+#more_content {
+    display: none;
+}
+
+#content {
+    margin-top: 43px;
+}
+
+#fantasy_content {
+    margin-top: -15px;
+}
+
+#beian {
+    font-size: 1rem;
+}
+
+#navbar {
+    padding: 0.1rem 1rem 0.1rem 1rem;
+}
+
+#buttons {
+    margin-right: -15px;
+}
+
+#buttons span{
+    margin:5px;
+}
+
+#footer_right {
+    display: inline-block;
+}

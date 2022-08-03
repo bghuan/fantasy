@@ -3,6 +3,7 @@
 header('Access-Control-Allow-Origin:*');
 header('Content-type: application/json; charset=utf-8');
 
+error_reporting(E_ERROR);
 require __DIR__ . '/vendor/autoload.php';
 include 'config.php';
 
