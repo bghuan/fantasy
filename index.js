@@ -42,7 +42,12 @@ const content = (event) => {
 const query_onhashchange = () => {
     a_Collapse.hide()
     let key = decodeURI(window.location.hash.slice(1))
-    if (!key) return (fantasy_content.innerHTML = json_all_innerHTML)
+    if (!key) {
+        fantasy_content.innerHTML=''
+        for (let i = 0; i < json_all_child.length; i++)
+            fantasy_content.appendChild(json_all_child[i])
+        return
+    }
     fantasy_title.innerText = key
     fantasy_search.value = key
     fantasy_key.value = key
@@ -56,13 +61,22 @@ btn_query.onclick = query
 btn_create.onclick = create
 btn_filter.onclick = filter
 btn_more.onclick = more
-window.onhashchange = query_onhashchange
 fantasy_content.onclick = content
+window.onhashchange = query_onhashchange
 
 
 
 a_Collapse = new bootstrap.Collapse(collapsea, { toggle: false })
 b_Collapse = new bootstrap.Collapse(collapseb, { toggle: false })
+collapseb.addEventListener('shown.bs.collapse', () => fantasy_key.focus())
+collapsea.addEventListener('shown.bs.collapse', () => fantasy_search.focus())
+document.addEventListener('click', (event) => {
+    let arr = ['fantasy_key', 'fantasy_value', 'collapseb', 'fantasy_search', 'collapsea']
+    if (arr.indexOf(event.target.id) == -1) {
+        b_Collapse.hide()
+        a_Collapse.hide()
+    }
+}, false)
 
 let json_all = []
 let json_all_child = []
@@ -70,6 +84,7 @@ for (let item of fantasy_content.children) {
     let key = item.children[1].innerText
     let value = item.children[0].innerText
     json_all.push({ [key]: value })
+    json_all_child = json_all_child.concat(item)
 }
 let json_all_innerHTML = fantasy_content.innerHTML
 if (window.location.hash.slice(1)) query_onhashchange()
