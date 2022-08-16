@@ -1,14 +1,17 @@
-let path='/fantasy/editor/'
+let path = '/fantasy/editor/'
 
-let url_read = path+'read.php' + window.location.search
-let url_create = path+'create.php' + window.location.search
-let url_backup = path+'backup.php' + window.location.search
+let url_read = path + 'read.php' + window.location.search
+let url_create = path + 'create.php' + window.location.search
+let url_backup = path + 'backup.php' + window.location.search
+let url_backup2 = path + 'backup2.php' + window.location.search
 let E
 let editorConfig
 let SlateTransforms
 let editor
 let toolbar
 let onFocus_ed = false
+let time_backup
+let time_tick_backup = 200
 
 // https://www.cnblogs.com/momo798/p/9177767.html
 var throttle = function (func, delay) {
@@ -99,21 +102,27 @@ let callBack_read = function (data) {
         }
     })
     scroll_bottom(1)
-    
-document.getElementById('w-e-textarea-1').style.marginLeft='200px'
+
+    document.getElementById('w-e-textarea-1').style.marginLeft = '200px'
 }
 
 HttpPost(url_read, null, callBack_read)
 
 document.addEventListener('keydown', function (e) {
     if (e.key == 's' && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
+        let is_save_force_oss = (new Date().getTime() - time_backup < time_tick_backup)
+        let url = is_save_force_oss ? url_backup : url_backup2
         e.preventDefault();
         var callBack = function (result) {
             console.log(result)
-            if (result == '123')
-                alert('保存成功')
+            setTimeout(function () {
+
+                if (!is_save_force_oss && result == '123')
+                    alert('保存成功')
+            }, time_tick_backup)
         }
-        HttpPost(url_backup, null, callBack)
+        HttpPost(url, null, callBack)
+        time_backup = new Date().getTime()
     }
 });
 document.addEventListener('keydown', function (e) {
@@ -132,11 +141,11 @@ document.addEventListener('keydown', function (e) {
         }, 1000);
     }
 });
-rtrim=function(data){
-    return data<10?'0'+data:data
+rtrim = function (data) {
+    return data < 10 ? '0' + data : data
 }
 var getDate = function (date = new Date()) {
-    return date.getFullYear() + '-' + rtrim(date.getMonth() + 1) + '-' + rtrim(date.getDate()) 
+    return date.getFullYear() + '-' + rtrim(date.getMonth() + 1) + '-' + rtrim(date.getDate())
 }
 var getTime = function (date = new Date()) {
     return rtrim(date.getHours()) + ":" + rtrim(date.getMinutes()) + ":" + rtrim(date.getSeconds())
@@ -153,17 +162,17 @@ document.addEventListener('keydown', function (e) {
             E.SlateTransforms.insertNodes(editor, [{ type: 'paragraph', children: [{ text: getDate() + ' ' }] }])
         }
         if (e.key == 'q') {
-            location.href='https://buguoheng.com/fantasy/editor/all.php'
+            location.href = 'https://buguoheng.com/fantasy/editor/all.php'
         }
     }
     else if (e.key == 'Enter') {
         editor.moveReverse(1) // 反向移动 2 个字符
-        var flag=editor.getText().indexOf(getDate())!=-1
-            E.SlateTransforms.insertNodes(editor, [{ type: 'paragraph', children: [{ text:(!flag? getDate():getTime() )+ ' ' }] }])
+        var flag = editor.getText().indexOf(getDate()) != -1
+        E.SlateTransforms.insertNodes(editor, [{ type: 'paragraph', children: [{ text: (!flag ? getDate() : getTime()) + ' ' }] }])
     }
 });
-document.title=window.location.search.replace('?','')
+document.title = window.location.search.replace('?', '')
 
-if(window.location.search=="?all"){
-  location.href='/fantasy/editor/all'
+if (window.location.search == "?all") {
+    location.href = '/fantasy/editor/all'
 }

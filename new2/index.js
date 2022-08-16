@@ -85,9 +85,7 @@ let fun_create = () => {
     }
     let key = create_key.value
     let value = create_value.value
-    let data = {}
-    data[key] = value
-    HttpPost(path_create, data, fun_create_callBack)
+    HttpPost(path_create, { [key]: value }, fun_create_callBack)
 }
 
 let fun_content_click = (e) => {
