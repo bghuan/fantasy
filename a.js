@@ -1,19 +1,58 @@
-let url = 'https://buguoheng.com/api/read'
-let url2 = 'https://buguoheng.com/api/read?a='
+// let url = 'https://buguoheng.com/api/read'
+// let url2 = 'https://buguoheng.com/api/read?a='
+let host = 'http://dev.bghuan.cn'
+let url = 'http://dev.bghuan.cn/php/read'
+let url2 = 'http://dev.bghuan.cn/php/read?a='
 let log = console.log
-let limit = 10
+let limit = 100
+let srcccc = []
 let callBack = (data) => {
     let allllll = ''
     for (let i = 0; i < data.length && i < limit; i++) {
         const a = data[i]['a'];
         const b = data[i]['b'];
-        let aaaaa = '<li class="card mb-3"><div class="card-body"><h4 class="card-title">' + a + '</h4><p class="card-text">' + b + '</p></div></li>'
+        let cccc = (a + '-' + b).substring(0, 80)
+        let src = host + '/static/image/openai/' + cccc + '.jpg'
+        srcccc.push(src)
+        // fetch('http://dev.bghuan.cn/php/openaiimage.php?a=' + cccc)
+        let aaaaa = '<li class="card mb-3"><div class="col-md-4"><img src="' + src + '" class="img-fluid rounded - start" alt="..."></div><div class="card - body"><h4 class="card - title">' + a + '</h4><p class="card - text">' + b + '</p></div></li>'
+
+        aaaaa = '<li class="card mb-3"><div class="row"><div class="col-md-2"><img src="' + src + '" class="img-fluid rounded-start" width="96"></div><div class="col-md-10"><div class="card-body"><h4 class="card-title">' + a + '</h4><p class="card-text">' + b + '</p></div></div></div></li>'
+
+        aaaaa = `
+<div class="col-md-6 col-sm-12">
+    <div class="card mb-3">
+        <div class="d-flex" style="height:140px">
+            <img src="${src}" class="rounded-start " width="140" height="140">
+            <div class="card-body" style="overflow-y: hidden;">
+                <h4 class="card-title">${a}</h4>
+                <p class="card-text">${b}</p>
+            </div>
+        </div>
+    </div>
+</div>`
+
         allllll += aaaaa
-        // if(i==10){
-        //     uuu.innerHTML = allllll
-        // }
+        if (i == 10) {
+            uuu.innerHTML = allllll
+        }
     }
     uuu.innerHTML = allllll
+
+    let imagessss = document.querySelectorAll('img')
+
+    let saaaaaaa = 0
+    for (let i = 0; i < imagessss.length; i++) {
+        if (saaaaaaa == 1) return
+        var img = new Image();
+        img.src = imagessss[i].src;
+        let a = decodeURI(img.src).split('openai/')[1]
+        img.onerror = function () {
+            saaaaaaa = 1
+            fetch('http://dev.bghuan.cn/php/openaiimage.php?a=' + a.replace('.jpg', '').substring(0, 80))
+        };
+
+    }
 }
 fetch(url).then(response => response.json()).then(json => callBack(json))
 
