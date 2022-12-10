@@ -1,61 +1,65 @@
-// let url = 'https://buguoheng.com/api/read'
-// let url2 = 'https://buguoheng.com/api/read?a='
-let host = 'http://dev.bghuan.cn'
-let url = 'http://dev.bghuan.cn/php/read'
-let url2 = 'http://dev.bghuan.cn/php/read?a='
+let host = 'https://dev.bghuan.cn'
+let url = 'https://dev.bghuan.cn/api/read'
+let url2 = 'https://dev.bghuan.cn/api/read?a='
 let log = console.log
-let limit = 100
-let srcccc = []
-let callBack = (data) => {
+let limit = 130
+let image_h = 110
+let image_w = 110
+let _1x1_image = host + '/static/image/1x1.bmp'
+
+let render_data = (data) => {
     let allllll = ''
     for (let i = 0; i < data.length && i < limit; i++) {
         const a = data[i]['a'];
         const b = data[i]['b'];
+        if (data.length > json_all.length) {
+            json_all.push(data[i])
+            json_all2.push({ [a]: b })
+        }
+        if (a == 'a_b') continue
+        // if (a == 'fantasy') continue
+        // if (a == 'test') continue
         let cccc = (a + '-' + b).substring(0, 80)
-        let src = host + '/static/image/openai/' + cccc + '.jpg'
-        srcccc.push(src)
-        // fetch('http://dev.bghuan.cn/php/openaiimage.php?a=' + cccc)
-        let aaaaa = '<li class="card mb-3"><div class="col-md-4"><img src="' + src + '" class="img-fluid rounded - start" alt="..."></div><div class="card - body"><h4 class="card - title">' + a + '</h4><p class="card - text">' + b + '</p></div></li>'
-
-        aaaaa = '<li class="card mb-3"><div class="row"><div class="col-md-2"><img src="' + src + '" class="img-fluid rounded-start" width="96"></div><div class="col-md-10"><div class="card-body"><h4 class="card-title">' + a + '</h4><p class="card-text">' + b + '</p></div></div></div></li>'
-
-        aaaaa = `
-<div class="col-md-6 col-sm-12">
-    <div class="card mb-3">
-        <div class="d-flex" style="height:140px">
-            <img src="${src}" class="rounded-start " width="140" height="140">
-            <div class="card-body" style="overflow-y: hidden;">
-                <h4 class="card-title">${a}</h4>
-                <p class="card-text">${b}</p>
+        let src = _1x1_image
+        let data_src = `https://bghuan.oss-cn-shenzhen.aliyuncs.com/image/openai/${cccc}.jpg?x-oss-process=image/resize,m_lfit,h_${image_h},w_${image_w}`
+        let right_image = `<img src="${src}" class="rounded-start" width=${image_h} height=${image_h} style="margin-top:6px;margin-left:-7px;" data-url="${data_src}">`
+        let aaaaa = `
+<div class="card mb-2 border-light">
+        <div class="d-flex" style="height:122px;">
+            ${right_image}        
+            <div class="card-body" style="overflow-y: hidden">
+                <h5 style="white-space: nowrap; overflow: hidden;text-overflow: ellipsis;">${a}</h5>
+                <p>${b}</p>
             </div>
         </div>
-    </div>
 </div>`
-
         allllll += aaaaa
-        if (i == 10) {
-            uuu.innerHTML = allllll
-        }
     }
     uuu.innerHTML = allllll
 
-    let imagessss = document.querySelectorAll('img')
-
-    let saaaaaaa = 0
-    for (let i = 0; i < imagessss.length; i++) {
-        if (saaaaaaa == 1) return
-        var img = new Image();
-        img.src = imagessss[i].src;
-        let a = decodeURI(img.src).split('openai/')[1]
-        img.onerror = function () {
-            saaaaaaa = 1
-            fetch('http://dev.bghuan.cn/php/openaiimage.php?a=' + a.replace('.jpg', '').substring(0, 80))
-        };
-
-    }
+    lazy_image()
 }
-fetch(url).then(response => response.json()).then(json => callBack(json))
+fetch(url).then(response => response.json()).then(json => render_data(json))
 
+lazy_image = () => {
+    var imgs = document.getElementsByTagName('img')
+    let io = new IntersectionObserver((entires) => {
+        entires.forEach(item => {
+            let oImg = item.target
+            if (item.intersectionRatio > 0 && item.intersectionRatio <= 1) {
+                if (oImg.getAttribute('err-image') != 1 && decodeURI(oImg.src) != oImg.getAttribute('data-url'))
+                    oImg.setAttribute('src', oImg.getAttribute('data-url'))
+            }
+            oImg.onerror = function () {
+                oImg.setAttribute('src', _1x1_image)
+                oImg.setAttribute('err-image', 1)
+            };
+        })
+    })
+    Array.from(imgs).forEach(element => {
+        io.observe(element)
+    });
+}
 let uuu_down = 0
 let uuu_up = 0
 let uuu_select = 0
@@ -80,44 +84,57 @@ uuu.onmouseup = (event) => {
     if (event.button != 0) return
     let a = ''
     let div = event.target.parentNode
-    if (event.target.nodeName == 'H4')
-        a = ((event.target.innerText))
+    if (event.target.nodeName == 'H5')
+        a = event.target.parentNode.querySelector('h5').innerText
     else if (event.target.nodeName == 'P')
-        a = ((event.target.parentNode.firstChild.innerText))
+        a = event.target.parentNode.querySelector('h5').innerText
     else if (event.target.nodeName == 'DIV') {
-        a = ((event.target.firstChild.innerText))
+        a = event.target.querySelector('h5').innerText
         div = event.target
+    }
+    else if (event.target.nodeName == 'IMG') {
+        a = event.target.parentNode.querySelector('h5').innerText
+        let b = event.target.parentNode.querySelector('p').innerText
+        let cccc = (a + '-' + b).substring(0, 80)
+        if (event.target.src == _1x1_image) {
+            oImg = event.target
+            oImg.setAttribute('src', host + '/static/image/download.png')
+            fetch(host + '/api/openai.php?a=' + cccc.replace('.jpg', '').substring(0, 80)).then(response => {
+                oImg.setAttribute('err-image', 2)
+                oImg.setAttribute('src', oImg.getAttribute('data-url'))
+                oImg.onerror = function () {
+                    oImg.setAttribute('src', _1x1_image)
+                    oImg.setAttribute('err-image', 1)
+                };
+            })
+            return
+        }
     }
     if (a == '') {
         return
     }
-    div.className += ' text-bg-primary'
-    if (div.childNodes.length != 2) {
-        for (let i = div.childNodes.length; i > 2; i--) {
-            div.removeChild(div.childNodes[i - 1])
-        }
-        div.lastChild.className = div.lastChild.className.replace(' d-none', '')
-        setTimeout(() => {
-            div.className = div.className.replace(' text-bg-primary', '')
-        }, 10);
-        return
-    }
-    callBack = (data) => {
-        let allllll = ''
-        for (let i = 0; i < data.length; i++) {
-            const a = data[i]['a'];
-            let aaaaa = '<p class="card-text">' + a + '</p>'
-            allllll += aaaaa
-        }
-        div.lastChild.className += ' d-none'
-        div.innerHTML += allllll
-        div.className = div.className.replace(' text-bg-primary', '')
-    }
-    fetch(url2 + a).then(response => response.json()).then(json => callBack(json))
+    query(fantasy_search.value = (a))
+    // div.className += ' text-bg-primary'
+    // if (div.childNodes.length != 2) {
+    //     for (let i = div.childNodes.length; i > 2; i--) {
+    //         div.removeChild(div.childNodes[i - 1])
+    //     }
+    //     div.lastChild.className = div.lastChild.className.replace(' d-none', '')
+    //     setTimeout(() => {
+    //         div.className = div.className.replace(' text-bg-primary', '')
+    //     }, 10);
+    //     return
+    // }
+    // callBack = (data) => {
+    //     let allllll = ''
+    //     for (let i = 0; i < data.length; i++) {
+    //         const a = data[i]['a'];
+    //         let aaaaa = '<p class="card-text">' + a + '</p>'
+    //         allllll += aaaaa
+    //     }
+    //     div.lastChild.className += ' d-none'
+    //     div.innerHTML += allllll
+    //     div.className = div.className.replace(' text-bg-primary', '')
+    // }
+    // fetch(url2 + a).then(response => response.json()).then(json => callBack(json))
 }
-const more = () => {
-    // more_content.className = more_content.className == 'd-none' ? '' : 'd-none'
-    more_content.style.display = more_content.style.display == 'inline-block' ? 'none' : 'inline-block'
-}
-
-btn_more.onclick = more

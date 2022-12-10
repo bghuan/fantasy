@@ -181,13 +181,13 @@ let listOssObject = () => client.list().then(res => res.objects.map(obj => write
 let initOssClient = (func, data) => loadJS(() => HttpGet(res => func(data, setClient(JSON.parse(res)))))
 
 // common
-const HttpGet = (callBack, str = 'https://buguoheng.com/api/sts') => {
+const HttpGet = (callBack, str = 'https://bghuan.cn/api/sts') => {
     let xmlhttp = new XMLHttpRequest() || new ActiveXObject("Microsoft.XMLHTTP")
     xmlhttp.onreadystatechange = () => { if (xmlhttp.readyState == 4 && xmlhttp.status == 200) callBack(xmlhttp.responseText) }
     xmlhttp.open("GET", str, true)
     xmlhttp.send()
 }
-const loadJS = function (callback, url = 'https://buguoheng.com/static/js/aliyun-oss-sdk-6.8.0.min.js') {
+const loadJS = function (callback, url = 'https://bghuan.cn/static/js/aliyun-oss-sdk-6.8.0.min.js') {
     let script = document.createElement('script')
     script.src = url
     script.type = "text/javascript"
@@ -267,6 +267,6 @@ let myCatch = arg => {
         }
     }
 }
-connect("wss://buguoheng.com/ws", room)
+connect("wss://bghuan.cn/ws", room)
 // connect('ws://127.0.0.1:8091', room)
 myCatch(room)

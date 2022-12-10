@@ -162,7 +162,7 @@ document.addEventListener('keydown', function (e) {
             E.SlateTransforms.insertNodes(editor, [{ type: 'paragraph', children: [{ text: getDate() + ' ' }] }])
         }
         if (e.key == 'q') {
-            location.href = 'https://buguoheng.com/fantasy/editor/all.php'
+            location.href = 'https://bghuan.cn/fantasy/editor/all.php'
         }
     }
     else if (e.key == 'Enter') {

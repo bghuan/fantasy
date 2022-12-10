@@ -31,11 +31,11 @@ function sendMail($to,$title,$content,$Account,$Password,$UserName) {
      echo "发送成功";
    }
 };
-$to="bu@buguoheng.com";
+$to="bu@bghuan.cn";
 $random = mt_rand(100000,999999);
 $redis->set($to,$random,600);
 
 $title=$random." 是你注册验证码";
-$content="验证码: ".$random." 有效期10分钟\r\n收集幻想\r\nbuguoheng.com";
+$content="验证码: ".$random." 有效期10分钟\r\n收集幻想\r\nbghuan.cn";
 
 sendMail($to,$title,$content,$emailAccount,$emailPassword,$emailUserName);

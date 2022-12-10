@@ -94,8 +94,8 @@ get_random = () => {
     return result
 }
 
-webSocket = new WebSocket("wss://buguoheng.com/ws", room)
-witness.href = 'https://ws.buguoheng.com?room=' + room
+webSocket = new WebSocket("wss://bghuan.cn/ws", room)
+witness.href = 'https://ws.bghuan.cn?room=' + room
 create_new_right_array()
 for (let i = 0; i < children.length; i++) {
     children[i].onclick = () => {

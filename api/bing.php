@@ -1,6 +1,6 @@
 <?php
 
-// header('Access-Control-Allow-Origin:*.buguoheng.com');
+// header('Access-Control-Allow-Origin:*.bghuan.cn');
 // header('Access-Control-Allow-Origin:*');
 header("Content-type: image/jpg");
 
