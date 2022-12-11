@@ -44,10 +44,29 @@ body {
     margin-right: -15px;
 }
 
-#buttons span{
-    margin:5px;
+#buttons span {
+    margin: 5px;
 }
 
 #footer_right {
     display: inline-block;
+}
+
+#uuu img {
+    margin-top: 6px;
+    margin-left: -7px;
+}
+
+#uuu div div {
+    height: 122px;
+}
+
+#uuu div div div {
+    overflow-y: hidden
+}
+
+#uuu h5 {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
