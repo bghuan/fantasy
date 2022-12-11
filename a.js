@@ -1,8 +1,9 @@
-let host = 'https://dev.bghuan.cn'
-let url = 'https://dev.bghuan.cn/api/read'
-let url2 = 'https://dev.bghuan.cn/api/read?a='
+let host = location.origin
+if (location.host.toString().indexOf('127') >= 0 || location.host.toString().indexOf('localhost') >= 0) host = 'https://dev.bghuan.cn'
+let url = host + '/api/read'
+let url2 = host + '/api/read?a='
 let log = console.log
-let limit = 130
+let limit = 100000
 let image_h = 110
 let image_w = 110
 let _1x1_image = host + '/static/image/1x1.bmp'
@@ -10,8 +11,14 @@ let _1x1_image = host + '/static/image/1x1.bmp'
 let render_data = (data) => {
     let allllll = ''
     for (let i = 0; i < data.length && i < limit; i++) {
-        const a = data[i]['a'];
-        const b = data[i]['b'];
+        let a = data[i]['a'];
+        let b = data[i]['b'];
+        try {
+            a = data[i]['a'].toString().replaceAll('\"', '\'');
+            b = data[i]['b'].toString().replaceAll('\"', '\'');
+        } catch (e) {
+            log(data[i]['b'], a, b, e)
+        }
         if (data.length > json_all.length) {
             json_all.push(data[i])
             json_all2.push({ [a]: b })
@@ -20,8 +27,8 @@ let render_data = (data) => {
         // if (a == 'fantasy') continue
         // if (a == 'test') continue
         let cccc = (a + '-' + b).substring(0, 80)
-        let src = _1x1_image
         let data_src = `https://bghuan.oss-cn-shenzhen.aliyuncs.com/image/openai/${cccc}.jpg?x-oss-process=image/resize,m_lfit,h_${image_h},w_${image_w}`
+        let src = i < 10 ? data_src : _1x1_image
         let right_image = `<img src="${src}" class="rounded-start" width=${image_h} height=${image_h} style="margin-top:6px;margin-left:-7px;" data-url="${data_src}">`
         let aaaaa = `
 <div class="card mb-2 border-light">
@@ -47,8 +54,9 @@ lazy_image = () => {
         entires.forEach(item => {
             let oImg = item.target
             if (item.intersectionRatio > 0 && item.intersectionRatio <= 1) {
-                if (oImg.getAttribute('err-image') != 1 && decodeURI(oImg.src) != oImg.getAttribute('data-url'))
+                if (oImg.getAttribute('err-image') != 1 && decodeURI(oImg.src) != oImg.getAttribute('data-url')) {
                     oImg.setAttribute('src', oImg.getAttribute('data-url'))
+                }
             }
             oImg.onerror = function () {
                 oImg.setAttribute('src', _1x1_image)
@@ -63,6 +71,8 @@ lazy_image = () => {
 let uuu_down = 0
 let uuu_up = 0
 let uuu_select = 0
+let sudo_change_image = 0
+let sudo_change_image_text = ''
 uuu.onmousedown = (event) => {
     uuu_down = Date.now()
     if (document.getSelection().toString().length > 0) {
@@ -96,10 +106,12 @@ uuu.onmouseup = (event) => {
         a = event.target.parentNode.querySelector('h5').innerText
         let b = event.target.parentNode.querySelector('p').innerText
         let cccc = (a + '-' + b).substring(0, 80)
-        if (event.target.src == _1x1_image) {
-            oImg = event.target
+        if (event.target.src == _1x1_image || sudo_change_image == 1) {
+            let oImg = event.target
             oImg.setAttribute('src', host + '/static/image/download.png')
-            fetch(host + '/api/openai.php?a=' + cccc.replace('.jpg', '').substring(0, 80)).then(response => {
+            let url = host + '/api/openai.php?a=' + cccc.replace('.jpg', '').substring(0, 80)
+            if (sudo_change_image_text) url += '&b=' + sudo_change_image_text
+            fetch(url).then(response => {
                 oImg.setAttribute('err-image', 2)
                 oImg.setAttribute('src', oImg.getAttribute('data-url'))
                 oImg.onerror = function () {
@@ -114,27 +126,29 @@ uuu.onmouseup = (event) => {
         return
     }
     query(fantasy_search.value = (a))
-    // div.className += ' text-bg-primary'
-    // if (div.childNodes.length != 2) {
-    //     for (let i = div.childNodes.length; i > 2; i--) {
-    //         div.removeChild(div.childNodes[i - 1])
-    //     }
-    //     div.lastChild.className = div.lastChild.className.replace(' d-none', '')
-    //     setTimeout(() => {
-    //         div.className = div.className.replace(' text-bg-primary', '')
-    //     }, 10);
-    //     return
-    // }
-    // callBack = (data) => {
-    //     let allllll = ''
-    //     for (let i = 0; i < data.length; i++) {
-    //         const a = data[i]['a'];
-    //         let aaaaa = '<p class="card-text">' + a + '</p>'
-    //         allllll += aaaaa
-    //     }
-    //     div.lastChild.className += ' d-none'
-    //     div.innerHTML += allllll
-    //     div.className = div.className.replace(' text-bg-primary', '')
-    // }
-    // fetch(url2 + a).then(response => response.json()).then(json => callBack(json))
+}
+
+let old_func = btn_query.onclick
+btn_query.onclick = () => {
+    let aaaaaaaa = fantasy_search.value?.split('image:')
+    if (aaaaaaaa.length > 1) {
+        var imgs = document.getElementsByTagName('img')
+        let oImg = imgs[aaaaaaaa[0]]
+        oImg.setAttribute('src', host + '/static/image/download.png')
+        let a = oImg.parentNode.querySelector('h5').innerText
+        let b = oImg.parentNode.querySelector('p').innerText
+        let cccc = (a + '-' + b).substring(0, 80)
+        let url = host + '/api/openai.php?a=' + cccc.replace('.jpg', '').substring(0, 80)
+        url += '&b=' + aaaaaaaa[1]
+        fetch(url).then(response => {
+            oImg.setAttribute('err-image', 2)
+            oImg.setAttribute('src', oImg.getAttribute('data-url'))
+            oImg.onerror = function () {
+                oImg.setAttribute('src', _1x1_image)
+                oImg.setAttribute('err-image', 1)
+            };
+        })
+    } else {
+        old_func()
+    }
 }

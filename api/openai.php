@@ -10,17 +10,22 @@ use OSS\OssClient;
 use OSS\Core\OssException;
 
 $a = querystring('a');
+$b = querystring('b');
 if (empty($a)) {
     exit;
 }
+$prompt = $a;
+if (!empty($b)) {
+    $prompt = $b;
+}
 
 $fileName = '../static/image/openai/' . $a . '.jpg';
-if (!file_exists($fileName)) {
+if (!file_exists($fileName) || true) {
 
     $apiKey = $openaiApiKey;
     $url = 'https://api.openai.com/v1/images/generations';
     $data = [
-        'prompt' => $a,
+        'prompt' => $prompt,
         'size' => '256x256',
     ];
     $ch = curl_init();

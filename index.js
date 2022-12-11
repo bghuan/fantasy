@@ -29,7 +29,7 @@ const filter = () => {
     // for (let i = 0; i < json_current.length; i++)
     //     fantasy_content.appendChild(json_current[i])
     let key = fantasy_search.value
-    let json = json_all.filter(item => item.a.indexOf(key) > 0 || item.b.indexOf(key) > 0)
+    let json = json_all.filter(item => item.a.indexOf(key) > 0 || item.b.toString().indexOf(key) > 0)
     render_data(json)
     a_Collapse.hide()
 }
