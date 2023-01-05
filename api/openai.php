@@ -26,7 +26,7 @@ if (!file_exists($fileName) || true) {
     $url = 'https://api.openai.com/v1/images/generations';
     $data = [
         'prompt' => $prompt,
-        'size' => '256x256',
+        // 'size' => '256x256',
     ];
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);

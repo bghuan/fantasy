@@ -20,7 +20,7 @@ if ($redis->get($is_backup)) {
 try {
     $ossClient = new OssClient($accessKeyId, $accessKeySecret, $endpoint);
     $ossClient->putObject($bucket, $objectName, $result);
-    $redis->set("is_editor_backuped", true);
+    $redis->set($is_backup, true);
     echo 123;
     exit;
 } catch (OssException $e) {

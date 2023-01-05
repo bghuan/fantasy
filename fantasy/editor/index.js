@@ -1,4 +1,7 @@
-let path = '/fantasy/editor/'
+
+let host = location.origin
+if (host.toString().indexOf('127') >= 0 || host.toString().indexOf('localhost') >= 0) host = 'https://dev.bghuan.cn'
+let path = host + '/fantasy/editor/'
 
 let url_read = path + 'read.php' + window.location.search
 let url_create = path + 'create.php' + window.location.search
@@ -12,6 +15,7 @@ let toolbar
 let onFocus_ed = false
 let time_backup
 let time_tick_backup = 200
+let last_data = ''
 
 // https://www.cnblogs.com/momo798/p/9177767.html
 var throttle = function (func, delay) {
@@ -49,6 +53,8 @@ let write = () => {
     let formData = new FormData()
     formData.append('content', data)
     let callBack = function (data) { }
+    if (last_data == data) return
+    last_data = data
     HttpPost(url_create, formData, callBack)
 }
 
@@ -82,6 +88,7 @@ let callBack_read = function (data) {
             content: JSON.parse(data),
             config: editorConfig
         })
+        last_data = data
     } else {
         editor = E.createEditor({
             selector: '#editor-text-area',
@@ -103,7 +110,7 @@ let callBack_read = function (data) {
     })
     scroll_bottom(1)
 
-    document.getElementById('w-e-textarea-1').style.marginLeft = '200px'
+    // document.getElementById('w-e-textarea-1').style.marginLeft = '200px'
 }
 
 HttpPost(url_read, null, callBack_read)
@@ -174,5 +181,5 @@ document.addEventListener('keydown', function (e) {
 document.title = window.location.search.replace('?', '')
 
 if (window.location.search == "?all") {
-    location.href = '/fantasy/editor/all'
+    location.href = host + '/fantasy/editor/all'
 }
