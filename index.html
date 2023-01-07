@@ -15,15 +15,6 @@
                 <a class='navbar-brand text-primary text-truncate col-5' data-toggle='collapse' href='#collapsea'
                     role='button' aria-expanded='false' aria-controls='collapsea' id='fantasy_title'>fantasy</a>
                 <div class='form-inline my-0' id='buttons'>
-                    <button class='btn btn-sm border d-none' type='button' id='editor'>
-                        <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='currentColor'
-                            class='bi bi-credit-card-2-front' viewBox='0 0 16 16'>
-                            <path
-                                d='M14 3a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h12zM2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H2z' />
-                            <path
-                                d='M2 5.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1zm0 3a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5z' />
-                        </svg>
-                    </button>
                     <button class='btn btn-sm border' data-toggle='collapse' data-target='#collapseb'
                         aria-expanded='false' aria-controls='collapseb' type='button' aria-labelledby='labeldiv'> <svg
                             xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'
@@ -52,27 +43,7 @@
     </div>
     <div class='container-lg row' id='content'>
         <div id="sss"></div>
-        <div id='uuu'> </div>
-        <div class='d-none'>
-            <div class='card mb-2 border-light'>
-                <div id='wscontent'>
-                    <!-- <h5>聊天信息</h5> -->
-                </div>
-                <div class='input-group'>
-                    <input type='text' class='form-control' placeholder='说点什么...' aria-label='Input group example'
-                        aria-describedby='ws_send' id='ws_text'>
-                    <button class='input-group-text' id='ws_send'>
-                        <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor'
-                            class='bi bi-send' viewBox='0 0 16 16'>
-                            <path
-                                d='M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z'>
-                            </path>
-                        </svg>
-                    </button>
-                </div>
-                <button class='btn' id='hide_wscontent'>隐藏</button>
-            </div>
-        </div>
+        <div id='uuu'></div>
     </div>
     <div class='container-lg'>
         <div class='text-muted float-end' id='footer'>
@@ -105,10 +76,8 @@
             </div>
         </div>
     </div>
-    <script type="module" src='index.js'></script>
-    <!-- <script type="module" src='index.ws.js'></script>
-    <script type="module" src='index.old.js'></script> -->
-    <script type="module" src='static/js/bootstrap.min.js'></script>
+    <script src='index.js'></script>
+    <script src='static/js/bootstrap.min.js'></script>
 </body>
 
 </html>

@@ -42,10 +42,9 @@ body {
     margin-left: 6px;
 }
 
-/* #uuu div div {
+#uuu div div {
     height: 122px;
-    
-} */
+}
 
 #uuu div div div {
     overflow-y: hidden
@@ -85,4 +84,10 @@ body {
 
 #uuu {
     padding: 0;
+}
+
+#uuu div {
+    height: 122px;
+    margin-bottom: 8px;
+    border: none;
 }

@@ -1,26 +1,212 @@
 
 let host = location.origin.toString().indexOf('localhost') >= 0 ? 'https://dev.bghuan.cn' : location.origin
-let url = host + '/api/read'
+let read_path = host + '/api/read'
+let create_path = host + '/api/create'
+let save_path = host + '/api/save'
+let default_image_path = host + '/static/image/1x1.bmp'
 let log = console.log
 let limit = 20000
 let image_h = 110
 let image_w = 110
 let image_wh2 = 60
-let _1x1_image = host + '/static/image/1x1.bmp'
 let uuu_down = 0
 let uuu_up = 0
 let uuu_select = 0
 let sudo_change_image = 0
 let sudo_change_image_text = ''
-let createPath = host + '/api/create'
 let json_all = []
-let allllll = ''
-let allllll_final = ''
 let stop_service = false
+let a_Collapse
+let b_Collapse
+let redner_data_data = []
+let save = { hide_json: [], error_image: [] }
+
+
+let render_data = (data) => {
+    let allllll = ''
+    let a, b, cccc, data_src, src, right_image, aaaaa, i_real = 0
+    json_all = json_all.length == 0 ? data : json_all
+    redner_data_data = []
+    // for (let i = data.length - 1; i >= 0 && i < limit; i--) {
+    for (let i = 0; i < data.length && i < limit; i++) {
+        a = data[i]['a']?.toString().replaceAll('\"', '\'').replaceAll('\n', '');
+        b = data[i]['b']?.toString().replaceAll('\"', '\'').replaceAll('\n', '');
+
+        // if (a == 'fantasy') continue
+        if (a == 'test') continue
+        if (a == 'yo') continue
+        if (!a || !b) continue
+
+        if (save.hide_json.includes(a + b) && window.location.hash.slice(1) == '') continue
+
+        cccc = (a + '-' + b).substring(0, 80).replaceAll('?', '%3F')
+        data_src = `https://bghuan.oss-cn-shenzhen.aliyuncs.com/image/openai/${cccc}.jpg?x-oss-process=image/resize,m_lfit,h_${image_h},w_${image_w}`
+        if (save.error_image.includes(cccc)) data_src = default_image_path
+
+        right_image = `<img src="${data_src}" class="rounded" width=${image_w} height=${image_w} onerror=image_onerr(event) ondragend=image_ondragend(event) ondragstart=image_ondragstart(event)>`
+        redner_data_data.push([right_image, a, b])
+        aaaaa = `<div></div>`
+        allllll += aaaaa
+        i_real++
+    }
+    uuu.innerHTML = allllll
+    layz_div()
+}
+let layz_div = () => {
+    var divs = uuu.childNodes
+    let observer = new IntersectionObserver((entires) => {
+        entires.forEach(item => {
+            let element = item.target
+
+            var index = [].indexOf.call(uuu.childNodes, element);
+            if (index == -1) return
+
+            let a = redner_data_data[index][1]
+            let b = redner_data_data[index][2]
+            let cccc = (a + '-' + b).substring(0, 80).replaceAll('?', '%3F')
+
+            if (save.hide_json.includes(a + b) && window.location.hash.slice(1) == '') return
+            if (save.error_image.includes(cccc)) {
+                data_src = default_image_path
+                right_image = `<img src="${data_src}" class="rounded" width=${image_w} height=${image_w} onerror=image_onerr(event) ondragend=image_ondragend(event) ondragstart=image_ondragstart(event)>`
+                redner_data_data[index][0] = right_image
+            }
+
+            if (item.intersectionRatio > 0 && item.intersectionRatio <= 1) {
+                let aaaaaaaa = `
+<div class="d-flex">
+    ${redner_data_data[index][0]}
+    <div class="card-body">
+        <h5>${redner_data_data[index][1]}</h5>
+        <p>${redner_data_data[index][2]}</p>
+    </div>
+</div>`
+                element.className = 'card'
+                element.innerHTML = aaaaaaaa.replaceAll('    ', '').replaceAll('\n', '')
+                observer.unobserve(element)
+            }
+        })
+    }, {
+        threshold: [0, 1]
+    })
+    Array.from(divs).forEach(element => {
+        observer.observe(element)
+    });
+}
+let save_push = (str) => {
+    let flag = false
+    Object.keys(save).forEach(item => {
+        if (save.default && save.default[item] != JSON.stringify(save[item]))
+            flag = true
+    })
+    if (!flag) return
+    var formData = new FormData();
+    formData.set('namespace', host)
+    if (!str) {
+        Object.keys(save).forEach(item => { formData.set(item, JSON.stringify(save[item])) })
+    } else
+        formData.set(str, JSON.stringify(save[str]))
+    fetch(save_path, { method: 'POST', body: formData }).then(response => response.json()).then(json => save.default = json)
+}
+let image_onerr_push = () => {
+    save.error_image_limit_time = save.error_image_limit_time + 1 || 1
+    let error_image_limit_time = save.error_image_limit_time
+    setTimeout(() => {
+        if (save.error_image_limit_time == error_image_limit_time)
+            save_push('error_image')
+    }, 1000);
+}
+let image_onerr = (event) => {
+    let oImg = event.target;
+    let src = decodeURI(oImg.src).replace('https://bghuan.oss-cn-shenzhen.aliyuncs.com/image/openai/', '').replace('.jpg?x-oss-process=image/resize,m_lfit,h_110,w_110', '')
+    if (!save.error_image.includes(src))
+        save.error_image.push(src)
+    oImg.setAttribute('src', default_image_path)
+    oImg.setAttribute('err-image', 1)
+    image_onerr_push()
+}
+let image_ondragstart = event => {
+    let oImg = event.target;
+    oImg.xxx = event.clientX
+}
+let image_ondragend = event => {
+    let oImg = event.target
+    let a = oImg.parentNode.querySelector('h5').innerText
+    let b = oImg.parentNode.querySelector('p').innerText
+    if (oImg.xxx < event.clientX) {
+        if (!save.hide_json.includes(a + b))
+            save.hide_json.push(a + b)
+    } else {
+        save.hide_json.splice(save.hide_json.indexOf(a + b), 1)
+    }
+    save_push('hide_json')
+}
+let image_change = (oImg) => {
+    let a = oImg.parentNode.querySelector('h5').innerText
+    let b = oImg.parentNode.querySelector('p').innerText
+    let cccc = (a + '-' + b).substring(0, 80).replaceAll('?', '%3F')
+    let data_src = `https://bghuan.oss-cn-shenzhen.aliyuncs.com/image/openai/${cccc}.jpg?x-oss-process=image/resize,m_lfit,h_${image_h},w_${image_w}`
+    oImg.setAttribute('src', data_src)
+    oImg.onerror = () => {
+        oImg.setAttribute('src', host + '/static/image/download.png')
+        let url = host + '/api/openai.php?a=' + cccc.replace('.jpg', '').substring(0, 80)
+        if (sudo_change_image_text != '') url += '&b=' + sudo_change_image_text
+        fetch(url).then(response => {
+            oImg.setAttribute('src', data_src)
+            oImg.onerror = () => image_onerr(oImg)
+        })
+        sudo_change_image_text = ''
+    }
+    save.error_image.splice(save.error_image.indexOf(cccc), 1)
+    save_push('error_image')
+}
+
+uuu.onmousedown = (event) => {
+    uuu_down = Date.now()
+    if (document.getSelection().toString().length > 0) uuu_select = 1
+}
+uuu.onmouseup = (event) => {
+    if (event.button != 0) return
+    if (uuu_select == 1) return uuu_select = 0
+    if (Date.now() - uuu_up < 200) return
+    if (Date.now() - uuu_down > 100) return
+    uuu_up = Date.now()
+
+    let h5_or_p = 'h5'
+    if (window.location.hash.slice(1) != '') { h5_or_p = 'p' }
+
+    let a = event.target.parentNode.querySelector(h5_or_p).innerText
+    if (event.target.nodeName == 'DIV')
+        a = event.target.querySelector(h5_or_p).innerText
+    else if (event.target.nodeName == 'IMG') {
+        if (event.target.src == default_image_path || sudo_change_image_text != '') {
+            return image_change(event.target)
+        }
+        // let a = event.target.parentNode.querySelector('h5').innerText
+        // let b = event.target.parentNode.querySelector('p').innerText
+        // let cccc = (a + '-' + b).substring(0, 80).replaceAll('?', '%3F')
+        // save.error_image.splice(save.error_image.indexOf(cccc), 1)
+        // save_push()
+    }
+    query(fantasy_search.value = (a))
+}
+
+let on_btn_query = () => {
+    let aaaaaaaa = fantasy_search.value?.split('image:')
+    if (aaaaaaaa.length > 1) {
+        var imgs = document.getElementsByTagName('img')
+        let oImg = imgs[aaaaaaaa[0]]
+        sudo_change_image_text = aaaaaaaa[1]
+        image_change(oImg)
+    } else {
+        query()
+    }
+}
 
 const query = () => {
     window.location.hash = fantasy_search.value
-    if (!window.location.hash) history.replaceState(null, '', location.pathname)
+    if (!window.location.hash)
+        history.replaceState(null, '', location.pathname)
 }
 const create = () => {
     let key = fantasy_key.value
@@ -30,7 +216,7 @@ const create = () => {
         value = key || value
         key = 'fantasy'
     }
-    let url = createPath + '?' + key + '=' + value
+    let url = create_path + '?' + key + '=' + value
     let callBack = (create_id) => {
         b_Collapse.hide()
         localStorage.id = localStorage.id + (',' + create_id)
@@ -56,226 +242,27 @@ const query_onhashchange = () => {
     let json = json_all.filter(item => item.a == key)
     if (!key) {
         json = json_all
-        // return uuu.innerHTML = allllll_final
     }
     render_data(json)
-    show_button_editor()
-    // connect(ws_url, decodeURI(window.location.hash.slice(1)) || 'gnrioabneruiafru')
 }
-const show_button_editor = () => {
-    // if (window.location.hash.slice(1) != '') {
-    //     editor.className = editor.className.replace('d-none', 'd-inline')
-    // }
-    // else {
-    //     editor.className = editor.className.replace('d-inline', 'd-none')
-    // }
-}
-const show_editor = () => {
-    let key = decodeURI(window.location.hash.slice(1))//.replaceAll('%','%25')
-    let src = `${host}/fantasy/editor/?fantasy.${key}`
-    let height = '500'
-    uuu.innerHTML += `<iframe src="${src}" style="height:${height}px"></iframe>`
-}
-editor.onclick = show_editor
-
-// btn_query.onclick = query
-btn_create.onclick = create
-btn_filter.onclick = filter
-btn_more.onclick = more
-window.onhashchange = query_onhashchange
-
-
-let render_data = (data) => {
-    allllll = ''
-    uuu.innerHTML = ''
-    let a, b, cccc, data_src, src, right_image, aaaaa
-    json_all = json_all.length == 0 ? data : json_all
-    for (let i = 0; i < data.length && i < limit; i++) {
-        // if (a == 'a_b') continue
-        // if (a == 'fantasy') continue
-        // if (a == 'test') continue
-        a = data[i]['a'].toString().replaceAll('\"', '\'');
-        b = data[i]['b'].toString().replaceAll('\"', '\'');
-        cccc = (a + '-' + b).substring(0, 80).replaceAll('?', '%3F')
-        data_src = `https://bghuan.oss-cn-shenzhen.aliyuncs.com/image/openai/${cccc}.jpg?x-oss-process=image/resize,m_lfit,h_${image_h},w_${image_w}`
-        src = _1x1_image
-        right_image = `<img src="${src}" class="rounded" width=${image_wh2} height=${image_wh2} data-url="${data_src}">`
-        let height = 72
-        let is_show_h5 = ''
-        // if (window.location.hash.slice(1) != '') {
-        //     height = 72
-        //     is_show_h5 = ' class="d-none"'
-        //     sss.className = 'col-9'
-        //     uuu.className = 'col-3'
-        //     right_image = `<img src="${src}" class="rounded" width=${image_wh2} height=${image_wh2} data-url="${data_src}">`
-        // }
-        // else
-        {
-            height = 122
-            sss.className = ''
-            uuu.className = ''
-            right_image = `<img src="${src}" class="rounded" width=${image_w} height=${image_w} data-url="${data_src}">`
-        }
-        aaaaa = `
-<div class="card mb-2 border-light">
-    <div class="d-flex">
-        ${right_image}        
-        <div class="card-body" style="height:${height}px">
-            <h5${is_show_h5}>${a}</h5>
-            <p>${b}</p>
-        </div>
-    </div>
-</div>`
-        allllll += aaaaa
-        if ((data.length < 21 && data.length == i + 1) || i == 19) {
-            uuu.innerHTML = allllll
-            allllll = ''
-            lazy_image()
-            if (allllll_final == '')
-                allllll_final = uuu.innerHTML
-        }
-    }
-}
-let lazy_image = () => {
-    var imgs = document.getElementsByTagName('img')
-    let io = new IntersectionObserver((entires) => {
-        entires.forEach(item => {
-            let oImg = item.target
-            if (item.intersectionRatio > 0 && item.intersectionRatio <= 1) {
-                if (oImg.getAttribute('err-image') == 1) return
-                if (decodeURI(oImg.src) == oImg.getAttribute('data-url')) return
-                oImg.setAttribute('src', oImg.getAttribute('data-url'))
-            }
-            oImg.onerror = () => image_onerr(oImg)
-        })
-    })
-    Array.from(imgs).forEach(element => {
-        io.observe(element)
-    });
-}
-let io2 = new IntersectionObserver((entires) => {
-    entires.forEach(item => {
-        if (item.intersectionRatio > 0 && item.intersectionRatio <= 1) {
-            if (allllll != '') {
-                uuu.innerHTML += allllll
-                allllll_final = uuu.innerHTML
-                allllll = ''
-                lazy_image()
-            }
-        }
-    })
-})
-io2.observe(footer)
-
-let image_onerr = (oImg) => {
-    oImg.setAttribute('src', _1x1_image)
-    oImg.setAttribute('err-image', 1)
-}
-let image_change = (oImg) => {
-    let a = oImg.parentNode.querySelector('h5').innerText
-    let b = oImg.parentNode.querySelector('p').innerText
-    let cccc = (a + '-' + b).substring(0, 80)
-    oImg.setAttribute('src', host + '/static/image/download.png')
-    let url = host + '/api/openai.php?a=' + cccc.replace('.jpg', '').substring(0, 80)
-    if (sudo_change_image_text != '') url += '&b=' + sudo_change_image_text
-    fetch(url).then(response => {
-        oImg.setAttribute('src', oImg.getAttribute('data-url'))
-        oImg.onerror = () => image_onerr(oImg)
-    })
-    sudo_change_image_text = ''
-}
-
-uuu.onmousedown = (event) => {
-    uuu_down = Date.now()
-    if (document.getSelection().toString().length > 0) uuu_select = 1
-}
-uuu.onmouseup = (event) => {
-    if (event.button != 0) return
-    if (uuu_select == 1) return uuu_select = 0
-    if (Date.now() - uuu_up < 200) return
-    if (Date.now() - uuu_down > 100) return
-    uuu_up = Date.now()
-
-    let a = event.target.parentNode.querySelector('h5').innerText
-    if (event.target.nodeName == 'DIV')
-        a = event.target.querySelector('h5').innerText
-    else if (event.target.nodeName == 'IMG') {
-        if (event.target.src == _1x1_image || sudo_change_image_text != '') {
-            return image_change(event.target)
-        }
-    }
-    query(fantasy_search.value = (a))
-}
-
-let on_btn_query = () => {
-    let aaaaaaaa = fantasy_search.value?.split('image:')
-    if (aaaaaaaa.length > 1) {
-        var imgs = document.getElementsByTagName('img')
-        let oImg = imgs[aaaaaaaa[0]]
-        sudo_change_image_text = aaaaaaaa[1]
-        image_change(oImg)
-    } else {
-        query()
-    }
-}
-btn_query.onclick = on_btn_query
-
-
-
-
-let a_Collapse
-let b_Collapse
-
 const stopServiceIfDateNine = () => {
-    if (new Date().getDate() == '9') {
-        document.body.innerHTML = new Date() + '<br />' + '每月9号不收集展示幻想'
-        stop_service = true
-    } else if (stop_service)
-        window.location.reload()
-    else return false
-    setTimeout(stopServiceIfDateNine, 100)
-    return true
+    if (new Date().getDate() == '9') { document.body.innerHTML = new Date() + '<br />' + '每月9号不收集展示幻想'; stop_service = true; } else if (stop_service) window.location.reload(); else return false; setTimeout(stopServiceIfDateNine, 100); return true;
 }
-//dialog
-document.getElementById("fantasy_search").addEventListener("keyup", event => { if (event.keyCode == 13) { on_btn_query() } })
 const loadJS = function (url, callback) {
-    let script = document.createElement('script')
-    script.src = url
-    script.type = "text/javascript"
-    if (script.onreadystatechange) {
-        script.onreadystatechange = function () {
-            if (this.readyState == "complete" || this.readyState == "loaded") {
-                script.onreadystatechange = null
-                callback()
-            }
-        }
-    } else {
-        script.onload = () => callback()
-    }
-    document.body.appendChild(script)
+    let script = document.createElement('script'); script.src = url; script.type = "text/javascript"; if (script.onreadystatechange) { script.onreadystatechange = function () { if (this.readyState == "complete" || this.readyState == "loaded") { script.onreadystatechange = null; callback(); } } } else { script.onload = () => callback(); } document.body.appendChild(script);
 }
-document.getElementById('exampleModalLong').addEventListener('show.bs.modal', function () {
-    if (document.getElementsByClassName("modal-body")[0].innerHTML.length <= 0) {
-        let callBack = (json) => {
-            let converter = new showdown.Converter()
-            document.getElementsByClassName("modal-body")[0].innerHTML = converter.makeHtml(json)
-        }
-        loadJS('static/js/showdown.min.js', () => {
-            fetch('README.md')
-                .then(response => response.text())
-                .then(json => {
-                    callBack(json)
-                })
-        })
-    }
-})
 document.addEventListener("DOMContentLoaded", (function () {
     if (stopServiceIfDateNine()) return
     a_Collapse = new bootstrap.Collapse(collapsea, { toggle: false })
     b_Collapse = new bootstrap.Collapse(collapseb, { toggle: false })
     collapseb.addEventListener('shown.bs.collapse', () => fantasy_key.focus())
     collapsea.addEventListener('shown.bs.collapse', () => fantasy_search.focus())
+    document.getElementById("fantasy_search").addEventListener("keyup", event => { if (event.keyCode == 13) { on_btn_query() } })
+    document.getElementById('exampleModalLong').addEventListener('show.bs.modal', function () {
+        if (document.getElementsByClassName("modal-body")[0].innerHTML.length <= 0) { let callBack = (json) => { let converter = new showdown.Converter(); document.getElementsByClassName("modal-body")[0].innerHTML = converter.makeHtml(json); }; loadJS('static/js/showdown.min.js', () => { fetch('README.md').then(response => response.text()).then(json => { callBack(json); }) }) }
+    })
     document.addEventListener('click', (event) => {
+        if (document.getSelection().toString().length > 0) return
         let arr = ['fantasy_key', 'fantasy_value', 'collapseb', 'fantasy_search', 'collapsea']
         if (arr.indexOf(event.target.id) == -1) {
             b_Collapse.hide()
@@ -283,9 +270,27 @@ document.addEventListener("DOMContentLoaded", (function () {
         }
     }, false)
 
+    btn_query.onclick = on_btn_query
+    btn_create.onclick = create
+    btn_filter.onclick = filter
+    btn_more.onclick = more
+    window.onhashchange = query_onhashchange
+
+
+    let url = `${host}/api/save?namespace=${host}`
+    Object.keys(save).forEach(item => { url += `&${item}` })
     fetch(url).then(response => response.json()).then(json => {
-        render_data(json)
-        query_onhashchange()
+        Object.keys(save).forEach(item => {
+            save[item] = json[item] ? JSON.parse(json[item]) : []
+        })
+        save.default = json
     })
-    // connect(ws_url, decodeURI(window.location.hash.slice(1)) || 'gnrioabneruiafru')
+
+
+    setTimeout(() => {
+        fetch('https://bghuan.oss-cn-shenzhen.aliyuncs.com/backup/fantasy.open.json').then(response => response.json()).then(json => {
+            render_data(json)
+            if (window.location.hash.slice(1) != '') query_onhashchange()
+        })
+    }, 1000);
 }))
