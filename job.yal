@@ -1,0 +1,40 @@
+show all
+image
+    change image all
+        check openai token
+    openai image muti
+    upload local image
+click change image
+save to backup
+connect me
+check hide_json 
+三分游戏
+show fantasy connect number
+reduce index page div number
+think fantasy connect one string to one string more
+[
+    {
+        "title": "石头剪刀布",
+        "describe": "两人及以上同时出石头或剪刀或布,石头胜剪刀,剪刀胜布,布胜石头"
+    },
+    {
+        "title": "跳皮筋",
+        "describe": "两个人撑着一条有弹性且连成一圈的绳,中间一人或多人按某种规则踩绳或跳过绳"
+    },
+    {
+        "title": "弹珠",
+        "describe": "很廉价的几颗玻璃小球，就可以让很多小伙伴玩一整天。也许现在的你，宁愿花点钱去打桌球，也不屑这么低级的小游戏。可现在回想起来，就那么几颗弹珠，只要找一个开阔一点的场地，随随便便就能玩起来。而且玩这样的小游戏同样是需要技巧的，打得准的小伙伴，可以赢很多颗弹珠，这或许会让你体会到最初的那种游戏上的收获和满足感。"
+    },
+    {
+        "title": "扇纸牌",
+        "describe": "这种游戏或许已经被大多数80后和90后所淡忘，和前面的打弹珠一样，只需要靠简单的道具，就可以约几个同学玩。记得那个时候大家所用的纸牌，并不是现在的扑克牌，毕竟小孩子对这些东西并不感兴趣。能够吸引他们的是那些做工看起来粗糙，但是上面却印满了丰富的动漫图画的纸牌，这些在当时都被大家视若珍宝，有的甚至被很多小伙伴收藏至今。"
+    },
+    {
+        "title": "捉迷藏",
+        "describe": "蒙住眼睛寻找躲藏者"
+    },
+    {
+        "title": "你画我猜",
+        "describe": "两人一组，自由组合，两人面对面的站着，一人可以用手式做出动作，或者用其他句子 来形容，另外一个人猜词语。负责比划的人不能说出包含所猜的词中的任何一个字"
+    }
+]
