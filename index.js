@@ -59,6 +59,7 @@ let layz_div = () => {
         entires.forEach(item => {
             if (item.intersectionRatio > 0 && item.intersectionRatio <= 1) {
                 show_div(item.target)
+                div_observer?.unobserve(item.target)
             }
         })
     }, {
@@ -93,7 +94,6 @@ let show_div = (element, flag = true) => {
 </div>`
     element.className = 'card'
     element.innerHTML = innerHTML.replaceAll('    ', '').replaceAll('\n', '')
-    div_observer?.unobserve(element)
 }
 let get_image_element = (src) => {
     return `<img src="${src}" class="rounded" width=${image_w} height=${image_w} onerror=image_onerr(event) ondragend=image_ondragend(event) ondragstart=image_ondragstart(event)>`
@@ -205,6 +205,7 @@ uuu.onmouseup = (event) => {
     if (uuu_select == 1) return uuu_select = 0
     if (Date.now() - uuu_up < 200) return
     if (Date.now() - uuu_down > 100) return
+    if (collapsea.className.indexOf('show') > 0 || collapseb.className.indexOf('show') > 0) return
     uuu_up = Date.now()
 
     let h5_or_p = 'h5'
@@ -234,6 +235,7 @@ let on_btn_query = () => {
         let oImg = imgs[aaaaaaaa[0]]
         sudo_change_image_text = aaaaaaaa[1]
         image_change(oImg)
+        a_Collapse?.hide()
     } else {
         query()
     }
@@ -290,9 +292,13 @@ const loadJS = function (url, callback) {
 document.addEventListener("DOMContentLoaded", (function () {
     if (stopServiceIfDateNine()) return
 
-    collapseb.addEventListener('shown.bs.collapse', () => fantasy_key.focus())
+    collapseb.addEventListener('shown.bs.collapse', () => {
+        if (window.location.hash.slice(1) == '') fantasy_key.focus()
+        else fantasy_value.focus()
+    })
     collapsea.addEventListener('shown.bs.collapse', () => fantasy_search.focus())
-    document.getElementById("fantasy_search").addEventListener("keyup", event => { if (event.keyCode == 13) { on_btn_query() } })
+    document.getElementById("fantasy_search").addEventListener("keyup", event => { if (event.keyCode == 13) { on_btn_query(); event.stopPropagation() } })
+    document.getElementById("fantasy_value").addEventListener("keyup", event => { if (event.keyCode == 13) { create(); event.stopPropagation() } })
     document.getElementById('exampleModalLong').addEventListener('show.bs.modal', function () {
         if (document.getElementsByClassName("modal-body")[0].innerHTML.length <= 0) { let callBack = (json) => { let converter = new showdown.Converter(); document.getElementsByClassName("modal-body")[0].innerHTML = converter.makeHtml(json); }; loadJS('static/js/showdown.min.js', () => { fetch('README.md').then(response => response.text()).then(json => { callBack(json); }) }) }
     })
@@ -338,3 +344,4 @@ function getHashCode(str) {
     }
     return (hash & 0x7FFFFFFF);
 }
+document.body.addEventListener("keyup", event => { if (event.keyCode == 13) { event.stopPropagation(); b_Collapse.show() } })

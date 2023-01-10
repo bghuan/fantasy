@@ -37,3 +37,17 @@ foreach ($keyvalue as $key => $value) {
 }
 
 echo gzencode(json_encode2($array));
+
+try {
+    $timestamp = time();
+    $formatted_time = date('YmdHis', $timestamp);
+    $my_key2 = str_replace(':', '', str_replace('/', '', $my_key));
+    $objectName = 'backup/' . $my_key2 . $formatted_time . '.json';
+    $result = json_encode2($array);
+    $f = fopen($objectName, "w");
+    fwrite($f, $result);
+    fclose($f);
+    // echo gzencode($objectName);
+} catch (e) {
+    gzencode(var_dump((e)));
+}

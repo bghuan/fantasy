@@ -1,18 +1,19 @@
-show all
+# show all 
 image
     change image all
-        check openai token
+        # check openai token
     use image hash name
-    1try hash name
-    2try old name
-    3openai create new image
+    # 1try hash name
+    # 2try old name
+    # 3openai create new image
     openai image muti
     upload local image
+    image muti
 click change image
-save to backup
+# save to backup
 connect me
 check hide_json 
-三分游戏
+# 三分游戏
 show fantasy connect number
 reduce index page div number
 think fantasy connect one string to one string more
