@@ -7,10 +7,11 @@ include 'config.php';
 $namespace = querystring('namespace');
 $key = querystring("key");
 $value = querystring("value");
+$prix = querystring("prix");
 $keyvalue = $_POST ? $_POST : $_GET;
 
-$prix = $_SERVER['PHP_SELF'] . '.' . (empty($namespace) ? '' : $namespace . '.');
-$my_key = $prix . $key;
+$key_prix = $_SERVER['PHP_SELF'] . '.' . (empty($namespace) ? '' : $namespace . '.');
+$my_key = $key_prix . $key;
 $array = array();
 
 // var_dump($keyvalue);
@@ -18,25 +19,23 @@ $array = array();
 
 if (!empty($key)) {
     if (empty($value)) {
-        echo $redis->get($my_key);
-        exit;
+        $result = $redis->get($my_key);
     }
-    echo $redis->set($my_key, $value);
-    exit;
+} else {
+    foreach ($keyvalue as $key => $value) {
+        $my_key = $key_prix . $key;
+        if (empty($value)) {
+            $value = $redis->get($my_key);
+            $value = ($value == false && !$redis->exists($my_key)) ? null : $value;
+        } else {
+            $redis->set($my_key, $value);
+        }
+        $array[$key] = $value;
+    }
+    $result = json_encode2($array);
 }
 
-foreach ($keyvalue as $key => $value) {
-    $my_key = $prix . $key;
-    if (empty($value)) {
-        $value = $redis->get($my_key);
-        $value = ($value == false && !$redis->exists($my_key)) ? null : $value;
-    } else {
-        $redis->set($my_key, $value);
-    }
-    $array[$key] = $value;
-}
-
-echo gzencode(json_encode2($array));
+echo gzencode($prix . $result);
 
 try {
     $timestamp = time();

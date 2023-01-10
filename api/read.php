@@ -4,13 +4,13 @@ header('Content-type: application/json; charset=utf-8');
 header("Content-Encoding: gzip");
 include 'config.php';
 
+$prix = querystring("prix");
+
 try {
     $filter = [];
     $option = ['sort' => ['_id' => -1], 'projection' => ['_id' => 0]];
     $json = json_encode2($manager->executeQuery($db_name . '.' . $db_document, new MongoDB\Driver\Query($filter, $option))->toArray());
-    echo gzencode($json);
-    exit;
+    echo gzencode($prix . $json);
 } catch (MongoDB\Driver\Exception $e) {
     echo $e->getMessage(), "\n";
-    exit;
 }

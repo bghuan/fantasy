@@ -37,20 +37,20 @@ body {
     display: inline-block;
 }
 
-#uuu img {
+#content img {
     margin-top: 6px;
     margin-left: 6px;
 }
 
-#uuu div div {
+#content div div {
     height: 122px;
 }
 
-#uuu div div div {
+#content div div div {
     overflow-y: hidden
 }
 
-#uuu h5 {
+#content h5 {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -60,7 +60,7 @@ body {
     height: calc(80vh)
 }
 
-#content {
+#content2 {
     margin: 51px 0 0 0;
     padding: 0;
 }
@@ -82,11 +82,11 @@ body {
     padding: 0;
 }
 
-#uuu {
+#content {
     padding: 0;
 }
 
-#uuu div {
+#content div {
     height: 122px;
     margin-bottom: 8px;
     border: none;
