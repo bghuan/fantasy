@@ -1,3 +1,91 @@
+function encodeUTF8(s) {
+    var i, r = [], c, x;
+    for (i = 0; i < s.length; i++)
+        if ((c = s.charCodeAt(i)) < 0x80)
+            r.push(c);
+        else if (c < 0x800)
+            r.push(0xC0 + (c >> 6 & 0x1F), 0x80 + (c & 0x3F));
+        else {
+            if ((x = c ^ 0xD800) >> 10 == 0)
+                c = (x << 10) + (s.charCodeAt(++i) ^ 0xDC00) + 0x10000,
+                    r.push(0xF0 + (c >> 18 & 0x7), 0x80 + (c >> 12 & 0x3F));
+            else
+                r.push(0xE0 + (c >> 12 & 0xF));
+            r.push(0x80 + (c >> 6 & 0x3F), 0x80 + (c & 0x3F));
+        }
+    return r;
+}
+function sha1(s) {
+    var data = new Uint8Array(encodeUTF8(s));
+    var i, j, t;
+    var l = ((data.length + 8) >>> 6 << 4) + 16, s = new Uint8Array(l << 2);
+    s.set(new Uint8Array(data.buffer)),
+        s = new Uint32Array(s.buffer);
+    for (t = new DataView(s.buffer),
+        i = 0; i < l; i++)
+        s[i] = t.getUint32(i << 2);
+    s[data.length >> 2] |= 0x80 << (24 - (data.length & 3) * 8);
+    s[l - 1] = data.length << 3;
+    var w = [], f = [function () {
+        return m[1] & m[2] | ~m[1] & m[3];
+    }, function () {
+        return m[1] ^ m[2] ^ m[3];
+    }, function () {
+        return m[1] & m[2] | m[1] & m[3] | m[2] & m[3];
+    }, function () {
+        return m[1] ^ m[2] ^ m[3];
+    }]
+        , rol = function (n, c) {
+            return n << c | n >>> (32 - c);
+        }
+        , k = [1518500249, 1859775393, -1894007588, -899497514]
+        , m = [1732584193, -271733879, null, null, -1009589776];
+    m[2] = ~m[0],
+        m[3] = ~m[1];
+    for (i = 0; i < s.length; i += 16) {
+        var o = m.slice(0);
+        for (j = 0; j < 80; j++)
+            w[j] = j < 16 ? s[i + j] : rol(w[j - 3] ^ w[j - 8] ^ w[j - 14] ^ w[j - 16], 1),
+                t = rol(m[0], 5) + f[j / 20 | 0]() + m[4] + w[j] + k[j / 20 | 0] | 0,
+                m[1] = rol(m[1], 30),
+                m.pop(),
+                m.unshift(t);
+        for (j = 0; j < 5; j++)
+            m[j] = m[j] + o[j] | 0;
+    }
+    ; t = new DataView(new Uint32Array(m).buffer);
+    for (var i = 0; i < 5; i++)
+        m[i] = t.getUint32(i << 2);
+    var hex = Array.prototype.map.call(new Uint8Array(new Uint32Array(m).buffer), function (e) {
+        return (e < 16 ? "0" : "") + e.toString(16);
+    }).join("");
+    return hex;
+}
+
+
+//获取字符串的 哈希值 
+//https://www.cnblogs.com/yjhua/p/5083419.html
+function getHashCode(str) {
+    var hash = 1315423911, i, ch;
+    for (i = str.length - 1; i >= 0; i--) {
+        ch = str.charCodeAt(i);
+        hash ^= ((hash << 5) + ch + (hash >> 2));
+    }
+    return (hash & 0x7FFFFFFF);
+}
+
+a = new Set(); for (let index = 0; index < json_all.length; index++) {
+    let str = json_all[index].a + json_all[index].b
+    getHashCode()
+}
+
+a = new Set();
+for (let index = 0; index < json_all.length; index++) {
+    let str = json_all[index].a + json_all[index].b
+    if (str) a.add(str)
+}
+
+
 
 let host = location.origin.toString().indexOf('localhost') >= 0 ? 'https://dev.bghuan.cn' : location.origin
 let read_path = host + '/api/read'
@@ -19,89 +107,116 @@ let stop_service = false
 let a_Collapse
 let b_Collapse
 let redner_data_data = []
-let save = { hide_json: [], error_image: [] }
+let save = { hide: [], error: [], default: {} }
+let div_observer
+let oss_image_prix = 'https://bghu.oss-cn-hangzhou.aliyuncs.com/'
 
 
 let render_data = (data) => {
     let allllll = ''
-    let a, b, cccc, data_src, src, right_image, aaaaa, i_real = 0
-    json_all = json_all.length == 0 ? data : json_all
+    let title, content, hash, image_src, src, right_image, aaaaa, i_real = 0
     redner_data_data = []
-    // for (let i = data.length - 1; i >= 0 && i < limit; i--) {
     for (let i = 0; i < data.length && i < limit; i++) {
-        a = data[i]['a']?.toString().replaceAll('\"', '\'').replaceAll('\n', '');
-        b = data[i]['b']?.toString().replaceAll('\"', '\'').replaceAll('\n', '');
+        title = data[i]['a']?.toString();
+        content = data[i]['b']?.toString();
+        hash = getHashCode(title + content)
 
-        // if (a == 'fantasy') continue
-        if (a == 'test') continue
-        if (a == 'yo') continue
-        if (!a || !b) continue
+        // if (title == 'fantasy') continue
+        if (title == 'test') continue
+        if (title == 'yo') continue
+        if (!title || !content) continue
 
-        if (save.hide_json.includes(a + b) && window.location.hash.slice(1) == '') continue
+        if (save.hide.includes(hash) && window.location.hash.slice(1) == '') continue
 
-        cccc = (a + '-' + b).substring(0, 80).replaceAll('?', '%3F')
-        data_src = `https://bghuan.oss-cn-shenzhen.aliyuncs.com/image/openai/${cccc}.jpg?x-oss-process=image/resize,m_lfit,h_${image_h},w_${image_w}`
-        if (save.error_image.includes(cccc)) data_src = default_image_path
+        image_src = get_image_full_path2(hash)
+        // if (save.error.includes(hash)) image_src = default_image_path
 
-        right_image = `<img src="${data_src}" class="rounded" width=${image_w} height=${image_w} onerror=image_onerr(event) ondragend=image_ondragend(event) ondragstart=image_ondragstart(event)>`
-        redner_data_data.push([right_image, a, b])
+        right_image = `<img src="${image_src}" class="rounded" width=${image_w} height=${image_w} onerror=image_onerr(event) ondragend=image_ondragend(event) ondragstart=image_ondragstart(event)>`
+        redner_data_data.push([right_image, title, content])
         aaaaa = `<div></div>`
         allllll += aaaaa
         i_real++
-        if (i_real == 19) {
-            uuu.innerHTML = allllll
-            allllll = ''
-            layz_div()
-        }
     }
-    uuu.innerHTML += allllll
+    uuu.innerHTML = allllll
     layz_div()
 }
 let layz_div = () => {
     var divs = uuu.childNodes
-    let observer = new IntersectionObserver((entires) => {
+    let div_observer = new IntersectionObserver((entires) => {
         entires.forEach(item => {
-            let element = item.target
-
-            var index = [].indexOf.call(uuu.childNodes, element);
-            if (index == -1) return
-            if (index >= redner_data_data.length) return
-
-            let a = redner_data_data[index][1]
-            let b = redner_data_data[index][2]
-            let cccc = (a + '-' + b).substring(0, 80).replaceAll('?', '%3F')
-
-            if (save.hide_json.includes(a + b) && window.location.hash.slice(1) == '') {
-                // element.parentElement.removeChild(element)
-                element.className = 'd-none'
-                return
-            }
-            if (save.error_image.includes(cccc)) {
-                data_src = default_image_path
-                right_image = `<img src="${data_src}" class="rounded" width=${image_w} height=${image_w} onerror=image_onerr(event) ondragend=image_ondragend(event) ondragstart=image_ondragstart(event)>`
-                redner_data_data[index][0] = right_image
-            }
-
             if (item.intersectionRatio > 0 && item.intersectionRatio <= 1) {
-                let aaaaaaaa = `
-<div class="d-flex">
-    ${redner_data_data[index][0]}
-    <div class="card-body">
-        <h5>${redner_data_data[index][1]}</h5>
-        <p>${redner_data_data[index][2]}</p>
-    </div>
-</div>`
-                element.className = 'card'
-                element.innerHTML = aaaaaaaa.replaceAll('    ', '').replaceAll('\n', '')
-                observer.unobserve(element)
+                show_div(item.target)
             }
         })
     }, {
         threshold: [0, 1]
     })
     Array.from(divs).forEach(element => {
-        observer.observe(element)
+        div_observer.observe(element)
     });
+}
+let show_div = (element, flag = true) => {
+    var index = [].indexOf.call(uuu.childNodes, element);
+    if (index == -1) return
+    if (index >= redner_data_data.length) return
+
+    let title = redner_data_data[index][1]
+    let content = redner_data_data[index][2]
+    let hash = getHashCode(title + content)
+
+    if (save.hide.includes(hash) && window.location.hash.slice(1) == '')
+        element.className = 'd-none'
+    if (save.error.includes(hash) || !flag) {
+        image_src = default_image_path
+        right_image = `<img src="${image_src}" class="rounded" width=${image_w} height=${image_w} onerror=image_onerr(event) ondragend=image_ondragend(event) ondragstart=image_ondragstart(event)>`
+        redner_data_data[index][0] = right_image
+    } else {
+        // let image_src222 = get_image_full_path(hash).replace('?x-oss-process=image/resize,m_lfit,h_110,w_110', '')
+        // let hash2 = (getHashCode(title + content)) + '.png'
+
+        // fetch('https://bghu.oss-cn-hangzhou.aliyuncs.com/' + hash2).then(response => response.text()).then(json => {
+        //     if (json.indexOf('<?xml version="1.0" encoding="UTF-8"?>') == 0) {
+        //         fetch(image_src222).then(response => response.blob()).then(blob => putObject(blob, hash2))
+        //     }
+        // }
+        // )
+    }
+
+    let aaaaaaaa = `
+<div class="d-flex">
+${redner_data_data[index][0]}
+<div class="card-body">
+<h5>${redner_data_data[index][1]}</h5>
+<p>${redner_data_data[index][2]}</p>
+</div>
+</div>`
+    element.className = 'card'
+    element.innerHTML = aaaaaaaa.replaceAll('    ', '').replaceAll('\n', '')
+    div_observer?.unobserve(element)
+}
+let get_clean_encodeurl = (str) => {
+    str = str?.replaceAll('%%', '%25%')
+    if (str?.includes('%%')) return get_clean_encodeurl(str)
+    if (str?.substr(str.length - 1) == '%') return str?.substring(0, str.length - 1) + '%25'
+    return str
+}
+// let get_image_name = (title, content) => {
+//     // return getHashCode(title + content)
+//     return (title + '-' + content).substring(0, 80).replaceAll('?', '%3F').replaceAll('\\', '').replaceAll(':', '').replaceAll('/', '')
+// }
+// let get_image_full_path = (hash) => {
+//     return `https://bghuan.oss-cn-shenzhen.aliyuncs.com/image/openai/${hash}.jpg?x-oss-process=image/resize,m_lfit,h_${image_h},w_${image_w}`
+// }
+let get_image_full_path2 = (hash) => {
+    // https://bghu.oss-cn-hangzhou.aliyuncs.com/959146541.png
+    return `https://bghu.oss-cn-hangzhou.aliyuncs.com/${hash}.png`
+}
+let save_pull = (str) => {
+    let url = `${host}/api/save?namespace=${host}&${str}`
+    fetch(url).then(response => response.json()).then(json => {
+        save[str] = JSON.parse(json[str])
+        save.default[str] = json
+    })
 }
 let save_push = (str) => {
     let flag = false
@@ -123,16 +238,15 @@ let image_onerr_push = () => {
     let error_image_limit_time = save.error_image_limit_time
     setTimeout(() => {
         if (save.error_image_limit_time == error_image_limit_time)
-            save_push('error_image')
+            save_push('error')
     }, 1000);
 }
 let image_onerr = (event) => {
     let oImg = event.target;
-    let src = decodeURI(oImg.src).replace('https://bghuan.oss-cn-shenzhen.aliyuncs.com/image/openai/', '').replace('.jpg?x-oss-process=image/resize,m_lfit,h_110,w_110', '')
-    if (!save.error_image.includes(src))
-        save.error_image.push(src)
+    let src = oImg.src.replace(oss_image_prix, '').replace('.jpg?x-oss-process=image/resize,m_lfit,h_110,w_110', '')
+    if (!save.error.includes(src))
+        save.error.push(src)
     oImg.setAttribute('src', default_image_path)
-    oImg.setAttribute('err-image', 1)
     image_onerr_push()
 }
 let image_ondragstart = event => {
@@ -141,34 +255,38 @@ let image_ondragstart = event => {
 }
 let image_ondragend = event => {
     let oImg = event.target
-    let a = oImg.parentNode.querySelector('h5').innerText
-    let b = oImg.parentNode.querySelector('p').innerText
+    let title = oImg.parentNode.querySelector('h5').innerHTML
+    let content = oImg.parentNode.querySelector('p').innerHTML
+    let hash = getHashCode(title + content)
     if (oImg.xxx < event.clientX) {
-        if (!save.hide_json.includes(a + b))
-            save.hide_json.push(a + b)
+        if (!save.hide.includes(hash))
+            save.hide.push(hash)
+        oImg.parentNode.parentNode.className = 'd-none'
     } else {
-        save.hide_json.splice(save.hide_json.indexOf(a + b), 1)
+        save.hide.splice(save.hide.indexOf(hash), 1)
     }
-    save_push('hide_json')
+    save_push('hide')
 }
 let image_change = (oImg) => {
-    let a = oImg.parentNode.querySelector('h5').innerText
-    let b = oImg.parentNode.querySelector('p').innerText
-    let cccc = (a + '-' + b).substring(0, 80).replaceAll('?', '%3F')
-    let data_src = `https://bghuan.oss-cn-shenzhen.aliyuncs.com/image/openai/${cccc}.jpg?x-oss-process=image/resize,m_lfit,h_${image_h},w_${image_w}`
-    oImg.setAttribute('src', data_src)
-    oImg.onerror = () => {
+    let title = oImg.parentNode.querySelector('h5').innerHTML
+    let content = oImg.parentNode.querySelector('p').innerHTML
+    let hash = getHashCode(title + content)
+    let image_src = get_image_full_path2(hash)
+    oImg.setAttribute('src', image_src)
+    let callBack = () => {
         oImg.setAttribute('src', host + '/static/image/download.png')
-        let url = host + '/api/openai.php?a=' + cccc.replace('.jpg', '').substring(0, 80)
-        if (sudo_change_image_text != '') url += '&b=' + sudo_change_image_text
+        let url = host + '/api/openai.php?hash=' + hash
+        if (sudo_change_image_text != '') url += '&prompt=' + sudo_change_image_text
         fetch(url).then(response => {
-            oImg.setAttribute('src', data_src)
-            oImg.onerror = () => image_onerr(oImg)
+            oImg.setAttribute('src', image_src)
+            oImg.onerror = image_onerr
         })
         sudo_change_image_text = ''
     }
-    save.error_image.splice(save.error_image.indexOf(cccc), 1)
-    save_push('error_image')
+    if (sudo_change_image_text != '') callBack()
+    else oImg.onerror = callBack
+    save.error.splice(save.error.indexOf(hash), 1)
+    save_push('error')
 }
 
 uuu.onmousedown = (event) => {
@@ -185,20 +303,21 @@ uuu.onmouseup = (event) => {
     let h5_or_p = 'h5'
     if (window.location.hash.slice(1) != '') { h5_or_p = 'p' }
 
-    let a = event.target.parentNode.querySelector(h5_or_p).innerText
+    let title = event.target.parentNode.querySelector(h5_or_p).innerHTML
     if (event.target.nodeName == 'DIV')
-        a = event.target.querySelector(h5_or_p).innerText
+        title = event.target.querySelector(h5_or_p).innerHTML
     else if (event.target.nodeName == 'IMG') {
         if (event.target.src == default_image_path || sudo_change_image_text != '') {
             return image_change(event.target)
         }
-        // let a = event.target.parentNode.querySelector('h5').innerText
-        // let b = event.target.parentNode.querySelector('p').innerText
-        // let cccc = (a + '-' + b).substring(0, 80).replaceAll('?', '%3F')
-        // save.error_image.splice(save.error_image.indexOf(cccc), 1)
-        // save_push()
+        // let title = event.target.parentNode.querySelector('h5').innerHTML
+        // let content = event.target.parentNode.querySelector('p').innerHTML
+        // let hash = getHashCode(title + content) + '.png'
+        // // save.error.splice(save.error.indexOf(hash), 1)
+        // // save_push()
+        // return
     }
-    query(fantasy_search.value = (a))
+    query(fantasy_search.value = (title))
 }
 
 let on_btn_query = () => {
@@ -228,7 +347,7 @@ const create = () => {
     }
     let url = create_path + '?' + key + '=' + value
     let callBack = (create_id) => {
-        b_Collapse.hide()
+        b_Collapse?.hide()
         localStorage.id = localStorage.id + (',' + create_id)
         location.reload()
     }
@@ -236,16 +355,16 @@ const create = () => {
 }
 const filter = () => {
     let key = fantasy_search.value
-    let json = json_all.filter(item => item.a.indexOf(key) >= 0 || item.b.toString().indexOf(key) >= 0)
+    let json = json_all.filter(item => item.a?.indexOf(key) >= 0 || item.b?.toString().indexOf(key) >= 0)
     render_data(json)
-    a_Collapse.hide()
+    a_Collapse?.hide()
 }
 const more = () => {
     more_content.style.display = more_content.style.display == 'inline-block' ? 'none' : 'inline-block'
 }
 const query_onhashchange = () => {
-    a_Collapse.hide()
-    let key = decodeURI(window.location.hash.slice(1))
+    a_Collapse?.hide()
+    let key = decodeURI(get_clean_encodeurl(window.location.hash.slice(1)))
     fantasy_title.innerText = key || 'fantasy'
     fantasy_search.value = key
     fantasy_key.value = key
@@ -263,8 +382,7 @@ const loadJS = function (url, callback) {
 }
 document.addEventListener("DOMContentLoaded", (function () {
     if (stopServiceIfDateNine()) return
-    a_Collapse = new bootstrap.Collapse(collapsea, { toggle: false })
-    b_Collapse = new bootstrap.Collapse(collapseb, { toggle: false })
+
     collapseb.addEventListener('shown.bs.collapse', () => fantasy_key.focus())
     collapsea.addEventListener('shown.bs.collapse', () => fantasy_search.focus())
     document.getElementById("fantasy_search").addEventListener("keyup", event => { if (event.keyCode == 13) { on_btn_query() } })
@@ -275,51 +393,100 @@ document.addEventListener("DOMContentLoaded", (function () {
         if (document.getSelection().toString().length > 0) return
         let arr = ['fantasy_key', 'fantasy_value', 'collapseb', 'fantasy_search', 'collapsea']
         if (arr.indexOf(event.target.id) == -1) {
-            b_Collapse.hide()
-            a_Collapse.hide()
+            b_Collapse?.hide()
+            a_Collapse?.hide()
         }
     }, false)
 
+    setTimeout(() => {
+        loadJS('static/js/bootstrap.min.js', () => {
+            a_Collapse = new bootstrap.Collapse(collapsea, { toggle: false })
+            b_Collapse = new bootstrap.Collapse(collapseb, { toggle: false })
+            fantasy_title.href = '#collapsea'
+        })
+        save_pull('error')
+    }, 500);
     btn_query.onclick = on_btn_query
     btn_create.onclick = create
     btn_filter.onclick = filter
     btn_more.onclick = more
     window.onhashchange = query_onhashchange
-
-    fetch(read_path).then(response => response.json()).then(json => {
-        render_data(json)
-        if (window.location.hash.slice(1) != '') query_onhashchange()
-    })
-
-    setTimeout(() => {
-
-        let url = `${host}/api/save?namespace=${host}`
-        Object.keys(save).forEach(item => { url += `&${item}` })
-        fetch(url).then(response => response.json()).then(json => {
-            Object.keys(save).forEach(item => {
-                save[item] = json[item] ? JSON.parse(json[item]) : []
-            })
-            save.default = json
-        })
-    }, 1000);
 }))
 
+save_pull('hide')
 
-
-// let url = `${host}/api/save?namespace=${host}`
-// Object.keys(save).forEach(item => { url += `&${item}` })
-// fetch(url).then(response => response.json()).then(json => {
-//     Object.keys(save).forEach(item => {
-//         save[item] = json[item] ? JSON.parse(json[item]) : []
-//     })
-//     save.default = json
-// })
-let url = `${host}/api/save?namespace=${host}&hide_json`
-fetch(url).then(response => response.json()).then(json => {
-    save[hide_json] = JSON.parse(json[hide_json])
+//'https://bghuan.oss-cn-shenzhen.aliyuncs.com/backup/fantasy.open.json'
+fetch(read_path).then(response => response.json()).then(json => {
+    json_all = json
+    query_onhashchange()
 })
 
-url = `${host}/api/save?namespace=${host}&error_image`
-fetch(url).then(response => response.json()).then(json => {
-    save[error_image] = JSON.parse(json[error_image])
-})
+//获取字符串的 哈希值 
+//https://www.cnblogs.com/yjhua/p/5083419.html
+function getHashCode(str) {
+    var hash = 1315423911, i, ch;
+    for (i = str.length - 1; i >= 0; i--) {
+        ch = str.charCodeAt(i);
+        hash ^= ((hash << 5) + ch + (hash >> 2));
+    }
+    return (hash & 0x7FFFFFFF);
+}
+document.addEventListener('keydown', function (e) {
+    if (e.key == 'f' && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
+        for (let index = 0; index < uuu.childNodes.length; index++) {
+            show_div(uuu.childNodes[index])
+        }
+    }
+});
+
+// let client
+// // oss, use aliyun oss to send/receive big file
+// const setClient = (json) => {
+//     client = new OSS({
+//         region: 'oss-cn-hangzhou',
+//         accessKeyId: json['Credentials']['AccessKeyId'],
+//         accessKeySecret: json['Credentials']['AccessKeySecret'],
+//         stsToken: json['Credentials']['SecurityToken'],
+//         bucket: 'bghu'
+//         // secure: true
+//     });
+// }
+
+// async function putObject(name, data) {
+//     try {
+//         const result = await client.put(
+//             data,
+//             name
+//         );
+//         console.log(result);
+//     } catch (e) {
+//         console.log(e);
+//     }
+// }
+
+// fetch('https://bghuan.cn/api/sts').then(response => response.json()).then(json => setClient(json))
+
+// setTimeout(() => {
+//     aaa = [];
+//     qqq = [];
+//     for (let index = 0; index < document.getElementsByTagName('img').length; index++) {
+//         let element = document.getElementsByTagName('img')[index]; if (element.src != default_image_path) aaa.push(element.src)
+//     }
+//     for (let index = 0; index < aaa.length; index += 111111) {
+//         const element = aaa[index];
+//         qqq = (decodeURI(element.replace('.jpg?x-oss-process=image/resize,m_lfit,h_110,w_110', '').replace('https://bghuan.oss-cn-shenzhen.aliyuncs.com/image/openai/', '')).split('-'))
+//         let www = element.replace('?x-oss-process=image/resize,m_lfit,h_110,w_110', '')
+//         let a = qqq[0]
+//         let b = qqq[1]
+//         // (title + '-' + content).substring(0, 80).replaceAll('?', '%3F').replaceAll('\\', '').replaceAll(':', '').replaceAll('/', '')
+//         let hash = (getHashCode(a + b)) + '.png'
+
+//         fetch('https://bghu.oss-cn-hangzhou.aliyuncs.com/' + hash).then(response => response.text()).then(json => {
+//             if (json.indexOf('<?xml version="1.0" encoding="UTF-8"?>') == 0) {
+//                 fetch(www).then(response => response.blob()).then(blob => putObject(blob, hash))
+//             }
+//         }
+//         )
+//     }
+// }, 1000);
+

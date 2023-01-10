@@ -18,34 +18,36 @@ let json_all = []
 let stop_service = false
 let a_Collapse
 let b_Collapse
-let redner_data_data = []
-let save = { hide_json: [], error_image: [], default: {} }
+let json_show = []
+let json_show_hash = []
+let save = { hide: [], error: [], default: {} }
+let div_observer
+let oss_image_prix = 'https://bghu.oss-cn-hangzhou.aliyuncs.com/'
 
 
 let render_data = (data) => {
     let allllll = ''
-    let title, content, cccc, data_src, src, right_image, aaaaa, i_real = 0
-    redner_data_data = []
-    // for (let i = data.length - 1; i >= 0 && i < limit; i--) {
+    let title, content, hash, image_src, innerHTML, i_real = 0
+    json_show = []
+    json_show_hash = []
     for (let i = 0; i < data.length && i < limit; i++) {
-        title = data[i]['a']?.toString().replaceAll('\"', '\'').replaceAll('\n', '');
-        content = data[i]['b']?.toString().replaceAll('\"', '\'').replaceAll('\n', '');
+        title = data[i]['a']?.toString().replaceAll('\n', '');
+        content = data[i]['b']?.toString().replaceAll('\n', '');
+        hash = getHashCode(title + content)
 
         // if (title == 'fantasy') continue
         if (title == 'test') continue
         if (title == 'yo') continue
         if (!title || !content) continue
+        if (save.hide.includes(hash) && window.location.hash.slice(1) == '') continue
+        if (json_show_hash.includes(hash)) continue
 
-        if (save.hide_json.includes(title + content) && window.location.hash.slice(1) == '') continue
+        image_src = get_image_full_path(hash)
 
-        cccc = get_image_name(title, content)
-        data_src = `https://bghuan.oss-cn-shenzhen.aliyuncs.com/image/openai/${cccc}.jpg?x-oss-process=image/resize,m_lfit,h_${image_h},w_${image_w}`
-        // if (save.error_image.includes(cccc)) data_src = default_image_path
-
-        right_image = `<img src="${data_src}" class="rounded" width=${image_w} height=${image_w} onerror=image_onerr(event) ondragend=image_ondragend(event) ondragstart=image_ondragstart(event)>`
-        redner_data_data.push([right_image, title, content])
-        aaaaa = `<div></div>`
-        allllll += aaaaa
+        json_show.push([image_src, title, content])
+        json_show_hash.push(hash)
+        innerHTML = `<div></div>`
+        allllll += innerHTML
         i_real++
     }
     uuu.innerHTML = allllll
@@ -53,45 +55,48 @@ let render_data = (data) => {
 }
 let layz_div = () => {
     var divs = uuu.childNodes
-    let observer = new IntersectionObserver((entires) => {
+    let div_observer = new IntersectionObserver((entires) => {
         entires.forEach(item => {
             if (item.intersectionRatio > 0 && item.intersectionRatio <= 1) {
-                let element = item.target
-                var index = [].indexOf.call(uuu.childNodes, element);
-                if (index == -1) return
-                if (index >= redner_data_data.length) return
-
-                let title = redner_data_data[index][1]
-                let content = redner_data_data[index][2]
-                let cccc = get_image_name(title, content)
-
-                if (save.hide_json.includes(title + content) && window.location.hash.slice(1) == '')
-                    element.className = 'd-none'
-                if (save.error_image.includes(cccc)) {
-                    data_src = default_image_path
-                    right_image = `<img src="${data_src}" class="rounded" width=${image_w} height=${image_w} onerror=image_onerr(event) ondragend=image_ondragend(event) ondragstart=image_ondragstart(event)>`
-                    redner_data_data[index][0] = right_image
-                }
-
-                let aaaaaaaa = `
-<div class="d-flex">
-    ${redner_data_data[index][0]}
-    <div class="card-body">
-        <h5>${redner_data_data[index][1]}</h5>
-        <p>${redner_data_data[index][2]}</p>
-    </div>
-</div>`
-                element.className = 'card'
-                element.innerHTML = aaaaaaaa.replaceAll('    ', '').replaceAll('\n', '')
-                observer.unobserve(element)
+                show_div(item.target)
             }
         })
     }, {
         threshold: [0, 1]
     })
     Array.from(divs).forEach(element => {
-        observer.observe(element)
+        div_observer.observe(element)
     });
+}
+let show_div = (element, flag = true) => {
+    var index = [].indexOf.call(uuu.childNodes, element);
+    if (index == -1) return
+    if (index >= json_show.length) return
+
+    let title = json_show[index][1]
+    let content = json_show[index][2]
+    let hash = getHashCode(title + content)
+
+    if (save.hide.includes(hash) && window.location.hash.slice(1) == '')
+        element.className = 'd-none'
+    if (save.error.includes(hash) || !flag) {
+        json_show[index][0] = default_image_path
+    }
+
+    let innerHTML = `
+<div class="d-flex">
+    ${get_image_element(json_show[index][0])}
+    <div class="card-body">
+        <h5>${json_show[index][1]}</h5>
+        <p>${json_show[index][2]}</p>
+    </div>
+</div>`
+    element.className = 'card'
+    element.innerHTML = innerHTML.replaceAll('    ', '').replaceAll('\n', '')
+    div_observer?.unobserve(element)
+}
+let get_image_element = (src) => {
+    return `<img src="${src}" class="rounded" width=${image_w} height=${image_w} onerror=image_onerr(event) ondragend=image_ondragend(event) ondragstart=image_ondragstart(event)>`
 }
 let get_clean_encodeurl = (str) => {
     str = str?.replaceAll('%%', '%25%')
@@ -99,21 +104,29 @@ let get_clean_encodeurl = (str) => {
     if (str?.substr(str.length - 1) == '%') return str?.substring(0, str.length - 1) + '%25'
     return str
 }
-let get_image_name = (title, content) => {
-    return (title + '-' + content).substring(0, 80).replaceAll('?', '%3F').replaceAll('\\', '')
+let get_image_full_path = (hash) => {
+    return oss_image_prix + hash + '.png' + '?x-oss-process=image/resize,m_lfit,h_110,w_110'
 }
 let save_pull = (str) => {
     let url = `${host}/api/save?namespace=${host}&${str}`
     fetch(url).then(response => response.json()).then(json => {
+        if (!json || !json[str]) return
         save[str] = JSON.parse(json[str])
         save.default[str] = json
     })
 }
 let save_push = (str) => {
+    for (let index = save.error.length; index > 0; index--) {
+        if (typeof save.error[index] != 'number')
+            save.error.splice(index, 1)
+    }
+    for (let index = save.hide.length; index > 0; index--) {
+        if (typeof save.hide[index] != 'number')
+            save.hide.splice(index, 1)
+    }
     let flag = false
     Object.keys(save).forEach(item => {
-        if (save.default && save.default[item] != JSON.stringify(save[item]))
-            flag = true
+        if (save.default && save.default[item] != JSON.stringify(save[item])) flag = true
     })
     if (!flag) return
     var formData = new FormData();
@@ -129,17 +142,18 @@ let image_onerr_push = () => {
     let error_image_limit_time = save.error_image_limit_time
     setTimeout(() => {
         if (save.error_image_limit_time == error_image_limit_time)
-            save_push('error_image')
+            save_push('error')
     }, 1000);
 }
 let image_onerr = (event) => {
     let oImg = event.target;
-    let src = decodeURI(oImg.src.replaceAll('%%', '%25%')).replace('https://bghuan.oss-cn-shenzhen.aliyuncs.com/image/openai/', '').replace('.jpg?x-oss-process=image/resize,m_lfit,h_110,w_110', '')
-    if (!save.error_image.includes(src))
-        save.error_image.push(src)
+    if (save.error.length != 0) {
+        let src = oImg.src.replace(oss_image_prix, '').replace('.png?x-oss-process=image/resize,m_lfit,h_110,w_110', '')
+        if (!save.error.includes(src))
+            save.error.push(Number(src))
+        image_onerr_push()
+    }
     oImg.setAttribute('src', default_image_path)
-    oImg.setAttribute('err-image', 1)
-    image_onerr_push()
 }
 let image_ondragstart = event => {
     let oImg = event.target;
@@ -147,37 +161,39 @@ let image_ondragstart = event => {
 }
 let image_ondragend = event => {
     let oImg = event.target
-    let title = oImg.parentNode.querySelector('h5').innerText
-    let content = oImg.parentNode.querySelector('p').innerText
+    let title = oImg.parentNode.querySelector('h5').innerHTML
+    let content = oImg.parentNode.querySelector('p').innerHTML
+    let hash = getHashCode(title + content)
     if (oImg.xxx < event.clientX) {
-        if (!save.hide_json.includes(title + content))
-            save.hide_json.push(title + content)
+        if (!save.hide.includes(hash))
+            save.hide.push(hash)
         oImg.parentNode.parentNode.className = 'd-none'
     } else {
-        save.hide_json.splice(save.hide_json.indexOf(title + content), 1)
+        save.hide.splice(save.hide.indexOf(hash), 1)
     }
-    save_push('hide_json')
+    save_push('hide')
 }
 let image_change = (oImg) => {
-    let title = oImg.parentNode.querySelector('h5').innerText
-    let content = oImg.parentNode.querySelector('p').innerText
-    let cccc = get_image_name(title, content)
-    let data_src = `https://bghuan.oss-cn-shenzhen.aliyuncs.com/image/openai/${cccc}.jpg?x-oss-process=image/resize,m_lfit,h_${image_h},w_${image_w}`
-    oImg.setAttribute('src', data_src)
+    let title = oImg.parentNode.querySelector('h5').innerHTML
+    let content = oImg.parentNode.querySelector('p').innerHTML
+    let hash = getHashCode(title + content)
+    let image_src = get_image_full_path(hash)
+    oImg.setAttribute('src', image_src)
     let callBack = () => {
         oImg.setAttribute('src', host + '/static/image/download.png')
-        let url = host + '/api/openai.php?a=' + cccc
-        if (sudo_change_image_text != '') url += '&b=' + sudo_change_image_text
+        let url = host + '/api/openai.php?hash=' + hash
+        if (sudo_change_image_text != '') url += '&prompt=' + sudo_change_image_text
+        else url += '&prompt=' + title + '-' + content
         fetch(url).then(response => {
-            oImg.setAttribute('src', data_src)
-            oImg.onerror = () => image_onerr(oImg)
+            oImg.setAttribute('src', image_src)
+            oImg.onerror = image_onerr
         })
         sudo_change_image_text = ''
     }
     if (sudo_change_image_text != '') callBack()
     else oImg.onerror = callBack
-    save.error_image.splice(save.error_image.indexOf(cccc), 1)
-    save_push('error_image')
+    save.error.splice(save.error.indexOf(hash), 1)
+    save_push('error')
 }
 
 uuu.onmousedown = (event) => {
@@ -194,18 +210,19 @@ uuu.onmouseup = (event) => {
     let h5_or_p = 'h5'
     if (window.location.hash.slice(1) != '') { h5_or_p = 'p' }
 
-    let title = event.target.parentNode.querySelector(h5_or_p).innerText
+    let title = event.target.parentNode.querySelector(h5_or_p).innerHTML
     if (event.target.nodeName == 'DIV')
-        title = event.target.querySelector(h5_or_p).innerText
+        title = event.target.querySelector(h5_or_p).innerHTML
     else if (event.target.nodeName == 'IMG') {
         if (event.target.src == default_image_path || sudo_change_image_text != '') {
             return image_change(event.target)
         }
-        // let title = event.target.parentNode.querySelector('h5').innerText
-        // let content = event.target.parentNode.querySelector('p').innerText
-        // let cccc = get_image_name(title, content)
-        // save.error_image.splice(save.error_image.indexOf(cccc), 1)
-        // save_push()
+        // let title = event.target.parentNode.querySelector('h5').innerHTML
+        // let content = event.target.parentNode.querySelector('p').innerHTML
+        // let hash = getHashCode(title + content) + '.png'
+        // // save.error.splice(save.error.indexOf(hash), 1)
+        // // save_push()
+        // return
     }
     query(fantasy_search.value = (title))
 }
@@ -294,7 +311,7 @@ document.addEventListener("DOMContentLoaded", (function () {
             b_Collapse = new bootstrap.Collapse(collapseb, { toggle: false })
             fantasy_title.href = '#collapsea'
         })
-        save_pull('error_image')
+        save_pull('error')
     }, 500);
     btn_query.onclick = on_btn_query
     btn_create.onclick = create
@@ -303,10 +320,21 @@ document.addEventListener("DOMContentLoaded", (function () {
     window.onhashchange = query_onhashchange
 }))
 
-save_pull('hide_json')
+save_pull('hide')
 
 //'https://bghuan.oss-cn-shenzhen.aliyuncs.com/backup/fantasy.open.json'
 fetch(read_path).then(response => response.json()).then(json => {
     json_all = json
     query_onhashchange()
 })
+
+//获取字符串的 哈希值 
+//https://www.cnblogs.com/yjhua/p/5083419.html
+function getHashCode(str) {
+    var hash = 1315423911, i, ch;
+    for (i = str.length - 1; i >= 0; i--) {
+        ch = str.charCodeAt(i);
+        hash ^= ((hash << 5) + ch + (hash >> 2));
+    }
+    return (hash & 0x7FFFFFFF);
+}

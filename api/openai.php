@@ -9,17 +9,14 @@ require_once 'aliyun-oss-php-sdk-2.5.0.phar';
 use OSS\OssClient;
 use OSS\Core\OssException;
 
-$a = querystring('a');
-$b = querystring('b');
-if (empty($a)) {
+$prompt = querystring('prompt');
+$hash = querystring('hash');
+
+if (empty($prompt)) {
     exit;
 }
-$prompt = $a;
-if (!empty($b)) {
-    $prompt = $b;
-}
 
-$fileName = '../static/image/openai/' . $a . '.jpg';
+$fileName = '../static/image/openai/' . $hash . '.jpg';
 if (!file_exists($fileName) || true) {
 
     $apiKey = $openaiApiKey;
@@ -39,6 +36,7 @@ if (!file_exists($fileName) || true) {
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     $response = curl_exec($ch);
     curl_close($ch);
+    // $response = '{ "created": 1673325055, "data": [ { "url": "https://oaidalleapiprodscus.blob.core.windows.net/private/org-K2ND9d35VSLmOCCzGwHO0MdH/user-iOpm7F4HIMSZ28rhWAWcsdyS/img-BKZ0vylsIeST6f7nXSZI9kmP.png?st=2023-01-10T03%3A30%3A55Z&se=2023-01-10T05%3A30%3A55Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-01-10T03%3A01%3A35Z&ske=2023-01-11T03%3A01%3A35Z&sks=b&skv=2021-08-06&sig=/KQIyVLXI5oJed8WQqR7Fr0GRtjl8m01qhBupZ470T0%3D" } ] }';
 
     try {
         $jsonString = $response;
@@ -49,11 +47,12 @@ if (!file_exists($fileName) || true) {
         file_put_contents($fileName, $imageData);
         // echo $fileName;
 
-        $objectName = 'image/openai/' . $a . '.jpg';
+        $objectName = $hash . '.png';
+        echo ($response);
 
         try {
-            $ossClient = new OssClient($accessKeyId, $accessKeySecret, $endpoint);
-            $ossClient->uploadFile($bucket, $objectName, '/www/wwwroot/fantasy/static/image/openai/' . $a . '.jpg');
+            $ossClient = new OssClient($accessKeyId, $accessKeySecret, $endpoint2);
+            $ossClient->uploadFile($bucket2, $objectName, '/www/wwwroot/fantasy/static/image/openai/' . $hash . '.jpg');
             exit;
         } catch (OssException $e) {
             printf(__FUNCTION__ . ": FAILED\n");
