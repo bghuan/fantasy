@@ -5,7 +5,8 @@ node_modules/
 static/download/
 static/project/android/
 static/project/justAuth/
-static/project/yo/
+static/project/fantasytalk2/
+static/project/fancy editor/
 dist/
 
 *config.php*

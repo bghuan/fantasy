@@ -109,8 +109,6 @@ let callBack_read = function (data) {
         }
     })
     scroll_bottom(1)
-
-    // document.getElementById('w-e-textarea-1').style.marginLeft = '200px'
 }
 
 HttpPost(url_read, null, callBack_read)
@@ -183,3 +181,12 @@ document.title = window.location.search.replace('?', '')
 if (window.location.search == "?all") {
     location.href = host + '/fantasy/editor/all'
 }
+let textarea_marginLeft = 0
+document.addEventListener('keydown', e => {
+    if (((navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey))) {
+        if (e.key == 'ArrowRight') {
+            textarea_marginLeft += 100
+            document.getElementById('w-e-textarea-1').style.marginLeft = textarea_marginLeft + 'px'
+        }
+    }
+})

@@ -12,8 +12,8 @@
     <div class='pos-f-t fixed-top bg-white border-bottom' id='header'>
         <div class='container-lg'>
             <nav class='navbar navbar-light bg-white' id='navbar'>
-                <a class='navbar-brand text-primary text-truncate col-5' data-toggle='collapse'
-                    role='button' aria-expanded='false' aria-controls='collapsea' id='fantasy_title'>收集幻想</a>
+                <a class='navbar-brand text-primary text-truncate col-5' data-toggle='collapse' role='button'
+                    aria-expanded='false' aria-controls='collapsea' id='fantasy_title'>收集幻想</a>
                 <div class='form-inline my-0' id='buttons'>
                     <button class='btn btn-sm border' id="feather" data-toggle='collapse' data-target='#collapseb'
                         aria-expanded='false' aria-controls='collapseb' type='button' aria-labelledby='labeldiv'> <svg
@@ -46,41 +46,80 @@
         <div id='content'></div>
     </div>
     <div class='container-lg'>
-        <div class='text-muted float-end' id='footer'>
-            <div id='more_content'>
-                <a class='btn btn-primary btn-sm' href='static/download/fantasy.apk'>Android下载</a>
-                <a class='btn btn-primary btn-sm' href='fantasy/fangyuan'>左手画圆右手画方</a>
-                <a class='btn btn-primary btn-sm' href='fantasy/montyhall'>三门问题</a>
-                <a class='btn btn-primary btn-sm' href='fantasy/messenger'>信使</a>
-                <a class='btn btn-primary btn-sm' href='fantasy/websocket'>即时信息传输</a>
-                <a class='btn btn-primary btn-sm' href='fantasy/game'>三分游戏</a>
-            </div>
-            <a class='text-decoration-none' href='https://beian.miit.gov.cn' target='_blank'
-                id='beian'>豫ICP备18001086号-2</a>
-            <button class='btn btn-light btn-sm' id='btn_more'>more</button>
-            <button class='btn btn-light btn-sm' data-toggle='modal' data-target='#exampleModalLong'>about</button>
-            <a class='btn btn-sm' href='https://github.com/bghuan/fantasy' id='svg_github'><svg
-                    xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'
-                    stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'
-                    class='feather feather-github'>
-                    <path
-                        d='M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22'>
-                    </path>
-                </svg></a>
-            <div class='modal fade text-dark' id='exampleModalLong' data-bs-backdrop='static' data-bs-keyboard='false'
-                tabindex='-1' aria-labelledby='staticBackdropLabel' aria-hidden='true'>
-                <div class='modal-dialog modal-lg' role='document'>
-                    <div class='modal-content'>
-                        <div class='modal-body'></div>
+        <ul class='text-muted list-unstyled' id='footer'>
+            <li><a class='btn btn-primary' href='https://bghuan.cn/'>幻想</a></li>
+            <li><a class='btn btn-primary' href='https://bghuan.cn/fantasy/fangyuan/'>方圆</a></li>
+            <li><a class='btn btn-primary' href='https://bghuan.cn/fantasy/messenger/'>信使</a></li>
+            <li><a class='btn btn-primary' href='https://bghuan.cn/fantasy/websocket/'>聊天</a></li>
+            <li><a class='btn btn-primary' href='https://bghuan.cn/fantasy/game/'>收集游戏</a></li>
+            <li><a class='btn btn-primary' href='https://bghuan.cn/fantasy/montyhall/'>三门问题</a></li>
+            <li><a class='btn btn-primary' href='https://bghuan.cn/static/download/fantasy.apk'>App</a></li>
+            <li> <button class='btn btn-primary' data-toggle='modal' data-target='#exampleModalLong'>about</button>
+            </li>
+            <li><a class='btn btn-primary' href='https://bghuan.cn/fantasy/websocket2/'>联系我</a>
+            </li>
+            <li><a class='btn' href='https://github.com/bghuan/fantasy' id='svg_github'><svg
+                        xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'
+                        stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'
+                        class='feather feather-github'>
+                        <path
+                            d='M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22'>
+                        </path>
+                    </svg></a></li>
+            <li><a class='text-decoration-none' href='https://beian.miit.gov.cn' target='_blank'
+                    id='beian'>豫ICP备18001086号-2</a></li>
+            <li>
+                <div class='modal fade text-dark' id='exampleModalLong' data-bs-backdrop='static'
+                    data-bs-keyboard='false' tabindex='-1' aria-labelledby='staticBackdropLabel' aria-hidden='true'>
+                    <div class='modal-dialog modal-lg' role='document'>
+                        <div class='modal-content'>
+                            <div class='modal-body'></div>
+                        </div>
                     </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <!-- 
+    <footer class="bd-footer py-4 py-md-5 mt-5 bg-body-tertiary">
+        <div class="container py-4 py-md-5 px-4 px-md-3 text-body-secondary">
+            <div class="row">
+                <div class="col-lg-3 mb-3">
+                    <a class="d-inline-flex align-items-center mb-2 text-body-secondary text-decoration-none" href="/"
+                        aria-label="Bootstrap">
+                        <span class="fs-5">Bootstrap</span>
+                    </a>
+                    <ul class="list-unstyled small">
+                        <li class="mb-2">Designed and built with all the love in the world by the <a
+                                href="/docs/5.3/about/team/">Bootstrap team</a> with the help of <a
+                                href="https://github.com/twbs/bootstrap/graphs/contributors">our contributors</a>.</li>
+                        <li class="mb-2">Code licensed <a href="https://github.com/twbs/bootstrap/blob/main/LICENSE"
+                                target="_blank" rel="license noopener">MIT</a>, docs <a
+                                href="https://creativecommons.org/licenses/by/3.0/" target="_blank"
+                                rel="license noopener">CC BY 3.0</a>.</li>
+                        <li class="mb-2">Currently v5.3.0-alpha1.</li>
+                    </ul>
+                </div>
+                <div class="col-6 col-lg-2 offset-lg-1 mb-3">
+                    <h5>Links</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="/">Home</a></li>
+                        <li class="mb-2"><a href="/docs/5.3/">Docs</a></li>
+                        <li class="mb-2"><a href="/docs/5.3/examples/">Examples</a></li>
+                        <li class="mb-2"><a href="https://icons.getbootstrap.com/">Icons</a></li>
+                        <li class="mb-2"><a href="https://themes.getbootstrap.com/">Themes</a></li>
+                        <li class="mb-2"><a href="https://blog.getbootstrap.com/">Blog</a></li>
+                        <li class="mb-2"><a href="https://cottonbureau.com/people/bootstrap">Swag Store</a></li>
+                    </ul>
                 </div>
             </div>
         </div>
-    </div>
+    </footer> -->
+
     <script src='index.js'></script>
     <!-- <script src='https://bghuan.cn/api/read?prix=json_all='></script>
     <script src='https://bghuan.cn/api/save?namespace=bghuan&hide&prix=save='></script> -->
-    <script src='https://dev.bghuan.cn/api/read?prix=json_all='></script>
+    <script src='http://bghu.oss-cn-hangzhou.aliyuncs.com/backup/fantasy.open.bghuan.json'></script>
     <script src='https://dev.bghuan.cn/api/save?namespace=bghuan&hide&prix=save='></script>
 </body>
 

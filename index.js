@@ -1,7 +1,7 @@
 
 let host = location.origin.indexOf('localhost') >= 0 ? 'https://dev.bghuan.cn' : location.origin
 let read_path = host + '/api/read'
-let create_path = host + '/api/create'
+let create_path = host + '/api/create2'
 let save_path = host + '/api/save'
 let default_image_path = host + '/static/image/1x1.bmp'
 let oss_image_prix = 'https://bghu.oss-cn-hangzhou.aliyuncs.com/'
@@ -21,8 +21,9 @@ let b_Collapse
 let json_show = []
 let json_show_hash = []
 // let save = { hide: [], error: [], default: {} }
-let div_observer
 let default_search_title = fantasy_title.innerText
+let html_hash = {}
+let key_local = ''
 
 
 let render_data = (data) => {
@@ -39,7 +40,7 @@ let render_data = (data) => {
         if (key == 'test') continue
         if (key == 'yo') continue
         if (!key || !value) continue
-        if (save.hide.includes(hash) && window.location.hash.slice(1) == '') continue
+        if (save.hide.includes(hash) && key_local == '') continue
         if (json_show_hash.includes(hash)) continue
 
         image_src = get_image_full_path(hash)
@@ -48,9 +49,9 @@ let render_data = (data) => {
         json_show_hash.push(hash)
         innerHTML = `<div></div>`
         allllll += innerHTML
-        i_real++
     }
     content.innerHTML = allllll
+    scrollTo(0, 0)
     layz_div()
 }
 let layz_div = () => {
@@ -65,20 +66,25 @@ let layz_div = () => {
     }, {
         threshold: [0, 1]
     })
-    Array.from(divs).forEach(element => {
-        div_observer.observe(element)
-    });
+    for (let index = 0; index < divs.length; index++) {
+        const element = divs[index];
+        if (index < 10)
+            show_div(element)
+        else
+            div_observer.observe(element)
+    }
 }
 let show_div = (element, flag = true) => {
     var index = [].indexOf.call(content.childNodes, element);
     if (index == -1) return
     if (index >= json_show.length) return
+    if (element.className) return
 
     let key = json_show[index][1]
     let value = json_show[index][2]
     let hash = getHashCode(key + value)
 
-    if (save.hide.includes(hash) && window.location.hash.slice(1) == '')
+    if (save.hide.includes(hash) && key_local == '')
         element.className = 'd-none'
     if (save.error.includes(hash) || !flag) {
         json_show[index][0] = default_image_path
@@ -94,6 +100,16 @@ let show_div = (element, flag = true) => {
 </div>`
     element.className = 'card'
     element.innerHTML = innerHTML.replaceAll('    ', '').replaceAll('\n', '')
+    set_cache()
+}
+let set_cache = () => {
+    html_hash[key_local] = content.innerHTML
+    html_hash[key_local + 'json'] = json_show
+}
+let get_cache = () => {
+    content.innerHTML = html_hash[key_local]
+    json_show = html_hash[key_local + 'json']
+    layz_div()
 }
 let get_image_element = (src) => {
     return `<img src="${src}" class="rounded" width=${image_w} height=${image_w} onerror=image_onerr(event) ondragend=image_ondragend(event) ondragstart=image_ondragstart(event)>`
@@ -155,6 +171,25 @@ let image_onerr = (event) => {
         image_onerr_push()
     }
     oImg.setAttribute('src', default_image_path)
+
+    //temp
+    // let key = oImg.parentNode.querySelector('h5').innerHTML
+    // let value = oImg.parentNode.querySelector('p').innerHTML
+    // let hash = getHashCode(key + value)
+    // let image_src = get_image_full_path(hash)
+    // oImg.setAttribute('src', image_src)
+    // let callBack = () => {
+    //     oImg.setAttribute('src', host + '/static/image/download.png')
+    //     let url = host + '/api/openai.php?hash=' + hash
+    //     url += '&prompt=' + key + '-' + value
+    //     fetch(url).then(response => {
+    //         oImg.setAttribute('src', image_src)
+    //     })
+    //     sudo_change_image_text = ''
+    // }
+    // oImg.onerror = callBack
+    // save.error.splice(save.error.indexOf(hash), 1)
+    // save_push('error')
 }
 let image_ondragstart = event => {
     let oImg = event.target;
@@ -198,13 +233,12 @@ let image_change = (oImg) => {
 }
 
 content.onmouseleave = (event) => {
-    let key = decodeURI(get_clean_encodeurl(window.location.hash.slice(1)))
-    fantasy_title.innerText = key || default_search_title
+    fantasy_title.innerText = key_local || default_search_title
 }
 content.onmouseover = (event) => {
     if (event.target == content) return
     let h5_or_p = 'h5'
-    if (window.location.hash.slice(1) != '') { h5_or_p = 'p' }
+    if (key_local != '') { h5_or_p = 'p' }
 
     let key = event.target.parentNode.querySelector(h5_or_p)?.innerHTML
     if (event.target.nodeName == 'DIV')
@@ -226,7 +260,7 @@ content.onmouseup = (event) => {
     uuu_up = Date.now()
 
     let h5_or_p = 'h5'
-    if (window.location.hash.slice(1) != '') { h5_or_p = 'p' }
+    if (key_local != '') { h5_or_p = 'p' }
 
     let key = event.target.parentNode.querySelector(h5_or_p)?.innerHTML
     if (event.target.nodeName == 'DIV')
@@ -277,7 +311,7 @@ const create = () => {
         fantasy_key.value = 'fantasy'
         fantasy_value.focus()
     } else if (value) {
-        let url = create_path + '?' + key + '=' + value
+        let url = create_path + '?' + key + '=' + value + '&namespace=' + save.namespace + '&prix=json_all='
         let callBack = (create_id) => {
             b_Collapse?.hide()
             localStorage.id = localStorage.id + (',' + create_id)
@@ -287,9 +321,11 @@ const create = () => {
     }
 }
 const filter = () => {
-    let key = fantasy_search.value
-    let json = json_all.filter(item => item.a?.indexOf && (item.a?.indexOf(key) >= 0 || item.b?.toString().indexOf(key)) >= 0)
-    render_data(json)
+    let key = fantasy_search.value.trim()
+    if (key) {
+        let json = json_all.filter(item => item.a?.indexOf && (item.a?.indexOf(key) >= 0 || item.b?.toString().indexOf(key)) >= 0)
+        render_data(json)
+    }
     a_Collapse?.hide()
 }
 const more = () => {
@@ -297,17 +333,20 @@ const more = () => {
 }
 const query_onhashchange = () => {
     a_Collapse?.hide()
-    let key = decodeURI(get_clean_encodeurl(window.location.hash.slice(1)))
+    key_local = decodeURI(get_clean_encodeurl(window.location.hash.slice(1)))
     // if (fantasy_title.innerText == '收集幻想') setTimeout(() => { fantasy_title.innerText = key || 'fantasy' }, 1000);
     // else
-    fantasy_title.innerText = key || default_search_title
-    fantasy_search.value = key
-    fantasy_key.value = key
-    let json = json_all.filter(item => item.a == key)
-    if (!key) {
+    fantasy_title.innerText = key_local || default_search_title
+    fantasy_search.value = key_local
+    fantasy_key.value = key_local
+    let json = json_all.filter(item => item.a == key_local)
+    if (!key_local) {
         json = json_all
     }
-    render_data(json)
+    if (html_hash[key_local])
+        get_cache()
+    else
+        render_data(json)
 }
 const stopServiceIfDateNine = () => {
     if (new Date().getDate() == '9') { document.body.innerHTML = new Date() + '<br />' + '每月9号不收集展示幻想'; stop_service = true; } else if (stop_service) window.location.reload(); else return false; setTimeout(stopServiceIfDateNine, 100); return true;
@@ -331,7 +370,6 @@ const show_create_rightnow = () => { is_create_show_right_now = true }
 btn_query.onclick = on_btn_query
 btn_create.onclick = create
 btn_filter.onclick = filter
-btn_more.onclick = more
 fantasy_title.onclick = show_search_rightnow
 feather.onclick = show_create_rightnow
 window.onhashchange = query_onhashchange
@@ -340,7 +378,7 @@ document.addEventListener("DOMContentLoaded", (function () {
     if (stopServiceIfDateNine()) return
 
     collapseb.addEventListener('shown.bs.collapse', () => {
-        if (window.location.hash.slice(1) == '') fantasy_key.focus()
+        if (key_local == '') fantasy_key.focus()
         else fantasy_value.focus()
     })
     collapsea.addEventListener('shown.bs.collapse', () => fantasy_search.focus())
@@ -359,6 +397,7 @@ document.addEventListener("DOMContentLoaded", (function () {
         }
     }, false)
     document.body.addEventListener("keyup", event => { if (event.keyCode == 13) { event.stopPropagation(); b_Collapse.show() } })
+    // more_content.querySelectorAll('a').forEach(item => item.href = item.href.replace('https://bghuan.cn', location.origin))
 
     setTimeout(() => {
         loadJS('static/js/bootstrap.min.js', () => {
@@ -373,3 +412,7 @@ document.addEventListener("DOMContentLoaded", (function () {
     save = { hide: JSON.parse(save.hide), namespace: save.namespace, error: [], default: [] }
     query_onhashchange()
 }))
+
+
+// document.getElementsByClassName("create")[1].addEventListener("keydown", event => { if (event.keyCode == 13) { event.preventDefault() } })
+// document.getElementById("div_card").style.minHeight = window.innerHeight - 90 + 'px'

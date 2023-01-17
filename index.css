@@ -9,12 +9,14 @@ body {
 
 #footer {
     height: 32px;
-    margin-top: -3px;
-    padding: 0
+    /* margin-top: -3px; */
+    padding: 0;
+    /* float: right; */
+    /* text-align: right; */
 }
 
-#more_content {
-    display: none;
+#footer li {
+    margin-top: 4px;
 }
 
 #beian {
