@@ -1,0 +1,482 @@
+let arr1 = [0, 1, 2, 3, 4, 8, 6, 5, 2, 2, 1, 8, 69, 2, 2, 4, 3, 8]
+let arr2 = [2, 2]
+
+for (let i = 0; i < arr1.length; i++) {
+    if (arr1[i] == arr2[0]) {
+        if (arr1[i + 1] == arr2[1]) {
+            console.log(i)
+        }
+    }
+}
+
+
+
+let arr1 = [0, 1, 2, 3, 4, 8, 6, 5, 'A', 'A', 1, 8, 69, 'A', 'A', 4, 3, 8]
+let arr2 = [2, 3, 4, 5, 'A', 'A', 3, 4, 5, 6]
+
+for (let i = 0; i < arr1.length; i++) {
+    if (arr1[i] == arr2[0]) {
+        if (arr1[i + 1] == arr2[1]) {
+            console.log(i)
+        }
+    }
+}
+
+
+
+let arr1 = ['A', 'A', 1, 8, 69, 'A', 'A', 4, 3, 8]
+let arr2 = [2, 3, 4, 5, 'A', 'A', 3, 4, 5, 6]
+let len = 2
+let log = console.log
+
+for (let i = 0; i < arr2.length; i++) {
+    let flag = true
+    for (let j = 0; j < len; j++) {
+        log(arr2[i], arr1[j])
+        if (arr2[i] == arr1[j]) {
+
+        }
+        else {
+            flag = false
+        }
+    }
+    if (flag)
+        log(i)
+}
+
+
+
+let arr1 = ['A', 1, 8, 69, 'A', 'A', 4, 3, 8]
+let arr2 = [2, 3, 4, 5, 'A', 3, 4, 5, 6]
+let log = console.log
+
+for (let i = 0; i < arr2.length; i++) {
+    if (arr2[i] == arr1[0]) {
+        log(i)
+    }
+}
+
+
+
+let arr1 = [0, 1, 0, 1, 0, 1, 'A', 1, 8, 69, 'A', 'A', 4, 3, 8]
+let arr2 = [2, 3, 4, 5, 'A', 3, 4, 5, 6]
+let log = console.log
+let start_index = 0
+
+
+for (let i = 0; i < arr1.length; i++) {
+    start_index = i
+    if (![1, 0].includes(arr1[i])) break
+}
+
+for (let i = 0; i < arr2.length; i++) {
+    if (arr2[i] == arr1[start_index]) {
+        log(i)
+    }
+}
+
+
+
+// 一直录音,直到录音匹配了已知声音,则播放后续已知声音
+// 0/1 音量小
+// 2/3/4/5 杂音
+// A 正确的第一个音
+// 'A', 'B' 更长的正确的第一个音
+//明灭案灯,照不见三千里
+//离辞别句,相思似是而非
+//情诉纸墨,想不到怎写你
+//恨爱悲欢,欠着谁的凄美
+
+let music = [0, 1, 0, 1, 0, 1, '明', '灭', '案', '灯', 'D', 1, 8, 69, 'A', 'A', 4, 3, 8]
+let mic = [2, 0, 3, 4, 0, 0, 0, 5, '明', '灭', 'B', 3, 4, 0, 0, 5, 6]
+let log = console.log
+let start_index = 0
+
+
+for (let i = 0; i < music.length; i++) {
+    start_index = i
+    if (![1, 0].includes(music[i])) break
+}
+
+for (let i = 0; i < mic.length; i++) {
+    if (mic[i] == music[start_index]) {
+        log(i)
+    }
+}
+
+
+
+// 一直录音,直到录音匹配了已知声音,则播放后续已知声音
+// 0/1 音量小
+// 2/3/4/5 杂音
+// 明 正确的第一个音
+// '明', '灭' 更长的正确的第一个音
+//明灭案灯,照不见三千里
+//离辞别句,相思似是而非
+//情诉纸墨,想不到怎写你
+//恨爱悲欢,欠着谁的凄美
+
+let music = [0, 1, 0, 1, 0, 1, '明', '灭', '案', '灯', 'D', 1, 8, 69, 'A', 'A', 4, 3, 8]
+let mic = [2, 0, 3, 4, 0, 0, 0, 5, '明', '灭', '案', '灯', 3, 4, 0, 0, 5, 6]
+
+let start_index = 0; for (let i = 0; i < music.length; i++) { start_index = i; if (![1, 0].includes(music[i])) break }
+let right_index = 0
+
+for (let i = 0; i < mic.length; i++) {
+    if (mic[i] == music[start_index]) {
+        right_index = i
+        break
+    }
+}
+
+if (right_index) {
+    console.log(music.slice(right_index))
+}
+
+
+// 一直录音,直到录音匹配了已知声音,则播放后续已知声音
+// 0/1 音量小
+// 2/3/4/5 杂音
+// 明 正确的第一个音
+// '明', '灭' 更长的正确的第一个音
+//明灭案灯,照不见三千里
+//离辞别句,相思似是而非
+//情诉纸墨,想不到怎写你
+//恨爱悲欢,欠着谁的凄美
+
+let music = [0, 1, 0, 1, 0, 1, '明', '灭', '案', '灯', 'D', 1, 8, 69, 'A', 'A', 4, 3, 8]
+let mic = [2, 0, 3, 4, 0, 0, 0, 5, '明', '灭', '案', 3, 4, 0, 0, 5, '明', '灭', '案', 3, 4, 0, 0, 5, 6]
+
+let start_index = 0; for (let i = 0; i < music.length; i++) { start_index = i; if (![1, 0].includes(music[i])) break }
+let right_index = 0
+let need_lenght = 3
+
+function comp(mic) {
+    let flag = true
+    for (let i = 0; i < need_lenght; i++) {
+        if (music[start_index + i] != mic[i])
+            flag = false
+    }
+    return flag
+}
+
+for (let i = 0; i < mic.length; i++) {
+    if (comp(mic.slice(i))) {
+        console.log(music.slice(start_index + need_lenght))
+    }
+}
+
+
+// 一直录音,直到录音匹配了已知声音,则播放后续已知声音
+// 0/1 音量小
+// 2/3/4/5 杂音
+// 明 正确的第一个音
+// '明', '灭' 更长的正确的第一个音
+//明灭案灯,照不见三千里
+//离辞别句,相思似是而非
+//情诉纸墨,想不到怎写你
+//恨爱悲欢,欠着谁的凄美
+
+let music = '明灭案灯,照不见三千里;离辞别句,相思似是而非;情诉纸墨,想不到怎写你;恨爱悲欢,欠着谁的凄美'
+let music_array = music.split('')
+let mic = [2, 0, 3, 4, 0, 0, 0, 5, '明', '灭', '案', 3, 4, 0, 0, 5, '明', '灭', '案', 3, 4, 0, 0, 5, 6]
+
+let start_index = 0; for (let i = 0; i < music.length; i++) { start_index = i; if (![1, 0].includes(music[i])) break }
+let right_index = 0
+let need_lenght = 3
+
+for (let i = 0; i < mic.length; i++) {
+    let flag = true
+    for (let j = 0; j < need_lenght; j++) {
+        if (music_array[start_index + j] != mic.slice(i)[j])
+            flag = false
+    }
+    if (flag) {
+        console.log(music.slice(start_index + need_lenght))
+    }
+}
+
+
+// 一直录音,直到录音匹配了已知声音,则播放后续已知声音
+// 0/1 音量小
+// 2/3/4/5 杂音
+// 明 正确的第一个音
+// '明', '灭' 更长的正确的第一个音
+//明灭案灯,照不见三千里
+//离辞别句,相思似是而非
+//情诉纸墨,想不到怎写你
+//恨爱悲欢,欠着谁的凄美
+
+
+let music = '明灭案灯,照不见三千里;离辞别句,相思似是而非;情诉纸墨,想不到怎写你;恨爱悲欢,欠着谁的凄美'
+let music_array = music.split('')
+let mic = [2, 0, 3, 4, 0, 0, 0, 5, '明', '灭', '案']
+
+let start_index = 0; for (let i = 0; i < music.length; i++) { start_index = i; if (![1, 0].includes(music[i])) break }
+let right_index = 0
+let need_lenght = 3
+let tick = 100
+
+function my_catch(mic) {
+    let flag = true
+    for (let i = 0; i < need_lenght; i++) {
+        if (music_array[start_index + i] != mic[i])
+            flag = false
+    }
+    return flag
+}
+
+function sing_with_me(mic) {
+    if (my_catch(mic)) {
+        sing(music.slice(start_index + need_lenght))
+    }
+}
+
+function sing(str) {
+    let index = 0
+    setInterval(function () {
+        if (index < music.length)
+            console.log(str.substr(index++, 1))
+    }, tick)
+}
+setInterval(function () {
+    if (mic.length > 0) {
+        mic = mic.slice(1)
+        sing_with_me(mic)
+    }
+}, tick)
+
+let music = '明灭案灯,照不见三千里;离辞别句,相思似是而非;情诉纸墨,想不到怎写你;恨爱悲欢,欠着谁的凄美'
+let music_array = music.split('')
+let mic = [2, 0, 3, 4, 0, 0, 0, 5, '明', '灭', '案']
+
+let start_index = 0; for (let i = 0; i < music.length; i++) { start_index = i; if (![1, 0].includes(music[i])) break }
+let right_index = 0
+let need_lenght = 3
+let tick = 100
+
+function my_catch(mic) {
+    let flag = true
+    for (let i = 0; i < need_lenght; i++) {
+        if (music_array[start_index + i] != mic[i])
+            flag = false
+    }
+    return flag
+}
+
+function sing_with_me(mic) {
+    if (my_catch(mic)) {
+        sing(music.slice(start_index + need_lenght))
+    }
+}
+
+function sing(str) {
+    let index = 0
+    setInterval(function () {
+        if (index < music.length)
+            _sing(str.substr(index++, 1))
+    }, tick)
+}
+
+function _sing(str) {
+    if (str.length > 0)
+        console.log(str.toString())
+}
+
+function speak(mic) {
+    setInterval(function () {
+        if (mic.length > 0) {
+            _sing(mic.slice(0, 1))
+            mic = mic.slice(1)
+            sing_with_me(mic)
+        }
+    }, tick)
+}
+
+speak(mic)
+
+let music = '明灭案灯,照不见三千里'
+let music_array = music.split('')
+let mic = [2, 0, 3, 4, 0, 0, 0, 5, '明', '灭', '案']
+
+let start_index = 0; for (let i = 0; i < music.length; i++) { start_index = i; if (![1, 0].includes(music[i])) break }
+let right_index = 0
+let need_lenght = 3
+let tick = 100
+
+const my_catch = (mic) => {
+    let flag = true
+    for (let i = 0; i < need_lenght; i++) { if (music_array[start_index + i] != mic[i]) flag = false }
+    return flag
+}
+const sing = (str) => { if (str.length > 0) console.log(str.toString()) }
+
+const sing_with_me = (str) => {
+    let index = 0
+    let intervalId = setInterval(function () {
+        if (index >= music.length) clearInterval(intervalId);
+        sing(str.substr(index++, 1))
+    }, tick)
+}
+
+const sing_with_me_try = (mic) => { if (my_catch(mic)) sing_with_me(music.slice(start_index + need_lenght)) }
+
+function speak(mic) {
+    let intervalId = setInterval(function () {
+        if (mic.length == 0) clearInterval(intervalId);
+        sing(mic.slice(0, 1))
+        mic = mic.slice(1)
+        sing_with_me_try(mic)
+    }, tick)
+}
+
+speak(mic)
+
+let _music = '明灭案灯,照不见三千里'
+let music = _music.split('')
+let mic = [2, 0, 3, 4, 0, 0, 0, 5, '明', '灭', '案']
+
+let start_index = 0; for (let i = 0; i < music.length; i++) { start_index = i; if (![1, 0].includes(music[i])) break }
+let right_index = 0
+let need_lenght = 3
+let tick = 100
+
+const my_catch = (word) => {
+    if (right_index == need_lenght) { right_index = 0; return true }
+    if (music[start_index + right_index].toString() == word.toString()) right_index++
+    else right_index = 0
+}
+const sing = (str) => { if (str.length > 0) console.log(str.toString()) }
+
+const sing_with_me = (str) => {
+    let index = 0
+    let intervalId = setInterval(function () {
+        if (index >= music.length) clearInterval(intervalId);
+        sing(str.substr(index++, 1))
+    }, tick)
+}
+
+const listen = (word) => { if (my_catch(word)) sing_with_me(_music.slice(start_index + need_lenght)) }
+
+function speak(words) {
+    let intervalId = setInterval(function () {
+        if (words.length == 0) clearInterval(intervalId);
+        sing(words.slice(0, 1))
+        listen(words.slice(0, 1))
+        words = words.slice(1)
+    }, tick)
+}
+
+speak(mic)
+
+let _music = '明灭案灯,照不见三千里'
+let music = _music.split('')
+let mic = [2, 0, 3, 4, 0, 0, 0, 5, '明', '灭', '案']
+
+let start_index = 0; for (let i = 0; i < music.length; i++) { start_index = i; if (![1, 0].includes(music[i])) break }
+let right_index = 0
+let need_lenght = 3
+let tick = 100
+
+const my_catch = (word) => {
+    if (right_index == need_lenght) { right_index = 0; return true }
+    if (music[start_index + right_index].toString() == word.toString()) right_index++
+    else right_index = 0
+}
+const sing = (str) => { if (str.length > 0) good_sound.innerText += (str.toString()) }
+const sing2 = (str) => { if (str.length > 0) bad_sound.innerText += (str.toString()) }
+
+const sing_with_me = (str) => {
+    let index = 0
+    let intervalId = setInterval(function () {
+        if (index >= music.length) clearInterval(intervalId);
+        sing(str.substr(index++, 1))
+    }, tick)
+}
+
+const listen = (word) => { if (my_catch(word)) sing_with_me(_music.slice(start_index + need_lenght)) }
+
+function speak(words) {
+    let intervalId = setInterval(function () {
+        if (words.length == 0) clearInterval(intervalId);
+        sing2(words.slice(0, 1))
+        listen(words.slice(0, 1))
+        words = words.slice(1)
+    }, tick)
+}
+
+speak(mic)
+
+<!doctype html>
+<html lang="zn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="https://bghuan.cn/static/css/bootstrap-5.1.0.css">
+    <title>三分音乐</title>
+</head>
+
+<body>
+    <div id="bad_sound">speak:</div>
+    <div id="good_sound">sing:</div>
+    <script src="index.js"></script>
+</body>
+
+</html>
+
+<!doctype html>
+<html lang="zn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="https://bghuan.cn/static/css/bootstrap-5.1.0.css">
+    <title>三分音乐</title>
+</head>
+
+<body>
+    <div id="bad">speak&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;</div>
+    <div id="good">sing&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;</div>
+    <script src="index.js"></script>
+</body>
+
+</html>let _music = '明灭案灯,照不见三千里'
+let music = _music.split('')
+let mic = [2, 0, 3, 4, 0, 0, 0, 5, '明', '灭', '案', '灯', 3, 4, 3, 4, 3, 4]
+
+let start_index = 0; for (let i = 0; i < music.length; i++) { start_index = i; if (![1, 0].includes(music[i])) break }
+let right_index = 0
+let need_lenght = 3
+let tick = 100
+
+const my_catch = (word) => {
+    if (right_index == need_lenght) { right_index = 0; make_right_length(); return true }
+    if (music[start_index + right_index].toString() == word.toString()) right_index++
+    else right_index = 0
+}
+const sing = (str) => { if (str.length > 0) good.innerText += (str.toString()) }
+const sing2 = (str) => { if (str.length > 0) bad.innerText += (str.toString()) }
+const make_right_length = () => { let a = bad.innerText.length - good.innerText.length; for (let i = 0; i < a; i++)good.innerText += '' }
+
+const sing_with_me = (str) => {
+    let index = 0
+    let intervalId = setInterval(function () {
+        if (index >= music.length) clearInterval(intervalId);
+        sing(str.substr(index++, 1))
+    }, tick)
+}
+
+const listen = (word) => { if (my_catch(word)) sing_with_me(_music.slice(start_index + need_lenght)) }
+
+function speak(words) {
+    let intervalId = setInterval(function () {
+        if (words.length == 0) clearInterval(intervalId);
+        sing2(words.slice(0, 1))
+        listen(words.slice(0, 1))
+        words = words.slice(1)
+    }, tick)
+}
+
+speak(mic)
+

@@ -177,7 +177,7 @@ async function ossPut(data) {
     }
 }
 
-let listOssObject = () => client.list().then(res => res.objects.map(obj => write(createFileLink(obj.url))))
+let listOssObject = () => client.list().then(res => res.objects.map(obj => write(decodeURI(createFileLink(obj.url)))))
 let initOssClient = (func, data) => loadJS(() => HttpGet(res => func(data, setClient(JSON.parse(res)))))
 
 // common
@@ -213,7 +213,7 @@ document.getElementById("text").addEventListener("paste", (event) => paste(event
 document.ondragover = () => false
 document.ondrop = putFile
 
-let room = decodeURI(location.search).replace('?', '').replaceAll('=', '-')
+let room = decodeURI(location.search).replace('?', '').replace('=', '-').replace('=', '-').replace('=', '-').replace('=', '-')
 
 let myCatch = arg => {
     if (typeof arg == "string") {
