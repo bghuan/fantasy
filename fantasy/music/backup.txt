@@ -480,3 +480,170 @@ function speak(words) {
 
 speak(mic)
 
+var analyser
+let frequencyData
+
+navigator.mediaDevices.getUserMedia({ audio: true })
+    .then(function (stream) {
+        var audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        var mediaStreamSource = audioContext.createMediaStreamSource(stream);
+        analyser = audioContext.createAnalyser();
+        mediaStreamSource.connect(analyser);
+        // analyser.connect(audioContext.destination);
+        frequencyData = new Uint8Array(analyser.frequencyBinCount);
+
+        requestAnimationFrame(animationLoop);
+
+    })
+let asaaa = 0
+function animationLoop() {
+    // Your code here
+    analyser.getByteFrequencyData(frequencyData)
+    // for (let i = 0; i < frequencyData.length; i++) {
+    //     if (frequencyData[i] != 0)
+    //         console.log(frequencyData[i], frequencyData.length);
+    // }
+    // console.log(frequencyData)
+    // qqq.innerHTML = frequencyData.toString()
+    // console.log(new Date().getSeconds(), asaaa++)
+    requestAnimationFrame(animationLoop);
+
+    canvasCtx.clearRect(0, 0, oW, oH);
+    for (var i = 0; i < frequencyData.length; i++) {
+        barHeight = frequencyData[i];
+        // 绘制向上的线条
+        canvasCtx.fillStyle = color1;
+        /* context.fillRect(x,y,width,height)
+         * x，y是坐标
+         * width，height线条的宽高
+         */
+        canvasCtx.fillRect(oW / 2 + (i * 8), oH / 2, 2, -barHeight);
+        canvasCtx.fillRect(oW / 2 - (i * 8), oH / 2, 2, -barHeight);
+        // 绘制向下的线条
+        canvasCtx.fillStyle = color2;
+        canvasCtx.fillRect(oW / 2 + (i * 8), oH / 2, 2, barHeight);
+        canvasCtx.fillRect(oW / 2 - (i * 8), oH / 2, 2, barHeight);
+    }
+}
+//https://blog.csdn.net/xh888zw/article/details/124409016
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+var canvasCtx = canvas.getContext("2d");
+var oW = canvas.width;
+var oH = canvas.height;
+var color1 = canvasCtx.createLinearGradient(oW / 2, oH / 2 - 10, oW / 2, oH / 2 - 150);
+var color2 = canvasCtx.createLinearGradient(oW / 2, oH / 2 + 10, oW / 2, oH / 2 + 150);
+color1.addColorStop(0, '#1E90FF');
+color1.addColorStop(.25, '#FF7F50');
+color1.addColorStop(.5, '#8A2BE2');
+color1.addColorStop(.75, '#4169E1');
+color1.addColorStop(1, '#00FFFF');
+
+color2.addColorStop(0, '#1E90FF');
+color2.addColorStop(.25, '#FFD700');
+color2.addColorStop(.5, '#8A2BE2');
+color2.addColorStop(.75, '#4169E1');
+color2.addColorStop(1, '#FF0000');
+
+<!doctype html>
+<html lang="zn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>三分音乐</title>
+</head>
+
+<body>
+    <div id="bad">speak&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;</div>
+    <div id="good">sing&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;</div>
+    <textarea id="qqq"></textarea>
+    <canvas id="canvas"></canvas>
+    <script src="index.js"></script>
+    <script src="audio.js"></script>
+</body>
+
+</html>
+
+
+<?php
+header('Access-Control-Allow-Origin:*');
+include 'config.php';
+
+//https://github.com/aliyun/aliyun-oss-php-sdk/releases/download/v2.5.0/aliyun-oss-php-sdk-2.5.0.phar
+require_once 'aliyun-oss-php-sdk-2.5.0.phar';
+
+// 引入 OSS SDK
+use OSS\OssClient;
+use OSS\Core\OssException;
+
+set_time_limit(300); 
+
+$prompt = querystring('prompt');
+$hash = querystring('hash');
+
+if (empty($prompt)) {
+    exit;
+}
+
+$fileName = '../static/image/openai/' . $hash . '.jpg';
+if (!file_exists($fileName) || true) {
+
+    // $apiKey = $openaiApiKey;
+    // $url = 'https://api.openai.com/v1/images/generations';
+    // $data = [
+    //     'prompt' => $prompt,
+    //     'size' => '256x256',
+    // ];
+    // $ch = curl_init();
+    // curl_setopt($ch, CURLOPT_URL, $url);
+    // curl_setopt($ch, CURLOPT_POST, true);
+    // curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+    // curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    //     'Content-Type: application/json',
+    //     'Authorization: Bearer ' . $apiKey,
+    // ]);
+    // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    // $response = curl_exec($ch);
+    // curl_close($ch);
+    $response = '{ "created": 1678150808, "data": [ { "url": "https://oaidalleapiprodscus.blob.core.windows.net/private/org-K2ND9d35VSLmOCCzGwHO0MdH/user-iOpm7F4HIMSZ28rhWAWcsdyS/img-SrM9z6cdKmpgCq3MUIQ6MDfy.png?st=2023-03-07T00%3A00%3A08Z&se=2023-03-07T02%3A00%3A08Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-03-06T21%3A28%3A39Z&ske=2023-03-07T21%3A28%3A39Z&sks=b&skv=2021-08-06&sig=A3LjpZDYfJBCYzVZs8IdO23VeoJ5nL5ki6ITzt3C5QY%3D" } ] }';
+
+    try {
+        $jsonString = $response;
+        $jsonObject = json_decode($jsonString);
+        $data = $jsonObject->data;
+        $url = $data[0]->url;
+        echo '333'.$url;
+        $imageData = file_get_contents($url);
+        file_put_contents($fileName, $imageData);
+// $size=110;
+// $src = imagecreatefromstring($imageData);
+// $dst = imagecreatetruecolor($size, $size);
+// imagecopyresampled($dst, $src, 0, 0, 0, 0, $size, $size, imagesx($src), imagesy($src));
+// imagedestroy($dst);
+// imagedestroy($src);
+// ob_start();
+// imagepng($dst);
+// $data = ob_get_clean();
+// imagedestroy($dst);
+
+// file_put_contents($fileName, $data);
+
+        // echo $fileName;
+
+        $objectName = $hash . '.png';
+        echo ($response);
+
+        try {
+            $ossClient = new OssClient($accessKeyId, $accessKeySecret, $endpoint2);
+            $ossClient->uploadFile($bucket2, $objectName, '/www/wwwroot/fantasy/static/image/openai/' . $hash . '.jpg');
+            exit;
+        } catch (OssException $e) {
+            printf(__FUNCTION__ . ": FAILED\n");
+            printf($e->getMessage() . "\n");
+            return;
+        }
+    } catch (e) {
+        var_dump($response);
+    }
+}

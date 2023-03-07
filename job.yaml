@@ -8,13 +8,16 @@ image
     # 3openai create new image
     openai image muti
     upload local image
-    image muti
+        image muti, a easy way to change image name
+        点击图片展开多图片及上传按钮
+        异形图片如何展示
 click change image
 # save to backup
-connect me
+# connect me
     # android receive notice
-    未及时回复则发送其他联系方式
-    保活
+    # XXX未及时回复则发送其他联系方式
+    # XXX保活
+    # 能直接写下一个幻想,内容就是要联系我
 check hide_json 
 # 三分游戏
 show fantasy connect number

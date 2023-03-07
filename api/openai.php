@@ -12,6 +12,14 @@ use OSS\Core\OssException;
 $prompt = querystring('prompt');
 $hash = querystring('hash');
 
+// echo "may can't let api.openai.com for create ai image by this server";
+// exit;
+$asd = 'dev.bghuan.cn';
+$current_url = "http".(!empty($_SERVER['HTTPS'])?"s":"")."://".$asd.$_SERVER['REQUEST_URI'];
+$response = file_get_contents($current_url);
+echo $response;
+exit;
+
 if (empty($prompt)) {
     exit;
 }
@@ -23,7 +31,7 @@ if (!file_exists($fileName) || true) {
     $url = 'https://api.openai.com/v1/images/generations';
     $data = [
         'prompt' => $prompt,
-        // 'size' => '256x256',
+        'size' => '256x256',
     ];
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
