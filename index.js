@@ -218,6 +218,8 @@ let image_change = (oImg) => {
     let callBack = () => {
         oImg.setAttribute('src', host + '/static/image/download.png')
         let url = host + '/api/openai.php?hash=' + hash
+        //转发时有遇到服务死亡,请求不返回,宝塔登不上
+        url = 'https://dev.bghuan.cn' + '/api/openai.php?hash=' + hash
         if (sudo_change_image_text != '') url += '&prompt=' + sudo_change_image_text
         else url += '&prompt=' + key + '-' + value
         fetch(url).then(response => {
@@ -408,6 +410,7 @@ document.addEventListener("DOMContentLoaded", (function () {
             if (is_create_show_right_now) b_Collapse?.show()
         })
         save_pull('error')
+        fetch('/api/me').then(response => response.text()).then(tel => me.href = 'tel:' + tel)
     }, 100);
     save = { hide: JSON.parse(save.hide), namespace: save.namespace, error: [], default: [] }
     query_onhashchange()
