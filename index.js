@@ -37,7 +37,7 @@ let render_data = (data) => {
         hash = getHashCode(key + value)
 
         // if (key == 'fantasy') continue
-        if (key == 'test') continue
+        if (key == 'test' && key_local != 'test') continue
         if (key == 'yo') continue
         if (!key || !value) continue
         if (save.hide.includes(hash) && key_local == '') continue
@@ -351,7 +351,7 @@ const query_onhashchange = () => {
         render_data(json)
 }
 const stopServiceIfDateNine = () => {
-    if (new Date().getDate() == '9') { document.body.innerHTML = new Date() + '<br />' + '每月9号不收集展示幻想'; stop_service = true; } else if (stop_service) window.location.reload(); else return false; setTimeout(stopServiceIfDateNine, 100); return true;
+    if (new Date().getDate() == '9') { document.body.innerHTML = formatDateToISO8601(new Date()) + '<br />' + '每月9号不收集展示幻想'; stop_service = true; } else if (stop_service) window.location.reload(); else return false; setTimeout(stopServiceIfDateNine, 100); return true;
 }
 const loadJS = function (url, callback) {
     let script = document.createElement('script'); script.src = url; script.type = "text/javascript"; if (script.onreadystatechange) { script.onreadystatechange = function () { if (this.readyState == "complete" || this.readyState == "loaded") { script.onreadystatechange = null; callback(); } } } else { script.onload = () => callback(); } document.body.appendChild(script);
@@ -410,12 +410,21 @@ document.addEventListener("DOMContentLoaded", (function () {
             if (is_create_show_right_now) b_Collapse?.show()
         })
         save_pull('error')
-        fetch('/api/me').then(response => response.text()).then(tel => me.href = 'tel:' + tel)
+        //fetch('/api/me').then(response => response.text()).then(tel => me.href = 'tel:' + tel)
     }, 100);
     save = { hide: JSON.parse(save.hide), namespace: save.namespace, error: [], default: [] }
     query_onhashchange()
 }))
-
+function formatDateToISO8601(date) {
+    let pad = (num) => (`0${num}`).slice(-2); // 用于补零的函数  
+    let year = date.getFullYear();
+    let month = pad(date.getMonth() + 1); // 月份是从0开始的，所以需要加1  
+    let day = pad(date.getDate());
+    let hours = pad(date.getHours());
+    let minutes = pad(date.getMinutes());
+    let seconds = pad(date.getSeconds());
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
 
 // document.getElementsByClassName("create")[1].addEventListener("keydown", event => { if (event.keyCode == 13) { event.preventDefault() } })
 // document.getElementById("div_card").style.minHeight = window.innerHeight - 90 + 'px'

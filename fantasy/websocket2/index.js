@@ -28,10 +28,20 @@ const connect = (websocketUrl, room = "") => {
         document.getElementById('text').disabled = true
     }
     webSocket.onmessage = event => {
-        if (typeof event.data == "string")
-            onmessageString(event.data)
-        else if (typeof event.data == "object")
+        // if (typeof event.data == "string")
+        //     onmessageString(event.data)
+        // else if (typeof event.data == "object")
+        //     onmessageBinary(event.data)
+
+        //typeof event.data err
+        if (event.data.size < 200) {
+            let reader = new FileReader();
+            reader.onload = e => onmessageString(e.target.result)
+            reader.readAsText(event.data);
+        }
+        else {
             onmessageBinary(event.data)
+        }
     }
     webSocket.onerror = err => console.log(err)
 }
