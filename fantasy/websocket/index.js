@@ -177,7 +177,7 @@ async function ossPut(data) {
     }
 }
 
-let listOssObject = () => client.list().then(res => res.objects.map(obj => write(decodeURI(createFileLink(obj.url)))))
+let listOssObject = () => client.list().then(res => res.objects.map(obj => write(createFileLink(decodeURI(obj.url)))))
 let initOssClient = (func, data) => loadJS(() => HttpGet(res => func(data, setClient(JSON.parse(res)))))
 
 // common
