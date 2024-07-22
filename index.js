@@ -1,5 +1,4 @@
-
-let host = location.origin.indexOf('localhost') >= 0 ? 'https://dev.bghuan.cn' : location.origin
+let host = location.origin.indexOf('localhost') >= 0 ? 'https://bghuan.cn' : location.origin
 let read_path = host + '/api/read'
 let create_path = host + '/api/create2'
 let save_path = host + '/api/save'
@@ -14,21 +13,25 @@ let uuu_down = 0
 let uuu_up = 0
 let uuu_select = 0
 let sudo_change_image_text = ''
-// let json_all = []
 let stop_service = false
 let a_Collapse
 let b_Collapse
 let json_show = []
 let json_show_hash = []
-// let save = { hide: [], error: [], default: {} }
 let default_search_title = fantasy_title.innerText
 let html_hash = {}
 let key_local = ''
+let hide_array = ['test', 'yo', 'job']
+let is_search_show_right_now = false
+let is_create_show_right_now = false
 
+const show_search_rightnow = () => { is_search_show_right_now = true }
+const show_create_rightnow = () => { is_create_show_right_now = true }
+let div_observer = new IntersectionObserver((entires) => { entires.forEach(item => { if (item.intersectionRatio > 0 && item.intersectionRatio <= 1) { show_div(item.target); div_observer.unobserve(item.target) } }) }, { threshold: [0, 1] })
 
 let render_data = (data) => {
     let allllll = ''
-    let key, value, hash, image_src, innerHTML, i_real = 0
+    let key, value, hash, image_src, innerHTML
     json_show = []
     json_show_hash = []
     for (let i = 0; i < data.length && i < limit; i++) {
@@ -36,9 +39,10 @@ let render_data = (data) => {
         value = data[i]['b']?.toString().replaceAll('\n', '');
         hash = getHashCode(key + value)
 
-        // if (key == 'fantasy') continue
-        if (key == 'test' && key_local != 'test') continue
-        if (key == 'yo') continue
+        let is_hide = false
+        hide_array.forEach(item => { if (key == item && key_local != item) is_hide = true })
+
+        if (is_hide) continue
         if (!key || !value) continue
         if (save.hide.includes(hash) && key_local == '') continue
         if (json_show_hash.includes(hash)) continue
@@ -53,19 +57,10 @@ let render_data = (data) => {
     content.innerHTML = allllll
     scrollTo(0, 0)
     layz_div()
+    set_cache()
 }
 let layz_div = () => {
     var divs = content.childNodes
-    let div_observer = new IntersectionObserver((entires) => {
-        entires.forEach(item => {
-            if (item.intersectionRatio > 0 && item.intersectionRatio <= 1) {
-                show_div(item.target)
-                div_observer?.unobserve(item.target)
-            }
-        })
-    }, {
-        threshold: [0, 1]
-    })
     for (let index = 0; index < divs.length; index++) {
         const element = divs[index];
         if (index < 10)
@@ -90,17 +85,16 @@ let show_div = (element, flag = true) => {
         json_show[index][0] = default_image_path
     }
 
-    let innerHTML = `
-<div class="d-flex">
-    ${get_image_element(json_show[index][0])}
-    <div class="card-body">
-        <h5>${json_show[index][1]}</h5>
-        <p>${json_show[index][2]}</p>
-    </div>
-</div>`
+    let content_innerHTML = `
+    <div class="d-flex">
+        ${get_image_element(json_show[index][0])}
+        <div class="card-body">
+            <h5>${json_show[index][1]}</h5>
+            <p>${json_show[index][2]}</p>
+        </div>
+    </div>`
     element.className = 'card'
-    element.innerHTML = innerHTML.replaceAll('    ', '').replaceAll('\n', '')
-    set_cache()
+    element.innerHTML = content_innerHTML.replaceAll('    ', '').replaceAll('\n', '')
 }
 let set_cache = () => {
     html_hash[key_local] = content.innerHTML
@@ -154,6 +148,133 @@ let save_push = (str) => {
         formData.set(str, JSON.stringify(save[str]))
     fetch(save_path, { method: 'POST', body: formData }).then(response => response.json()).then(json => save.default = json)
 }
+//element func 
+content.onmouseleave = (event) => {
+    fantasy_title.innerText = key_local || default_search_title
+}
+content.onmouseover = (event) => {
+    if (event.target == content) return
+    let target = event.target.nodeName == 'DIV' ? event.target : event.target.parentNode
+    let key1 = target.querySelector('h5')?.innerHTML
+    let value1 = target.querySelector('p')?.innerHTML
+    if (key1 == key_local) key1 = value1
+    if (key1) fantasy_title.innerText = key1
+}
+content.onmousedown = (event) => {
+    uuu_down = Date.now()
+    if (document.getSelection().toString().length > 0) uuu_select = 1
+}
+content.onmouseup = (event) => {
+    if (event.button != 0) return
+    if (uuu_select == 1) return uuu_select = 0
+    if (Date.now() - uuu_up < 200) return
+    if (Date.now() - uuu_down > 100) return
+    if (collapsea.className.indexOf('show') > 0 || collapseb.className.indexOf('show') > 0) return
+    if (event.target == content) return
+    uuu_up = Date.now()
+
+    let target = event.target.nodeName == 'DIV' ? event.target : event.target.parentNode
+    let key1 = target.querySelector('h5')?.innerHTML
+    let value1 = target.querySelector('p')?.innerHTML
+    if (key1 == key_local) key1 = value1
+
+    if (event.target.nodeName == 'IMG') {
+        if (event.target.src == default_image_path || sudo_change_image_text != '') {
+            return image_change(event.target)
+        }
+    }
+    if (key1) query(fantasy_search.value = (key1))
+}
+let on_btn_query = () => {
+    let image_change_code = fantasy_search.value?.split('image:')
+    if (image_change_code.length <= 1) return query()
+
+    var imgs = document.getElementsByTagName('img')
+    let oImg = imgs[image_change_code[0]]
+    sudo_change_image_text = image_change_code[1]
+    image_change(oImg)
+    a_Collapse?.hide()
+}
+//button func
+const query = () => {
+    window.location.hash = fantasy_search.value
+    if (!window.location.hash) history.replaceState(null, '', location.pathname)
+}
+const create = () => {
+    let key = fantasy_key.value.trim()
+    let value = fantasy_value.value.trim()
+    if (!key && !value) b_Collapse?.hide()
+    else if (key && !value) fantasy_value.focus()
+    else if (!key && value) { fantasy_key.value = 'fantasy'; fantasy_value.focus() }
+    else if (key && value) {
+        let url = create_path + '?' + key + '=' + value + '&namespace=' + save.namespace + '&prix=json_all='
+        let callBack = (create_id) => {
+            b_Collapse?.hide()
+            localStorage.id = localStorage.id + (',' + create_id)
+            location.reload()
+        }
+        fetch(url).then(response => response.text()).then(json => callBack(json))
+    }
+}
+const filter = () => {
+    let key = fantasy_search.value.trim()
+    if (!key) return
+    let json = json_all.filter(item => item.a?.indexOf && (item.a?.indexOf(key) >= 0 || item.b?.toString().indexOf(key)) >= 0)
+    render_data(json)
+    a_Collapse?.hide()
+}
+
+const query_onhashchange = () => {
+    a_Collapse?.hide()
+    key_local = decodeURI(get_clean_encodeurl(window.location.hash.slice(1)))
+    fantasy_title.innerText = key_local || default_search_title
+    fantasy_search.value = key_local
+    fantasy_key.value = key_local
+    let json = json_all.filter(item => item.a == key_local || item.b == key_local)
+
+    if (!key_local) json = json_all
+    if (html_hash[key_local]) get_cache()
+    else render_data(json)
+}
+//other func
+const stopServiceIfDateNine = () => {
+    if (new Date().getDate() != '9') return
+    header.style.display = 'none'
+    content2.style.display = 'none'
+    document.body.innerHTML = '<h1>每月9号不收集展示幻想</h1>' + document.body.innerHTML;
+}
+const loadJS = function (url, callback) {
+    let script = document.createElement('script'); script.src = url; script.type = "text/javascript"; if (script.onreadystatechange) { script.onreadystatechange = function () { if (this.readyState == "complete" || this.readyState == "loaded") { script.onreadystatechange = null; callback(); } } } else { script.onload = () => callback(); } document.body.appendChild(script);
+}
+const about_show = () => {
+    if (document.getElementsByClassName("modal-body")[0].innerHTML.length <= 0) { let callBack = (json) => { let converter = new showdown.Converter(); document.getElementsByClassName("modal-body")[0].innerHTML = converter.makeHtml(json); }; loadJS('static/js/showdown.min.js', () => { fetch('README.md').then(response => response.text()).then(json => { callBack(json); }) }) }
+}
+const collapse_hide = (event) => {
+    if (document.getSelection().toString().length > 0) return
+    let arr = ['fantasy_key', 'fantasy_value', 'collapseb', 'fantasy_search', 'collapsea', 'btn_create']
+    if (arr.indexOf(event.target.id) != -1) return
+    b_Collapse?.hide()
+    a_Collapse?.hide()
+}
+const bootstrap_load = () => {
+    loadJS('static/js/bootstrap.min.js', () => {
+        a_Collapse = new bootstrap.Collapse(collapsea, { toggle: false })
+        b_Collapse = new bootstrap.Collapse(collapseb, { toggle: false })
+        fantasy_title.href = '#collapsea'
+        if (is_search_show_right_now) a_Collapse?.show()
+        if (is_create_show_right_now) b_Collapse?.show()
+    })
+    save_pull('error')
+}
+function getHashCode(str) {
+    var hash = 1315423911, i, ch;
+    for (i = str.length - 1; i >= 0; i--) {
+        ch = str.charCodeAt(i);
+        hash ^= ((hash << 5) + ch + (hash >> 2));
+    }
+    return (hash & 0x7FFFFFFF);
+}
+//image func
 let image_onerr_push = () => {
     save.error_image_limit_time = save.error_image_limit_time + 1 || 1
     let error_image_limit_time = save.error_image_limit_time
@@ -171,25 +292,7 @@ let image_onerr = (event) => {
         image_onerr_push()
     }
     oImg.setAttribute('src', default_image_path)
-
-    //temp
-    // let key = oImg.parentNode.querySelector('h5').innerHTML
-    // let value = oImg.parentNode.querySelector('p').innerHTML
-    // let hash = getHashCode(key + value)
-    // let image_src = get_image_full_path(hash)
-    // oImg.setAttribute('src', image_src)
-    // let callBack = () => {
-    //     oImg.setAttribute('src', host + '/static/image/download.png')
-    //     let url = host + '/api/openai.php?hash=' + hash
-    //     url += '&prompt=' + key + '-' + value
-    //     fetch(url).then(response => {
-    //         oImg.setAttribute('src', image_src)
-    //     })
-    //     sudo_change_image_text = ''
-    // }
-    // oImg.onerror = callBack
-    // save.error.splice(save.error.indexOf(hash), 1)
-    // save_push('error')
+    oImg.onerror = () => { }
 }
 let image_ondragstart = event => {
     let oImg = event.target;
@@ -218,7 +321,6 @@ let image_change = (oImg) => {
     let callBack = () => {
         oImg.setAttribute('src', host + '/static/image/download.png')
         let url = host + '/api/openai.php?hash=' + hash
-        //转发时有遇到服务死亡,请求不返回,宝塔登不上
         url = 'https://dev.bghuan.cn' + '/api/openai.php?hash=' + hash
         if (sudo_change_image_text != '') url += '&prompt=' + sudo_change_image_text
         else url += '&prompt=' + key + '-' + value
@@ -227,6 +329,7 @@ let image_change = (oImg) => {
             oImg.onerror = image_onerr
         })
         sudo_change_image_text = ''
+        oImg.onerror = () => { }
     }
     if (sudo_change_image_text != '') callBack()
     else oImg.onerror = callBack
@@ -234,197 +337,25 @@ let image_change = (oImg) => {
     save_push('error')
 }
 
-content.onmouseleave = (event) => {
-    fantasy_title.innerText = key_local || default_search_title
-}
-content.onmouseover = (event) => {
-    if (event.target == content) return
-    let h5_or_p = 'h5'
-    if (key_local != '') { h5_or_p = 'p' }
-
-    let key = event.target.parentNode.querySelector(h5_or_p)?.innerHTML
-    if (event.target.nodeName == 'DIV')
-        key = event.target.querySelector(h5_or_p)?.innerHTML
-    if (key)
-        fantasy_title.innerText = key
-}
-content.onmousedown = (event) => {
-    uuu_down = Date.now()
-    if (document.getSelection().toString().length > 0) uuu_select = 1
-}
-content.onmouseup = (event) => {
-    if (event.button != 0) return
-    if (uuu_select == 1) return uuu_select = 0
-    if (Date.now() - uuu_up < 200) return
-    if (Date.now() - uuu_down > 100) return
-    if (collapsea.className.indexOf('show') > 0 || collapseb.className.indexOf('show') > 0) return
-    if (event.target == content) return
-    uuu_up = Date.now()
-
-    let h5_or_p = 'h5'
-    if (key_local != '') { h5_or_p = 'p' }
-
-    let key = event.target.parentNode.querySelector(h5_or_p)?.innerHTML
-    if (event.target.nodeName == 'DIV')
-        key = event.target.querySelector(h5_or_p).innerHTML
-    else if (event.target.nodeName == 'IMG') {
-        if (event.target.src == default_image_path || sudo_change_image_text != '') {
-            return image_change(event.target)
-        }
-        // let key = event.target.parentNode.querySelector('h5').innerHTML
-        // let value = event.target.parentNode.querySelector('p').innerHTML
-        // let hash = getHashCode(key + value) + '.png'
-        // // save.error.splice(save.error.indexOf(hash), 1)
-        // // save_push()
-        // return
-    }
-    if (key)
-        query(fantasy_search.value = (key))
-}
-
-let on_btn_query = () => {
-    let aaaaaaaa = fantasy_search.value?.split('image:')
-    if (aaaaaaaa.length > 1) {
-        var imgs = document.getElementsByTagName('img')
-        let oImg = imgs[aaaaaaaa[0]]
-        sudo_change_image_text = aaaaaaaa[1]
-        image_change(oImg)
-        a_Collapse?.hide()
-    } else {
-        query()
-    }
-}
-
-const query = () => {
-    window.location.hash = fantasy_search.value
-    if (!window.location.hash)
-        history.replaceState(null, '', location.pathname)
-}
-const create = () => {
-    let key = fantasy_key.value.trim()
-    let value = fantasy_value.value.trim()
-    if (!key && !value) {
-        b_Collapse?.hide()
-    }
-    if (key && !value) {
-        fantasy_value.focus()
-    }
-    if (!key && value) {
-        fantasy_key.value = 'fantasy'
-        fantasy_value.focus()
-    } else if (value) {
-        let url = create_path + '?' + key + '=' + value + '&namespace=' + save.namespace + '&prix=json_all='
-        let callBack = (create_id) => {
-            b_Collapse?.hide()
-            localStorage.id = localStorage.id + (',' + create_id)
-            location.reload()
-        }
-        fetch(url).then(response => response.text()).then(json => callBack(json))
-    }
-}
-const filter = () => {
-    let key = fantasy_search.value.trim()
-    if (key) {
-        let json = json_all.filter(item => item.a?.indexOf && (item.a?.indexOf(key) >= 0 || item.b?.toString().indexOf(key)) >= 0)
-        render_data(json)
-    }
-    a_Collapse?.hide()
-}
-const more = () => {
-    more_content.style.display = more_content.style.display == 'inline-block' ? 'none' : 'inline-block'
-}
-const query_onhashchange = () => {
-    a_Collapse?.hide()
-    key_local = decodeURI(get_clean_encodeurl(window.location.hash.slice(1)))
-    // if (fantasy_title.innerText == '收集幻想') setTimeout(() => { fantasy_title.innerText = key || 'fantasy' }, 1000);
-    // else
-    fantasy_title.innerText = key_local || default_search_title
-    fantasy_search.value = key_local
-    fantasy_key.value = key_local
-    let json = json_all.filter(item => item.a == key_local)
-    if (!key_local) {
-        json = json_all
-    }
-    if (html_hash[key_local])
-        get_cache()
-    else
-        render_data(json)
-}
-const stopServiceIfDateNine = () => {
-    if (new Date().getDate() == '9') { document.body.innerHTML = formatDateToISO8601(new Date()) + '<br />' + '每月9号不收集展示幻想'; stop_service = true; } else if (stop_service) window.location.reload(); else return false; setTimeout(stopServiceIfDateNine, 100); return true;
-}
-const loadJS = function (url, callback) {
-    let script = document.createElement('script'); script.src = url; script.type = "text/javascript"; if (script.onreadystatechange) { script.onreadystatechange = function () { if (this.readyState == "complete" || this.readyState == "loaded") { script.onreadystatechange = null; callback(); } } } else { script.onload = () => callback(); } document.body.appendChild(script);
-}
-function getHashCode(str) {
-    var hash = 1315423911, i, ch;
-    for (i = str.length - 1; i >= 0; i--) {
-        ch = str.charCodeAt(i);
-        hash ^= ((hash << 5) + ch + (hash >> 2));
-    }
-    return (hash & 0x7FFFFFFF);
-}
-let is_search_show_right_now = false
-let is_create_show_right_now = false
-const show_search_rightnow = () => { is_search_show_right_now = true }
-const show_create_rightnow = () => { is_create_show_right_now = true }
-
-btn_query.onclick = on_btn_query
-btn_create.onclick = create
-btn_filter.onclick = filter
-fantasy_title.onclick = show_search_rightnow
-feather.onclick = show_create_rightnow
-window.onhashchange = query_onhashchange
-
 document.addEventListener("DOMContentLoaded", (function () {
-    if (stopServiceIfDateNine()) return
-
-    collapseb.addEventListener('shown.bs.collapse', () => {
-        if (key_local == '') fantasy_key.focus()
-        else fantasy_value.focus()
-    })
-    collapsea.addEventListener('shown.bs.collapse', () => fantasy_search.focus())
-    document.getElementById("fantasy_search").addEventListener("keyup", event => { if (event.keyCode == 13) { on_btn_query(); event.stopPropagation() } })
-    document.getElementById("fantasy_value").addEventListener("keyup", event => { if (event.keyCode == 13) { create(); event.stopPropagation() } })
-    document.getElementById("fantasy_key").addEventListener("keyup", event => { if (event.keyCode == 13) { create(); event.stopPropagation() } })
-    document.getElementById('exampleModalLong').addEventListener('show.bs.modal', function () {
-        if (document.getElementsByClassName("modal-body")[0].innerHTML.length <= 0) { let callBack = (json) => { let converter = new showdown.Converter(); document.getElementsByClassName("modal-body")[0].innerHTML = converter.makeHtml(json); }; loadJS('static/js/showdown.min.js', () => { fetch('README.md').then(response => response.text()).then(json => { callBack(json); }) }) }
-    })
-    document.addEventListener('click', (event) => {
-        if (document.getSelection().toString().length > 0) return
-        let arr = ['fantasy_key', 'fantasy_value', 'collapseb', 'fantasy_search', 'collapsea', 'btn_create']
-        if (arr.indexOf(event.target.id) == -1) {
-            b_Collapse?.hide()
-            a_Collapse?.hide()
-        }
-    }, false)
+    document.addEventListener('click', collapse_hide, false)
     document.body.addEventListener("keyup", event => { if (event.keyCode == 13) { event.stopPropagation(); b_Collapse.show() } })
-    // more_content.querySelectorAll('a').forEach(item => item.href = item.href.replace('https://bghuan.cn', location.origin))
+    fantasy_search.addEventListener("keyup", event => { if (event.keyCode == 13) { on_btn_query(); event.stopPropagation() } })
+    fantasy_value.addEventListener("keyup", event => { if (event.keyCode == 13) { create(); event.stopPropagation() } })
+    fantasy_key.addEventListener("keyup", event => { if (event.keyCode == 13) { create(); event.stopPropagation() } })
+    collapseb.addEventListener('shown.bs.collapse', () => { fantasy_value.focus(); if (key_local == '') fantasy_key.focus(); })
+    collapsea.addEventListener('shown.bs.collapse', () => fantasy_search.focus())
+    exampleModalLong.addEventListener('show.bs.modal', about_show)
 
-    setTimeout(() => {
-        loadJS('static/js/bootstrap.min.js', () => {
-            a_Collapse = new bootstrap.Collapse(collapsea, { toggle: false })
-            b_Collapse = new bootstrap.Collapse(collapseb, { toggle: false })
-            fantasy_title.href = '#collapsea'
-            if (is_search_show_right_now) a_Collapse?.show()
-            if (is_create_show_right_now) b_Collapse?.show()
-        })
-        save_pull('error')
-        //fetch('/api/me').then(response => response.text()).then(tel => me.href = 'tel:' + tel)
-    }, 100);
+    btn_query.onclick = on_btn_query
+    btn_create.onclick = create
+    btn_filter.onclick = filter
+    fantasy_title.onclick = show_search_rightnow
+    feather.onclick = show_create_rightnow
+    window.onhashchange = query_onhashchange
+
+    setTimeout(bootstrap_load, 100);
     save = { hide: JSON.parse(save.hide), namespace: save.namespace, error: [], default: [] }
     query_onhashchange()
+    stopServiceIfDateNine()
 }))
-function formatDateToISO8601(date) {
-    let pad = (num) => (`0${num}`).slice(-2); // 用于补零的函数  
-    let year = date.getFullYear();
-    let month = pad(date.getMonth() + 1); // 月份是从0开始的，所以需要加1  
-    let day = pad(date.getDate());
-    let hours = pad(date.getHours());
-    let minutes = pad(date.getMinutes());
-    let seconds = pad(date.getSeconds());
-    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-}
-
-// document.getElementsByClassName("create")[1].addEventListener("keydown", event => { if (event.keyCode == 13) { event.preventDefault() } })
-// document.getElementById("div_card").style.minHeight = window.innerHeight - 90 + 'px'

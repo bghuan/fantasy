@@ -33,6 +33,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     beginX = 0;
     beginY = 0;
+    //需适应用户鼠标可拉取范围,截取用户想触发的鼠标移动单位
     canvas.addEventListener('mousemove', function (e) {
         if (!isDrawing) return;
 
