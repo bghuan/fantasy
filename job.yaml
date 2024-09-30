@@ -2,16 +2,16 @@
 image
     change image all
         # check openai token
-    use image hash name
+    # use image hash name
     # 1try hash name
     # 2try old name
     # 3openai create new image
-    openai image muti
+    # openai image muti
     upload local image
         image muti, a easy way to change image name
         点击图片展开多图片及上传按钮
         异形图片如何展示
-click change image
+# click change image
 # save to backup
 # connect me
     # android receive notice
@@ -23,11 +23,11 @@ check hide_json
 show fantasy connect number
 reduce index page div number
 think fantasy connect one string to one string more
-enter \n delete
+# enter \n delete
 filter 撤销
-editor app
-    无法输入
-    无用返回
+# editor app
+    # 无法输入
+    # 无用返回
 job write easyer
 前进某条件下不在顶部
 通用footer
@@ -38,3 +38,14 @@ android open faster
     窄屏适配
 方圆优化
     添加分数
+
+# hide job convert to foreach hide
+# a->b  +  b->a
+bug filter then query         单循环      如同 不变
+# bug li filter wai li err       cache err      filter no cache         0  往后cache往前不cache
+  image err save repeat
+  clean
+  查看隐藏项
+  查找所有项
+  触屏隐藏释放
+  查询后标记同字
