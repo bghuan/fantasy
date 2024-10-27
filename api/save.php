@@ -8,6 +8,7 @@ $namespace = querystring('namespace');
 $key = querystring("key");
 $value = querystring("value");
 $prix = querystring("prix");
+$format = querystring("format");
 $keyvalue = $_POST ? $_POST : $_GET;
 
 $key_prix = $_SERVER['PHP_SELF'] . '.' . (empty($namespace) ? '' : $namespace . '.');
@@ -34,7 +35,10 @@ if (!empty($key)) {
     }
     $result = json_encode2($array);
 }
-
+if($format=="string") {
+    header('Content-type: text/plain; charset=utf-8');
+    echo gzencode($value);}
+else 
 echo gzencode($prix . $result);
 
 try {

@@ -40,8 +40,8 @@ $option = ['sort' => ['_id' => -1], 'projection' => ['_id' => 0]];
 
 try {
     $json = $prix . json_encode2($manager->executeQuery($db_name . '.' . $db_document, new MongoDB\Driver\Query([], $option))->toArray());
-    $ossClient = new OssClient($accessKeyId, $accessKeySecret, $endpoint2);
-    $ossClient->putObject($bucket2, $objectName, $json);
+    $ossClient = new OssClient($accessKeyId, $accessKeySecret, $endpoint);
+    $ossClient->putObject($bucket, $objectName, $json);
     exit;
 } catch (MongoDB\Driver\Exception $e) {
     echo $e->getMessage(), "\n";

@@ -28,10 +28,11 @@ const connect = (websocketUrl, room = "") => {
         document.getElementById('text').disabled = true
     }
     webSocket.onmessage = event => {
-        if (typeof event.data == "string")
-            onmessageString(event.data)
-        else if (typeof event.data == "object")
-            onmessageBinary(event.data)
+        if (event.data instanceof Blob || event.data instanceof ArrayBuffer) {
+            onmessageBinary(event.data);
+        } else {
+            onmessageString(event.data);
+        }
     }
     webSocket.onerror = err => console.log(err)
 }
