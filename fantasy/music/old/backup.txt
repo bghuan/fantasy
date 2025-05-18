@@ -1,0 +1,649 @@
+let arr1 = [0, 1, 2, 3, 4, 8, 6, 5, 2, 2, 1, 8, 69, 2, 2, 4, 3, 8]
+let arr2 = [2, 2]
+
+for (let i = 0; i < arr1.length; i++) {
+    if (arr1[i] == arr2[0]) {
+        if (arr1[i + 1] == arr2[1]) {
+            console.log(i)
+        }
+    }
+}
+
+
+
+let arr1 = [0, 1, 2, 3, 4, 8, 6, 5, 'A', 'A', 1, 8, 69, 'A', 'A', 4, 3, 8]
+let arr2 = [2, 3, 4, 5, 'A', 'A', 3, 4, 5, 6]
+
+for (let i = 0; i < arr1.length; i++) {
+    if (arr1[i] == arr2[0]) {
+        if (arr1[i + 1] == arr2[1]) {
+            console.log(i)
+        }
+    }
+}
+
+
+
+let arr1 = ['A', 'A', 1, 8, 69, 'A', 'A', 4, 3, 8]
+let arr2 = [2, 3, 4, 5, 'A', 'A', 3, 4, 5, 6]
+let len = 2
+let log = console.log
+
+for (let i = 0; i < arr2.length; i++) {
+    let flag = true
+    for (let j = 0; j < len; j++) {
+        log(arr2[i], arr1[j])
+        if (arr2[i] == arr1[j]) {
+
+        }
+        else {
+            flag = false
+        }
+    }
+    if (flag)
+        log(i)
+}
+
+
+
+let arr1 = ['A', 1, 8, 69, 'A', 'A', 4, 3, 8]
+let arr2 = [2, 3, 4, 5, 'A', 3, 4, 5, 6]
+let log = console.log
+
+for (let i = 0; i < arr2.length; i++) {
+    if (arr2[i] == arr1[0]) {
+        log(i)
+    }
+}
+
+
+
+let arr1 = [0, 1, 0, 1, 0, 1, 'A', 1, 8, 69, 'A', 'A', 4, 3, 8]
+let arr2 = [2, 3, 4, 5, 'A', 3, 4, 5, 6]
+let log = console.log
+let start_index = 0
+
+
+for (let i = 0; i < arr1.length; i++) {
+    start_index = i
+    if (![1, 0].includes(arr1[i])) break
+}
+
+for (let i = 0; i < arr2.length; i++) {
+    if (arr2[i] == arr1[start_index]) {
+        log(i)
+    }
+}
+
+
+
+// 一直录音,直到录音匹配了已知声音,则播放后续已知声音
+// 0/1 音量小
+// 2/3/4/5 杂音
+// A 正确的第一个音
+// 'A', 'B' 更长的正确的第一个音
+//明灭案灯,照不见三千里
+//离辞别句,相思似是而非
+//情诉纸墨,想不到怎写你
+//恨爱悲欢,欠着谁的凄美
+
+let music = [0, 1, 0, 1, 0, 1, '明', '灭', '案', '灯', 'D', 1, 8, 69, 'A', 'A', 4, 3, 8]
+let mic = [2, 0, 3, 4, 0, 0, 0, 5, '明', '灭', 'B', 3, 4, 0, 0, 5, 6]
+let log = console.log
+let start_index = 0
+
+
+for (let i = 0; i < music.length; i++) {
+    start_index = i
+    if (![1, 0].includes(music[i])) break
+}
+
+for (let i = 0; i < mic.length; i++) {
+    if (mic[i] == music[start_index]) {
+        log(i)
+    }
+}
+
+
+
+// 一直录音,直到录音匹配了已知声音,则播放后续已知声音
+// 0/1 音量小
+// 2/3/4/5 杂音
+// 明 正确的第一个音
+// '明', '灭' 更长的正确的第一个音
+//明灭案灯,照不见三千里
+//离辞别句,相思似是而非
+//情诉纸墨,想不到怎写你
+//恨爱悲欢,欠着谁的凄美
+
+let music = [0, 1, 0, 1, 0, 1, '明', '灭', '案', '灯', 'D', 1, 8, 69, 'A', 'A', 4, 3, 8]
+let mic = [2, 0, 3, 4, 0, 0, 0, 5, '明', '灭', '案', '灯', 3, 4, 0, 0, 5, 6]
+
+let start_index = 0; for (let i = 0; i < music.length; i++) { start_index = i; if (![1, 0].includes(music[i])) break }
+let right_index = 0
+
+for (let i = 0; i < mic.length; i++) {
+    if (mic[i] == music[start_index]) {
+        right_index = i
+        break
+    }
+}
+
+if (right_index) {
+    console.log(music.slice(right_index))
+}
+
+
+// 一直录音,直到录音匹配了已知声音,则播放后续已知声音
+// 0/1 音量小
+// 2/3/4/5 杂音
+// 明 正确的第一个音
+// '明', '灭' 更长的正确的第一个音
+//明灭案灯,照不见三千里
+//离辞别句,相思似是而非
+//情诉纸墨,想不到怎写你
+//恨爱悲欢,欠着谁的凄美
+
+let music = [0, 1, 0, 1, 0, 1, '明', '灭', '案', '灯', 'D', 1, 8, 69, 'A', 'A', 4, 3, 8]
+let mic = [2, 0, 3, 4, 0, 0, 0, 5, '明', '灭', '案', 3, 4, 0, 0, 5, '明', '灭', '案', 3, 4, 0, 0, 5, 6]
+
+let start_index = 0; for (let i = 0; i < music.length; i++) { start_index = i; if (![1, 0].includes(music[i])) break }
+let right_index = 0
+let need_lenght = 3
+
+function comp(mic) {
+    let flag = true
+    for (let i = 0; i < need_lenght; i++) {
+        if (music[start_index + i] != mic[i])
+            flag = false
+    }
+    return flag
+}
+
+for (let i = 0; i < mic.length; i++) {
+    if (comp(mic.slice(i))) {
+        console.log(music.slice(start_index + need_lenght))
+    }
+}
+
+
+// 一直录音,直到录音匹配了已知声音,则播放后续已知声音
+// 0/1 音量小
+// 2/3/4/5 杂音
+// 明 正确的第一个音
+// '明', '灭' 更长的正确的第一个音
+//明灭案灯,照不见三千里
+//离辞别句,相思似是而非
+//情诉纸墨,想不到怎写你
+//恨爱悲欢,欠着谁的凄美
+
+let music = '明灭案灯,照不见三千里;离辞别句,相思似是而非;情诉纸墨,想不到怎写你;恨爱悲欢,欠着谁的凄美'
+let music_array = music.split('')
+let mic = [2, 0, 3, 4, 0, 0, 0, 5, '明', '灭', '案', 3, 4, 0, 0, 5, '明', '灭', '案', 3, 4, 0, 0, 5, 6]
+
+let start_index = 0; for (let i = 0; i < music.length; i++) { start_index = i; if (![1, 0].includes(music[i])) break }
+let right_index = 0
+let need_lenght = 3
+
+for (let i = 0; i < mic.length; i++) {
+    let flag = true
+    for (let j = 0; j < need_lenght; j++) {
+        if (music_array[start_index + j] != mic.slice(i)[j])
+            flag = false
+    }
+    if (flag) {
+        console.log(music.slice(start_index + need_lenght))
+    }
+}
+
+
+// 一直录音,直到录音匹配了已知声音,则播放后续已知声音
+// 0/1 音量小
+// 2/3/4/5 杂音
+// 明 正确的第一个音
+// '明', '灭' 更长的正确的第一个音
+//明灭案灯,照不见三千里
+//离辞别句,相思似是而非
+//情诉纸墨,想不到怎写你
+//恨爱悲欢,欠着谁的凄美
+
+
+let music = '明灭案灯,照不见三千里;离辞别句,相思似是而非;情诉纸墨,想不到怎写你;恨爱悲欢,欠着谁的凄美'
+let music_array = music.split('')
+let mic = [2, 0, 3, 4, 0, 0, 0, 5, '明', '灭', '案']
+
+let start_index = 0; for (let i = 0; i < music.length; i++) { start_index = i; if (![1, 0].includes(music[i])) break }
+let right_index = 0
+let need_lenght = 3
+let tick = 100
+
+function my_catch(mic) {
+    let flag = true
+    for (let i = 0; i < need_lenght; i++) {
+        if (music_array[start_index + i] != mic[i])
+            flag = false
+    }
+    return flag
+}
+
+function sing_with_me(mic) {
+    if (my_catch(mic)) {
+        sing(music.slice(start_index + need_lenght))
+    }
+}
+
+function sing(str) {
+    let index = 0
+    setInterval(function () {
+        if (index < music.length)
+            console.log(str.substr(index++, 1))
+    }, tick)
+}
+setInterval(function () {
+    if (mic.length > 0) {
+        mic = mic.slice(1)
+        sing_with_me(mic)
+    }
+}, tick)
+
+let music = '明灭案灯,照不见三千里;离辞别句,相思似是而非;情诉纸墨,想不到怎写你;恨爱悲欢,欠着谁的凄美'
+let music_array = music.split('')
+let mic = [2, 0, 3, 4, 0, 0, 0, 5, '明', '灭', '案']
+
+let start_index = 0; for (let i = 0; i < music.length; i++) { start_index = i; if (![1, 0].includes(music[i])) break }
+let right_index = 0
+let need_lenght = 3
+let tick = 100
+
+function my_catch(mic) {
+    let flag = true
+    for (let i = 0; i < need_lenght; i++) {
+        if (music_array[start_index + i] != mic[i])
+            flag = false
+    }
+    return flag
+}
+
+function sing_with_me(mic) {
+    if (my_catch(mic)) {
+        sing(music.slice(start_index + need_lenght))
+    }
+}
+
+function sing(str) {
+    let index = 0
+    setInterval(function () {
+        if (index < music.length)
+            _sing(str.substr(index++, 1))
+    }, tick)
+}
+
+function _sing(str) {
+    if (str.length > 0)
+        console.log(str.toString())
+}
+
+function speak(mic) {
+    setInterval(function () {
+        if (mic.length > 0) {
+            _sing(mic.slice(0, 1))
+            mic = mic.slice(1)
+            sing_with_me(mic)
+        }
+    }, tick)
+}
+
+speak(mic)
+
+let music = '明灭案灯,照不见三千里'
+let music_array = music.split('')
+let mic = [2, 0, 3, 4, 0, 0, 0, 5, '明', '灭', '案']
+
+let start_index = 0; for (let i = 0; i < music.length; i++) { start_index = i; if (![1, 0].includes(music[i])) break }
+let right_index = 0
+let need_lenght = 3
+let tick = 100
+
+const my_catch = (mic) => {
+    let flag = true
+    for (let i = 0; i < need_lenght; i++) { if (music_array[start_index + i] != mic[i]) flag = false }
+    return flag
+}
+const sing = (str) => { if (str.length > 0) console.log(str.toString()) }
+
+const sing_with_me = (str) => {
+    let index = 0
+    let intervalId = setInterval(function () {
+        if (index >= music.length) clearInterval(intervalId);
+        sing(str.substr(index++, 1))
+    }, tick)
+}
+
+const sing_with_me_try = (mic) => { if (my_catch(mic)) sing_with_me(music.slice(start_index + need_lenght)) }
+
+function speak(mic) {
+    let intervalId = setInterval(function () {
+        if (mic.length == 0) clearInterval(intervalId);
+        sing(mic.slice(0, 1))
+        mic = mic.slice(1)
+        sing_with_me_try(mic)
+    }, tick)
+}
+
+speak(mic)
+
+let _music = '明灭案灯,照不见三千里'
+let music = _music.split('')
+let mic = [2, 0, 3, 4, 0, 0, 0, 5, '明', '灭', '案']
+
+let start_index = 0; for (let i = 0; i < music.length; i++) { start_index = i; if (![1, 0].includes(music[i])) break }
+let right_index = 0
+let need_lenght = 3
+let tick = 100
+
+const my_catch = (word) => {
+    if (right_index == need_lenght) { right_index = 0; return true }
+    if (music[start_index + right_index].toString() == word.toString()) right_index++
+    else right_index = 0
+}
+const sing = (str) => { if (str.length > 0) console.log(str.toString()) }
+
+const sing_with_me = (str) => {
+    let index = 0
+    let intervalId = setInterval(function () {
+        if (index >= music.length) clearInterval(intervalId);
+        sing(str.substr(index++, 1))
+    }, tick)
+}
+
+const listen = (word) => { if (my_catch(word)) sing_with_me(_music.slice(start_index + need_lenght)) }
+
+function speak(words) {
+    let intervalId = setInterval(function () {
+        if (words.length == 0) clearInterval(intervalId);
+        sing(words.slice(0, 1))
+        listen(words.slice(0, 1))
+        words = words.slice(1)
+    }, tick)
+}
+
+speak(mic)
+
+let _music = '明灭案灯,照不见三千里'
+let music = _music.split('')
+let mic = [2, 0, 3, 4, 0, 0, 0, 5, '明', '灭', '案']
+
+let start_index = 0; for (let i = 0; i < music.length; i++) { start_index = i; if (![1, 0].includes(music[i])) break }
+let right_index = 0
+let need_lenght = 3
+let tick = 100
+
+const my_catch = (word) => {
+    if (right_index == need_lenght) { right_index = 0; return true }
+    if (music[start_index + right_index].toString() == word.toString()) right_index++
+    else right_index = 0
+}
+const sing = (str) => { if (str.length > 0) good_sound.innerText += (str.toString()) }
+const sing2 = (str) => { if (str.length > 0) bad_sound.innerText += (str.toString()) }
+
+const sing_with_me = (str) => {
+    let index = 0
+    let intervalId = setInterval(function () {
+        if (index >= music.length) clearInterval(intervalId);
+        sing(str.substr(index++, 1))
+    }, tick)
+}
+
+const listen = (word) => { if (my_catch(word)) sing_with_me(_music.slice(start_index + need_lenght)) }
+
+function speak(words) {
+    let intervalId = setInterval(function () {
+        if (words.length == 0) clearInterval(intervalId);
+        sing2(words.slice(0, 1))
+        listen(words.slice(0, 1))
+        words = words.slice(1)
+    }, tick)
+}
+
+speak(mic)
+
+<!doctype html>
+<html lang="zn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="https://bghuan.cn/static/css/bootstrap-5.1.0.css">
+    <title>三分音乐</title>
+</head>
+
+<body>
+    <div id="bad_sound">speak:</div>
+    <div id="good_sound">sing:</div>
+    <script src="index.js"></script>
+</body>
+
+</html>
+
+<!doctype html>
+<html lang="zn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="https://bghuan.cn/static/css/bootstrap-5.1.0.css">
+    <title>三分音乐</title>
+</head>
+
+<body>
+    <div id="bad">speak&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;</div>
+    <div id="good">sing&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;</div>
+    <script src="index.js"></script>
+</body>
+
+</html>let _music = '明灭案灯,照不见三千里'
+let music = _music.split('')
+let mic = [2, 0, 3, 4, 0, 0, 0, 5, '明', '灭', '案', '灯', 3, 4, 3, 4, 3, 4]
+
+let start_index = 0; for (let i = 0; i < music.length; i++) { start_index = i; if (![1, 0].includes(music[i])) break }
+let right_index = 0
+let need_lenght = 3
+let tick = 100
+
+const my_catch = (word) => {
+    if (right_index == need_lenght) { right_index = 0; make_right_length(); return true }
+    if (music[start_index + right_index].toString() == word.toString()) right_index++
+    else right_index = 0
+}
+const sing = (str) => { if (str.length > 0) good.innerText += (str.toString()) }
+const sing2 = (str) => { if (str.length > 0) bad.innerText += (str.toString()) }
+const make_right_length = () => { let a = bad.innerText.length - good.innerText.length; for (let i = 0; i < a; i++)good.innerText += '' }
+
+const sing_with_me = (str) => {
+    let index = 0
+    let intervalId = setInterval(function () {
+        if (index >= music.length) clearInterval(intervalId);
+        sing(str.substr(index++, 1))
+    }, tick)
+}
+
+const listen = (word) => { if (my_catch(word)) sing_with_me(_music.slice(start_index + need_lenght)) }
+
+function speak(words) {
+    let intervalId = setInterval(function () {
+        if (words.length == 0) clearInterval(intervalId);
+        sing2(words.slice(0, 1))
+        listen(words.slice(0, 1))
+        words = words.slice(1)
+    }, tick)
+}
+
+speak(mic)
+
+var analyser
+let frequencyData
+
+navigator.mediaDevices.getUserMedia({ audio: true })
+    .then(function (stream) {
+        var audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        var mediaStreamSource = audioContext.createMediaStreamSource(stream);
+        analyser = audioContext.createAnalyser();
+        mediaStreamSource.connect(analyser);
+        // analyser.connect(audioContext.destination);
+        frequencyData = new Uint8Array(analyser.frequencyBinCount);
+
+        requestAnimationFrame(animationLoop);
+
+    })
+let asaaa = 0
+function animationLoop() {
+    // Your code here
+    analyser.getByteFrequencyData(frequencyData)
+    // for (let i = 0; i < frequencyData.length; i++) {
+    //     if (frequencyData[i] != 0)
+    //         console.log(frequencyData[i], frequencyData.length);
+    // }
+    // console.log(frequencyData)
+    // qqq.innerHTML = frequencyData.toString()
+    // console.log(new Date().getSeconds(), asaaa++)
+    requestAnimationFrame(animationLoop);
+
+    canvasCtx.clearRect(0, 0, oW, oH);
+    for (var i = 0; i < frequencyData.length; i++) {
+        barHeight = frequencyData[i];
+        // 绘制向上的线条
+        canvasCtx.fillStyle = color1;
+        /* context.fillRect(x,y,width,height)
+         * x，y是坐标
+         * width，height线条的宽高
+         */
+        canvasCtx.fillRect(oW / 2 + (i * 8), oH / 2, 2, -barHeight);
+        canvasCtx.fillRect(oW / 2 - (i * 8), oH / 2, 2, -barHeight);
+        // 绘制向下的线条
+        canvasCtx.fillStyle = color2;
+        canvasCtx.fillRect(oW / 2 + (i * 8), oH / 2, 2, barHeight);
+        canvasCtx.fillRect(oW / 2 - (i * 8), oH / 2, 2, barHeight);
+    }
+}
+//https://blog.csdn.net/xh888zw/article/details/124409016
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+var canvasCtx = canvas.getContext("2d");
+var oW = canvas.width;
+var oH = canvas.height;
+var color1 = canvasCtx.createLinearGradient(oW / 2, oH / 2 - 10, oW / 2, oH / 2 - 150);
+var color2 = canvasCtx.createLinearGradient(oW / 2, oH / 2 + 10, oW / 2, oH / 2 + 150);
+color1.addColorStop(0, '#1E90FF');
+color1.addColorStop(.25, '#FF7F50');
+color1.addColorStop(.5, '#8A2BE2');
+color1.addColorStop(.75, '#4169E1');
+color1.addColorStop(1, '#00FFFF');
+
+color2.addColorStop(0, '#1E90FF');
+color2.addColorStop(.25, '#FFD700');
+color2.addColorStop(.5, '#8A2BE2');
+color2.addColorStop(.75, '#4169E1');
+color2.addColorStop(1, '#FF0000');
+
+<!doctype html>
+<html lang="zn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>三分音乐</title>
+</head>
+
+<body>
+    <div id="bad">speak&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;</div>
+    <div id="good">sing&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;</div>
+    <textarea id="qqq"></textarea>
+    <canvas id="canvas"></canvas>
+    <script src="index.js"></script>
+    <script src="audio.js"></script>
+</body>
+
+</html>
+
+
+<?php
+header('Access-Control-Allow-Origin:*');
+include 'config.php';
+
+//https://github.com/aliyun/aliyun-oss-php-sdk/releases/download/v2.5.0/aliyun-oss-php-sdk-2.5.0.phar
+require_once 'aliyun-oss-php-sdk-2.5.0.phar';
+
+// 引入 OSS SDK
+use OSS\OssClient;
+use OSS\Core\OssException;
+
+set_time_limit(300); 
+
+$prompt = querystring('prompt');
+$hash = querystring('hash');
+
+if (empty($prompt)) {
+    exit;
+}
+
+$fileName = '../static/image/openai/' . $hash . '.jpg';
+if (!file_exists($fileName) || true) {
+
+    // $apiKey = $openaiApiKey;
+    // $url = 'https://api.openai.com/v1/images/generations';
+    // $data = [
+    //     'prompt' => $prompt,
+    //     'size' => '256x256',
+    // ];
+    // $ch = curl_init();
+    // curl_setopt($ch, CURLOPT_URL, $url);
+    // curl_setopt($ch, CURLOPT_POST, true);
+    // curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+    // curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    //     'Content-Type: application/json',
+    //     'Authorization: Bearer ' . $apiKey,
+    // ]);
+    // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    // $response = curl_exec($ch);
+    // curl_close($ch);
+    $response = '{ "created": 1678150808, "data": [ { "url": "https://oaidalleapiprodscus.blob.core.windows.net/private/org-K2ND9d35VSLmOCCzGwHO0MdH/user-iOpm7F4HIMSZ28rhWAWcsdyS/img-SrM9z6cdKmpgCq3MUIQ6MDfy.png?st=2023-03-07T00%3A00%3A08Z&se=2023-03-07T02%3A00%3A08Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-03-06T21%3A28%3A39Z&ske=2023-03-07T21%3A28%3A39Z&sks=b&skv=2021-08-06&sig=A3LjpZDYfJBCYzVZs8IdO23VeoJ5nL5ki6ITzt3C5QY%3D" } ] }';
+
+    try {
+        $jsonString = $response;
+        $jsonObject = json_decode($jsonString);
+        $data = $jsonObject->data;
+        $url = $data[0]->url;
+        echo '333'.$url;
+        $imageData = file_get_contents($url);
+        file_put_contents($fileName, $imageData);
+// $size=110;
+// $src = imagecreatefromstring($imageData);
+// $dst = imagecreatetruecolor($size, $size);
+// imagecopyresampled($dst, $src, 0, 0, 0, 0, $size, $size, imagesx($src), imagesy($src));
+// imagedestroy($dst);
+// imagedestroy($src);
+// ob_start();
+// imagepng($dst);
+// $data = ob_get_clean();
+// imagedestroy($dst);
+
+// file_put_contents($fileName, $data);
+
+        // echo $fileName;
+
+        $objectName = $hash . '.png';
+        echo ($response);
+
+        try {
+            $ossClient = new OssClient($accessKeyId, $accessKeySecret, $endpoint2);
+            $ossClient->uploadFile($bucket2, $objectName, '/www/wwwroot/fantasy/static/image/openai/' . $hash . '.jpg');
+            exit;
+        } catch (OssException $e) {
+            printf(__FUNCTION__ . ": FAILED\n");
+            printf($e->getMessage() . "\n");
+            return;
+        }
+    } catch (e) {
+        var_dump($response);
+    }
+}

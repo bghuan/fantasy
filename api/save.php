@@ -9,6 +9,7 @@ $key = querystring("key");
 $value = querystring("value");
 $prix = querystring("prix");
 $format = querystring("format");
+$savelalala = querystring("savelalala");
 $keyvalue = $_POST ? $_POST : $_GET;
 
 $key_prix = $_SERVER['PHP_SELF'] . '.' . (empty($namespace) ? '' : $namespace . '.');
@@ -30,6 +31,8 @@ if (!empty($key)) {
             $value = ($value == false && !$redis->exists($my_key)) ? null : $value;
         } else {
             $redis->set($my_key, $value);
+            if (!empty($savelalala) && $namespace != $key && $savelalala != $key)
+                $redis->set($my_key. '.' .date('YmdHis', time()), $value);
         }
         $array[$key] = $value;
     }

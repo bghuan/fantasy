@@ -135,6 +135,8 @@ let save_push = (str) => {
         if (typeof save.hide[index] != 'number')
             save.hide.splice(index, 1)
     }
+    save.error = [...new Set(save.error)];
+    save.hide = [...new Set(save.hide)];
     let flag = false
     Object.keys(save).forEach(item => {
         if (save.default && save.default[item] != JSON.stringify(save[item])) flag = true
@@ -322,6 +324,7 @@ let image_change = (oImg) => {
         oImg.setAttribute('src', host + '/static/image/download.png')
         let url = host + '/api/openai.php?hash=' + hash
         url = 'https://dev.bghuan.cn' + '/api/openai.php?hash=' + hash
+        url = 'https://bghuan.cn' + '/api/imageali.php?hash=' + hash
         if (sudo_change_image_text != '') url += '&prompt=' + sudo_change_image_text
         else url += '&prompt=' + key + '-' + value
         fetch(url).then(response => {

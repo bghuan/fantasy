@@ -1,39 +1,61 @@
-let _music = '明灭案灯,照不见三千里'
-let music = _music.split('')
-let mic = [2, 0, 3, 4, 0, 0, 0, 5, '明', '灭', '案', '灯', 3, 4, 3, 4, 3, 4]
+let source_data = [
+	'明灭案灯,照不见三千里',
+	'推开世界的门,你是站在门外怕迟到的人']
+source.innerHTML = source_data.join('<br>');
+let listen_length = 2
+let listen_length_current = 0
+let listen_init = '-门外怕'
+let source_data_index = 0
+let source_data_index_index = 0
 
-let start_index = 0; for (let i = 0; i < music.length; i++) { start_index = i; if (![1, 0].includes(music[i])) break }
-let right_index = 0
-let need_lenght = 3
-let tick = 100
+function changeColorToBlue(str) {
+	let sourceDiv = document.getElementById('source');
+	let originalText = sourceDiv.innerHTML;
 
-const my_catch = (word) => {
-    if (right_index == need_lenght) { right_index = 0; make_right_length(); return true }
-    if (music[start_index + right_index].toString() == word.toString()) right_index++
-    else right_index = 0
+	let newText = originalText.replaceAll('<span style="color: blue;">' + str + '</span>', str);
+	newText = newText.replaceAll(str, '<span style="color: blue;">' + str + '</span>');
+	if (sourceDiv.innerHTML != newText)
+		sourceDiv.innerHTML = newText;
+	checkSpans()
 }
-const sing = (str) => { if (str.length > 0) good.innerText += (str.toString()) }
-const sing2 = (str) => { if (str.length > 0) bad.innerText += (str.toString()) }
-const make_right_length = () => { let a = bad.innerText.length - good.innerText.length; for (let i = 0; i < a; i++)good.innerText += '' }
+function checkSpans() {
+	let array = source.innerHTML.split('<br>')
+	for (let i = 0; i < array.length; i++) {
+		let element = array[i];
+		let a1 = element.indexOf('</span>')
+		let a2 = a1 + element.substring(a1 + 7, element.length).indexOf('</span>')
+		let a3 = a2 + element.substring(a2 + 7 + 7, element.length).indexOf('</span>')
+		let a4 = a3 + element.substring(a3 + 7 + 7 + 7, element.length).indexOf('</span>')
+		if (a1 > 0 && (a2 == 28 || (a3 - a2) == 28 || (a4 - a3) == 28))
+			play.innerText = source.innerText.split('\n')[i]
+	}
+}
+let listening = () => {
+	// if (listen.innerText.length == 0) { listen.innerText = listen_init; return }
+	let listen_word = listen.innerText.slice(0, 1)
+	listen.innerText = listen.innerText.slice(1)
+	play.innerText = play.innerText.slice(1)
 
-const sing_with_me = (str) => {
-    let index = 0
-    let intervalId = setInterval(function () {
-        if (index >= music.length) clearInterval(intervalId);
-        sing(str.substr(index++, 1))
-    }, tick)
+	for (let i = 0; i < source_data.length; i++) {
+		const _source_data = source_data[i];
+		for (let j = 0; j < _source_data.length; j++) {
+			const str = _source_data[j];
+			if (listen_word == str) {
+				changeColorToBlue(str)
+			} else if ((source.innerHTML != source_data.join('<br>')) && source.innerHTML.indexOf(listen_word) < 0) {
+				source.innerHTML = source_data.join('<br>');
+				return
+			}
+
+			listen_length_current = 0
+		}
+	}
 }
 
-const listen = (word) => { if (my_catch(word)) sing_with_me(_music.slice(start_index + need_lenght)) }
-
-const speak = (words) => {
-    let intervalId = setInterval(function () {
-        if (words.length == 0) clearInterval(intervalId);
-        sing2(words.slice(0, 1))
-        listen(words.slice(0, 1))
-        words = words.slice(1)
-    }, tick)
+setInterval(listening, 1000)
+speak.onclick = () => {
+	let a = listen.innerText
+	listen.innerText = a.slice(0, 2) + speak_text.value + a.slice(2)
+	speak_text.value = ''
+	play.innerText = ''
 }
-
-speak(mic)
-

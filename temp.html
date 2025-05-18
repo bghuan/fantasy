@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <style>
+    div {
+      width: 200px;
+      height: 200px;
+      background-color: black;
+    }
+
+    div:active,
+    div:focus {
+      background-color: pink;
+    }
+
+    @media (pointer: coarse) {
+      /* 针对触摸设备 */
+      div:active {
+        background-color: pink;
+      }
+    }
+
+    @media (pointer: fine) {
+      /* 针对鼠标设备 */
+      div:active {
+        background-color: orange;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div></div>
+</body>
+
+</html>

@@ -124,6 +124,8 @@ document.addEventListener('keydown', function (e) {
 
                 if (!is_save_force_oss && result == '123')
                     alert('保存成功')
+                if (is_save_force_oss && result == '123')
+                    alert('保存成功2')
             }, time_tick_backup)
         }
         HttpPost(url, null, callBack)
@@ -176,7 +178,7 @@ document.addEventListener('keydown', function (e) {
         E.SlateTransforms.insertNodes(editor, [{ type: 'paragraph', children: [{ text: (!flag ? getDate() : getTime()) + ' ' }] }])
     }
 });
-document.title = window.location.search.replace('?', '')
+document.title = decodeURIComponent(window.location.search.replace('?', ''))
 
 if (window.location.search == "?all") {
     location.href = host + '/fantasy/editor/all'
