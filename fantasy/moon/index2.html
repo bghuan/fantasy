@@ -5,12 +5,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>月亮表2</title>
+    <style>
+        body {
+            overflow: hidden;
+            margin: 0;
+        }
+
+        .container {
+            display: flex;
+        }
+
+        #myCanvas {
+            border-right: 1px solid #ccc;
+            border-bottom: 1px solid #ccc;
+        }
+    </style>
 </head>
 
 <body>
-    <canvas id="myCanvas" width="1000" height="1000"></canvas>
-    <h3 id="date_now"></h3>
-    <script type="text/javascript" src="index2.js"></script>
+    <div class="container">
+        <canvas id="myCanvas" width="720" height="720"></canvas>
+        <div class="info-container">
+            <div id="msg"></div>
+            <div id="msg2"></div>
+            <input type="number" name="" id="msg3" value="2">
+        </div>
+    </div>
 </body>
+<script type="text/javascript" src="common.js"></script>
+<script type="text/javascript" src="index2.js"></script>
+<script type="text/javascript" src="index2win.js"></script>
 
 </html>

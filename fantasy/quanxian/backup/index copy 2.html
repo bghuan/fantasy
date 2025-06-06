@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>权限</title>
+</head>
+
+<body>
+
+</body>
+<script>
+    var _nengliang = 10000
+    var _weizhi = 0
+    var _mi_nengliang = 100
+    var _mi_weizhi = 100
+    var quanxian_list = []
+
+    setInterval(() => {
+        nengliang.quan(-1)
+    }, 1000);
+
+    var nengliang = { quan: (a) => { _nengliang = _nengliang + a } }
+    var weizhi = { quan: (a) => { _weizhi = _weizhi + a > 0 ? 1 : -1 } }
+    var mi = { quan: (a) => { if (a._weizhi == _mi_weizhi) _mi_nengliang = 0 } }
+    var xiu = {
+        quan: () => {
+            var aa = Math.abs(_weizhi - _mi_weizhi)
+            var c = _mi_nengliang - aa
+            if (c < 0) return 0
+            return c11
+        }
+    }
+    var shengxu = {
+        quan: (a) => {
+            var n = quanxian_list.length - 1
+            var random1 = Math.floor(Math.random() * n)
+            var random2 = Math.floor(Math.random() * n)
+            quanxian_list[random1]
+            quanxian_list[random2]
+            var quanxian = {
+                quan: quanxian_list[random1].quan,
+                //xian: quanxian_list[random2].xian
+            }
+            quanxian_list.add(quanxian)
+            quanxian.quan()
+        }
+    }
+    quanxian_list = [shijian, nengliang, weizhi, xiu, shengxu]
+
+</script>
+
+</html>

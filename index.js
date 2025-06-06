@@ -115,7 +115,7 @@ let get_clean_encodeurl = (str) => {
     return str
 }
 let get_image_full_path = (hash) => {
-    return oss_image_prix + hash + '.png' + '?x-oss-process=image/resize,m_lfit,h_110,w_110'
+    return oss_image_prix + hash + '.png' + '?x-oss-process=style/a'
 }
 let save_pull = (str, callBack) => {
     let url = `${host}/api/save?namespace=${save.namespace}&${str}`
@@ -136,6 +136,7 @@ let save_push = (str) => {
             save.hide.splice(index, 1)
     }
     save.error = [...new Set(save.error)];
+    save.error = [];
     save.hide = [...new Set(save.hide)];
     let flag = false
     Object.keys(save).forEach(item => {
@@ -169,8 +170,9 @@ content.onmousedown = (event) => {
 content.onmouseup = (event) => {
     if (event.button != 0) return
     if (uuu_select == 1) return uuu_select = 0
+    if (document.getSelection().toString().length > 0) return
     if (Date.now() - uuu_up < 200) return
-    if (Date.now() - uuu_down > 100) return
+    if (Date.now() - uuu_down > 500) return
     if (collapsea.className.indexOf('show') > 0 || collapseb.className.indexOf('show') > 0) return
     if (event.target == content) return
     uuu_up = Date.now()
@@ -266,7 +268,7 @@ const bootstrap_load = () => {
         if (is_search_show_right_now) a_Collapse?.show()
         if (is_create_show_right_now) b_Collapse?.show()
     })
-    save_pull('error')
+    //save_pull('error')
 }
 function getHashCode(str) {
     var hash = 1315423911, i, ch;
@@ -277,24 +279,25 @@ function getHashCode(str) {
     return (hash & 0x7FFFFFFF);
 }
 //image func
-let image_onerr_push = () => {
-    save.error_image_limit_time = save.error_image_limit_time + 1 || 1
-    let error_image_limit_time = save.error_image_limit_time
-    setTimeout(() => {
-        if (save.error_image_limit_time == error_image_limit_time)
-            save_push('error')
-    }, 1000);
-}
+// let image_onerr_push = () => {
+//     save.error_image_limit_time = save.error_image_limit_time + 1 || 1
+//     let error_image_limit_time = save.error_image_limit_time
+//     setTimeout(() => {
+//         if (save.error_image_limit_time == error_image_limit_time)
+//             save_push('error')
+//     }, 1000);
+// }
 let image_onerr = (event) => {
     let oImg = event.target;
-    if (save.error.length != 0) {
-        let src = oImg.src.replace(oss_image_prix, '').replace('.png?x-oss-process=image/resize,m_lfit,h_110,w_110', '')
-        if (!save.error.includes(src))
-            save.error.push(Number(src))
-        image_onerr_push()
-    }
-    oImg.setAttribute('src', default_image_path)
-    oImg.onerror = () => { }
+    // if (save.error.length != 0) {
+    //     let src = oImg.src.replace(oss_image_prix, '').replace('.png?x-oss-process=style/a', '')
+    //     if (!save.error.includes(src))
+    //         save.error.push(Number(src))
+    //     image_onerr_push()
+    // }
+    // oImg.setAttribute('src', default_image_path)
+    image_change(oImg)
+    //oImg.onerror = () => { }
 }
 let image_ondragstart = event => {
     let oImg = event.target;
@@ -314,6 +317,7 @@ let image_ondragend = event => {
     }
     save_push('hide')
 }
+let eeeeeeeeeeeeeee = 0
 let image_change = (oImg) => {
     let key = oImg.parentNode.querySelector('h5').innerHTML
     let value = oImg.parentNode.querySelector('p').innerHTML
@@ -321,6 +325,8 @@ let image_change = (oImg) => {
     let image_src = get_image_full_path(hash)
     oImg.setAttribute('src', image_src)
     let callBack = () => {
+        eeeeeeeeeeeeeee += 1
+        oImg.onerror = () => { }
         oImg.setAttribute('src', host + '/static/image/download.png')
         let url = host + '/api/openai.php?hash=' + hash
         url = 'https://dev.bghuan.cn' + '/api/openai.php?hash=' + hash
@@ -329,15 +335,15 @@ let image_change = (oImg) => {
         else url += '&prompt=' + key + '-' + value
         fetch(url).then(response => {
             oImg.setAttribute('src', image_src)
-            oImg.onerror = image_onerr
+            //oImg.onerror = image_onerr
+            eeeeeeeeeeeeeee -= 1
         })
         sudo_change_image_text = ''
-        oImg.onerror = () => { }
     }
     if (sudo_change_image_text != '') callBack()
     else oImg.onerror = callBack
-    save.error.splice(save.error.indexOf(hash), 1)
-    save_push('error')
+    //save.error.splice(save.error.indexOf(hash), 1)
+    //save_push('error')
 }
 
 document.addEventListener("DOMContentLoaded", (function () {

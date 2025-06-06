@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>权限</title>
+</head>
+
+<body>
+
+</body>
+<script>
+    var _nengliang = 10000
+    var _weizhi = 0
+    var _mi_nengliang = 100
+    var _mi_weizhi = 100
+    var quanxian_list = []
+
+    var shijian = {
+        quan: (a) => {
+            setInterval(() => {
+                nengliang.quan(-1)
+            }, 1000);
+        },
+        xian: () => {
+            return new Date()
+        }
+    }
+    var nengliang = {
+        quan: (a) => {
+            _nengliang = _nengliang + a
+        },
+        xian: () => {
+            return _nengliang
+        }
+    }
+    var weizhi = {
+        quan: (a) => {
+            var aa = a > 0 ? 1 : -1
+            _weizhi = _weizhi + aa
+        },
+        xian: () => { return _weizhi }
+    }
+    var mi = {
+        quan: (a) => {
+            if (a._weizhi == _mi_weizhi)
+                _mi_nengliang = 0
+        },
+        xian: () => { return }
+    }
+    var xiu = {
+        quan: (a) => {
+            var aa = Math.abs(_weizhi - _mi_weizhi)
+            var c = _mi_nengliang - aa
+            if (c < 0) return 0
+            return c
+        },
+        xian: () => { return }
+    }
+    var shengxu = {
+        quan: (a) => {
+            var n = quanxian_list.length - 1
+            var i = Math.floor(Math.random() * n)
+            var i2 = Math.floor(Math.random() * n)
+            quanxian_list[i]
+            quanxian_list[i2]
+            var quanxian = {
+                quan: quanxian_list[i].quan,
+                xian: quanxian_list[i2].xian
+            }
+            quanxian_list.add(quanxian)
+            return quanxian
+        },
+        xian: () => { return }
+    }
+    quanxian_list = [shijian, nengliang, weizhi, xiu, shengxu]
+</script>
+
+</html>

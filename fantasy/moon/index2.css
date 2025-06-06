@@ -1,0 +1,30 @@
+.container {
+  display: flex;       /* 使用 Flexbox 布局 */
+  gap: 20px;           /* 元素间间距 */
+  align-items: start;  /* 垂直对齐方式 */
+  width: 100%;
+  max-width: 1200px;   /* 最大宽度限制 */
+  margin: 0 auto;      /* 居中显示 */
+}
+
+#myCanvas {
+  border: 1px solid #ccc;
+  background: #000;
+}
+
+#msg {
+  flex: 1;             /* 占据剩余空间 */
+  min-width: 300px;    /* 最小宽度 */
+  padding: 15px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+#msg2 {
+  flex: 1;             /* 占据剩余空间 */
+  min-width: 300px;    /* 最小宽度 */
+  padding: 15px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
