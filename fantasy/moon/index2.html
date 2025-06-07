@@ -11,20 +11,39 @@
             margin: 0;
         }
 
-        .container {
-            display: flex;
+        .divCanvas {
+            width: 360;
+            height: 360;
+            position: relative;
         }
+
 
         #myCanvas {
             border-right: 1px solid #ccc;
             border-bottom: 1px solid #ccc;
+            position: absolute;
+            z-index: 1;
+        }
+
+        #myCanvas2 {
+            position: absolute;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .info-container {
+            display: none;
+            margin-left: '360px';
         }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <canvas id="myCanvas" width="720" height="720"></canvas>
+        <div class="divCanvas">
+            <canvas id="myCanvas" width="360" height="360"></canvas>
+            <canvas id="myCanvas2" width="360" height="360"></canvas>
+        </div>
         <div class="info-container">
             <div id="msg"></div>
             <div id="msg2"></div>

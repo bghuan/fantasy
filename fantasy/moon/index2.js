@@ -1,15 +1,19 @@
 const canvas = document.getElementById('myCanvas');
 const ctx = canvas.getContext('2d');
+const canvas2 = document.createElement('canvas');
+var ctx2 = canvas2.getContext('2d')
+const canvas3 = document.getElementById('myCanvas2');
+var ctx3 = canvas3.getContext('2d')
 
 const diff = 60;
 const radius = 60 * 3;
 const radius2 = 60 * 3 + 30;
-let writeXY = 360
-let blackXY = 360
+let writeXY = 180
+let blackXY = 180
 let x = y = 0;
 let angle = Math.PI / 2;
 let speed = 2 * Math.PI / 144 / 60 / 60;
-// speed = 2 * Math.PI / 144 / 60 * 2;
+// speed = 2 * Math.PI / 144 / 60 * 12;
 let animationId
 var dataPoints = []
 var day = 'rgba(255, 255, 255, 0.9)'
@@ -17,33 +21,24 @@ var night = 'rgba(0, 0, 0, 1)'
 let last_angle = 0
 let show_other = false
 let angle_diff = 0
-let lastFrameTime = 0;
-const targetFPS = 160;
-const frameInterval = 1000 / targetFPS;
+let timeString = ''
+ctx.globalCompositeOperation = show_other ? 'destination-over' : 'source-out'
+let _2PI = 2 * Math.PI
+let show_time = true
+var angle_map = {}
+let in_moon = false
 
 function draw_move_circle() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     ctx.beginPath();
-    ctx.fillStyle = get_fill(false);
-    ctx.arc(x, y, radius2, 0, 2 * Math.PI);
+    ctx.arc(x, y, radius2, 0, _2PI);
     ctx.fill();
 
-    ctx.globalCompositeOperation = show_other ? 'destination-over' : 'source-out'
+    ctx.drawImage(canvas2, 0, 0, canvas.width, canvas.height)
 
-    ctx.beginPath();
-    ctx.fillStyle = get_fill(true);
-    ctx.arc(writeXY, writeXY, radius, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.globalCompositeOperation = show_other ? 'destination-over' : 'source-over'
-
-    ctx.font = '30px Arial';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    let timeString = formatDateToHM(new Date());
-    ctx.fillStyle = get_fill(true);
-    ctx.fillText(timeString, writeXY - 5, writeXY + 5);
+    if (show_time && timeString != formatDateToHM(new Date()))
+        drawTime();
 
     wangge()
     shizi()
@@ -51,31 +46,68 @@ function draw_move_circle() {
     last_angle = angle
     // console.log(angle, angle - last_angle)
 }
-function move_circle(timestamp) {
+const path = new Path2D();
+path.arc(writeXY, writeXY, radius, 0, _2PI);
+function isMouseInMoon(e) {
+    var in_a = ctx.isPointInPath(path, e.clientX, e.clientY, 'evenodd')
+    if (!in_a) return false
+
+    const path2 = new Path2D();
+    path2.arc(x, y, radius2, 0, _2PI);
+
+    var in_b = ctx.isPointInPath(path2, e.clientX, e.clientY, 'evenodd')
+    return !in_b;
+}
+
+function move_circle() {
     angle += speed;
-    if (angle > 2 * Math.PI) angle = 0;
+    if (angle > _2PI) angle = 0;
     if (angle == 0 || Math.abs(angle - last_angle) >= 0.001) {
-        if (!lastFrameTime || timestamp - lastFrameTime > frameInterval) {
-            lastFrameTime += frameInterval;
+        let _angle = angle.toFixed(2)
+        if (Object.keys(angle_map).includes(_angle)) {
+            x = angle_map[_angle][0]
+            y = angle_map[_angle][1]
+        }
+        else {
             var _radius = radius + diff * timemap[msg3.value]
             x = blackXY + _radius * Math.cos(angle);
             y = blackXY + _radius * Math.sin(angle);
-
-            draw_move_circle()
+            angle_map[_angle] = [x, y]
         }
+        draw_move_circle()
     }
 
     animationId = requestAnimationFrame(move_circle);
 }
 
+function drawCanvas2_refresh() {
+    canvas2.width = canvas.width
+    canvas2.height = canvas.height
+    ctx2.clearRect(0, 0, canvas.width, canvas.height);
+    ctx2.beginPath();
+    ctx2.fillStyle = get_fill(true);
+    ctx2.arc(writeXY, writeXY, radius, 0, _2PI);
+    ctx2.fill();
+
+    ctx.fillStyle = get_fill(false);
+    last_angle = 11
+    timeString = "";
+
+    angle_map = {}
+}
+function drawTime() {
+    timeString = formatDateToHM(new Date());
+    ctx3.clearRect(0, 0, canvas.width, canvas.height);
+    ctx3.font = '30px Arial';
+    ctx3.textAlign = 'center';
+    ctx3.textBaseline = 'middle';
+    ctx3.fillStyle = get_fill(true);
+    ctx3.fillText(timeString, writeXY - 5, writeXY + 5);
+}
+
 function get_fill(flag) {
     const isDayTime = msg3.value >= 6 && msg3.value <= 18;
     return flag ? (isDayTime ? night : day) : (isDayTime ? day : night);
-}
-function border() {
-    ctx.lineWidth = 1;
-    ctx.strokeStyle = 'gray';
-    ctx.stroke();
 }
 function record() {
     pointX = x.toFixed(0)
@@ -92,30 +124,52 @@ function record() {
         msg2.innerHTML += formatDateToMSM(new Date()) + ' ' + x + ' ' + y + '</br>'
     dataPoints.push([formatDateToMS(new Date()), pointX, pointY])
 }
-init_angle = () => {
-    let aaa = new Date().getMinutes() + (new Date().getSeconds()) / 60
-    angle = (aaa / 30 * Math.PI)
-    if (aaa > 45) angle = ((aaa - 45) / 30 * Math.PI - Math.PI / 2)
-    // angle = (aaa / 30 * Math.PI) + Math.PI / 2
-    // if (aaa > 45) angle = ((aaa - 45) / 30 * Math.PI)
+init_angle = (num) => {
+    let minutes = new Date().getMinutes()
+    if (num >= 0) minutes += num
+    let time = minutes + new Date().getSeconds() / 60;
+    angle = (time % 60) / 60 * _2PI;
 }
 change_angle = (num) => {
     angle_diff += num
     if (angle_diff > 60) angle_diff = 1
     if (angle_diff < 0) angle_diff = 59
-    let aaa = new Date().getMinutes() + (new Date().getSeconds()) / 60 + angle_diff
-    angle = (aaa / 30 * Math.PI) + Math.PI / 2
-    if (aaa > 45) angle = ((aaa - 45) / 30 * Math.PI)
+    init_angle(angle_diff)
 }
+canvas.addEventListener('mousemove', (e) => {
+    let _in_moon = isMouseInMoon(e)
+    if (!in_moon && _in_moon) {
+        in_moon = true
+        canvas.style.cursor = 'pointer';
+    } else if (in_moon && !_in_moon) {
+        in_moon = false
+        canvas.style.cursor = 'default';
+        sendWinform('blur');
+    }
+});
 document.addEventListener('keydown', (e) => {
     if (e.key == 'ArrowDown') msg3.value = Number(msg3.value) - 1
     if (e.key == 'ArrowUp') msg3.value = Number(msg3.value) + 1
     if (e.key == 'ArrowRight') change_angle(1)
     if (e.key == 'ArrowLeft') change_angle(-1)
     if (e.key == 'Enter') init_angle()
-    if (e.key == 'Escape') show_other = !show_other
-    if (e.key == 'b') document.body.style.backgroundColor = document.body.style.backgroundColor == 'black' ? 'white' : 'black'
-    if (e.key == 'c') saveLocation()
+    if (e.key == 'f') sendWinform('blur')
+    if (e.key == 'Escape') {
+        show_other = !show_other;
+        ctx.globalCompositeOperation = show_other ? 'destination-over' : 'source-out'
+    }
+    if (e.key == 'a') document.body.style.backgroundColor = document.body.style.backgroundColor == 'black' ? 'white' : 'black'
+    if (e.key == 's') saveLocation()
+    if (e.key == 'd') {
+        show_time = !show_time
+        if (!show_time)
+            ctx3.clearRect(0, 0, canvas.width, canvas.height);
+    }
+    msg3.onchange = () => {
+        if (msg3.value < 0) msg3.value = 23;
+        if (msg3.value > 24) msg3.value = 1
+        drawCanvas2_refresh()
+    }
     msg3.onchange()
 });
 if (window.outerWidth < 800) {
@@ -126,6 +180,8 @@ else {
     msg3.value = 14
 }
 // msg3.focus()
-scroll(180, 180)
+// scroll(180, 180)
 init_angle()
-move_circle();
+drawCanvas2_refresh()
+
+move_circle()
