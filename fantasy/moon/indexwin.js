@@ -28,9 +28,16 @@ function sendWinform(msg) {
 }
 
 window.chrome.webview?.addEventListener('message', (event) => {
-    if (in_moon) return
-
     const message = event.data;
+
+    // if (message == ('focused')) {
+    //     in_moon = true
+    // }
+    // else if (message == ('blured')) {
+    //     in_moon = false
+    // }
+
+    // if (in_moon) return
     if (message.startsWith('mousePos:')) {
         const parts = message.split(':')[1].split(',');
         const x = parseInt(parts[0]);

@@ -1,140 +1,196 @@
 const canvas = document.getElementById('myCanvas');
 const ctx = canvas.getContext('2d');
+const canvas2 = document.createElement('canvas');
+var ctx2 = canvas2.getContext('2d')
+const canvas3 = document.getElementById('myCanvas2');
+var ctx3 = canvas3.getContext('2d')
 
-let RRR = 200;
-let XXX = 500;
+const diff = 60;
+const radius = 60 * 3;
+const radius2 = 60 * 3 + 30;
+let writeXY = 180
+let blackXY = 180
+let x = y = 0;
+let angle = Math.PI / 2;
+let speed = 2 * Math.PI / 144 / 60 / 60;
+// speed = 2 * Math.PI / 144 / 60 * 12;
+let animationId
+var dataPoints = []
+var day = 'rgba(255, 255, 255, 0.9)'
+var night = 'rgba(0, 0, 0, 1)'
+let last_angle = 0
+let show_other = false
+let angle_diff = 0
+let timeString = ''
+ctx.globalCompositeOperation = show_other ? 'destination-over' : 'source-out'
+let _2PI = 2 * Math.PI
+let show_time = true
+var angle_map = {}
+let in_moon = false
 
-function findCircleCenter(x1, y1, x2, y2, radius) {
-    const d = Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
-    if (d > 2 * radius) {
-        return null;
-    }
-    const midX = (x1 + x2) / 2;
-    const midY = (y1 + y2) / 2;
-    const h = Math.sqrt(radius * radius - (d / 2) * (d / 2));
-    const dx = (x2 - x1) / d;
-    const dy = (y2 - y1) / d;
-    let point = [
-        midX + h * dy,
-        midY - h * dx,
-        midX - h * dy,
-        midY + h * dx
-    ];
-    if ((499 < point[0] && point[0] < 501) && (499 < point[1] && point[1] < 501)) return [point[2], point[3]];
-    else if ((499 < point[2] && point[2] < 501) && (499 < point[3] && point[3] < 501)) return [point[0], point[1]];
-}
-let gudi = () => {
+function draw_move_circle() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = 'white';
+
     ctx.beginPath();
-    ctx.arc(XXX, XXX, RRR, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.stroke();
-}
-function updateCircles() {
-    gudi()
-    dedu()
-
-    let hhhValue = parseInt(document.getElementById('HHH').value);
-    const mmmValue = parseInt(document.getElementById('MMM').value);
-    if (hhhValue >= 12) {
-        document.getElementById('HHH').value = 0;
-    }
-    if (mmmValue >= 60) {
-        document.getElementById('HHH').value = hhhValue + 1;
-        hhhValue += 1;
-        document.getElementById('MMM').value = 0;
-    }
-
-    const hhhAngleInRadians = ((hhhValue % 12) * 30 + 0 / 2) * (Math.PI / 180);
-    const hhhX = XXX + RRR * Math.sin(hhhAngleInRadians);
-    const hhhY = XXX - RRR * Math.cos(hhhAngleInRadians);
-
-    const mmmAngleInRadians = (mmmValue * 6) * (Math.PI / 180);
-    const mmmX = XXX + RRR * Math.sin(mmmAngleInRadians);
-    const mmmY = XXX - RRR * Math.cos(mmmAngleInRadians);
-
-    let centers = findCircleCenter(hhhX, hhhY, mmmX, mmmY, RRR);
-    if (centers) {
-        ctx.beginPath();
-        ctx.fillStyle = 'black';
-        ctx.arc(centers[0], centers[1], RRR, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.stroke();
-    }
-
-    if (!flag2) return
-    ctx.fillStyle = 'green';
-    ctx.beginPath();
-    ctx.arc(hhhX, hhhY, 5, 0, Math.PI * 2);
+    ctx.arc(x, y, radius2, 0, _2PI);
     ctx.fill();
 
-    ctx.fillStyle = 'orange';
-    ctx.beginPath();
-    ctx.arc(mmmX, mmmY, 5, 0, Math.PI * 2);
-    ctx.fill();
+    ctx.drawImage(canvas2, 0, 0, canvas.width, canvas.height)
+
+    if (show_time && timeString != formatDateToHM(new Date()))
+        drawTime();
+
+    wangge()
+    shizi()
+    record()
+    last_angle = angle
+    // console.log(angle, angle - last_angle)
 }
-let dedu = () => {
-    if (!flag2) return
-    for (let i = 0; i < 12; i++) {
-        const angle = (i * 30) * (Math.PI / 180);
-        const x = XXX + RRR * Math.sin(angle);
-        const y = XXX - RRR * Math.cos(angle);
-        ctx.beginPath();
-        ctx.arc(x, y, 4, 0, Math.PI * 2);
-        ctx.fillStyle = 'white';
-        ctx.fill();
+const path = new Path2D();
+path.arc(writeXY, writeXY, radius, 0, _2PI);
+function isMouseInMoon(e) {
+    var in_a = ctx.isPointInPath(path, e.clientX, e.clientY, 'evenodd')
+    if (!in_a) return false
+
+    const path2 = new Path2D();
+    path2.arc(x, y, radius2, 0, _2PI);
+
+    var in_b = ctx.isPointInPath(path2, e.clientX, e.clientY, 'evenodd')
+    return !in_b;
+}
+
+function move_circle() {
+    angle += speed;
+    if (angle > _2PI) angle = 0;
+    if (angle == 0 || Math.abs(angle - last_angle) >= 0.001) {
+        let _angle = angle.toFixed(2)
+        if (Object.keys(angle_map).includes(_angle)) {
+            x = angle_map[_angle][0]
+            y = angle_map[_angle][1]
+        }
+        else {
+            var _radius = radius + diff * timemap[msg3.value]
+            x = blackXY + _radius * Math.cos(angle);
+            y = blackXY + _radius * Math.sin(angle);
+            angle_map[_angle] = [x, y]
+        }
+        draw_move_circle()
     }
 
-    for (let i = 0; i < 60; i++) {
-        const angle = (i * 6) * (Math.PI / 180);
-        const x = XXX + RRR * Math.sin(angle);
-        const y = XXX - RRR * Math.cos(angle);
-        ctx.beginPath();
-        ctx.arc(x, y, 2, 0, Math.PI * 2);
-        ctx.fillStyle = 'gray';
-        ctx.fill();
-    }
+    animationId = requestAnimationFrame(move_circle);
 }
 
-document.getElementById('HHH').addEventListener('input', updateCircles);
-document.getElementById('MMM').addEventListener('input', updateCircles);
+function drawCanvas2_refresh() {
+    canvas2.width = canvas.width
+    canvas2.height = canvas.height
+    ctx2.clearRect(0, 0, canvas.width, canvas.height);
+    ctx2.beginPath();
+    ctx2.fillStyle = get_fill(true);
+    ctx2.arc(writeXY, writeXY, radius, 0, _2PI);
+    ctx2.fill();
 
-let animationId;
-function drawCircle() {
-    let interval = parseInt(document.getElementById('III').value); // 设置时间间隔为 1 秒
-    const mmmValue = parseInt(document.getElementById('MMM').value);
-    document.getElementById('MMM').value = mmmValue + 1;
-    updateCircles();
-    animationId = setTimeout(drawCircle, interval);
+    ctx.fillStyle = get_fill(false);
+    last_angle = 11
+    timeString = "";
+
+    angle_map = {}
+}
+function drawTime() {
+    timeString = formatDateToHM(new Date());
+    ctx3.clearRect(0, 0, canvas.width, canvas.height);
+    ctx3.font = '30px Arial';
+    ctx3.textAlign = 'center';
+    ctx3.textBaseline = 'middle';
+    ctx3.fillStyle = get_fill(true);
+    ctx3.fillText(timeString, writeXY - 5, writeXY + 5);
 }
 
+function get_fill(flag) {
+    const isDayTime = msg3.value >= 6 && msg3.value <= 18;
+    return flag ? (isDayTime ? night : day) : (isDayTime ? day : night);
+}
+function record() {
+    pointX = x.toFixed(0)
+    pointY = y.toFixed(0)
+    const isDuplicate = dataPoints.some(point =>
+        point[0] === formatDateToMS(new Date()) &&
+        point[1] === pointX &&
+        point[2] === pointY
+    );
 
-let flag = true
-let flag2 = true
-document.addEventListener("mousedown", handleMousedown, false)
-document.addEventListener("mousemove", handleMousemove, false)
-function handleMousedown(event) {
-    flag = !flag
-    flag2 = false
-    canvas.style.cursor = canvas.style.cursor === 'none' ? 'auto' : 'none';
-    if (!flag) {
-        clearInterval(animationId)
+    msg.innerText = formatDateToMSM(new Date()) + ' ' + pointX + ' ' + pointY
+    if (isDuplicate) return
+    if ((pointX) % 60 == 0 && (pointY) % 60 == 0)
+        msg2.innerHTML += formatDateToMSM(new Date()) + ' ' + x + ' ' + y + '</br>'
+    dataPoints.push([formatDateToMS(new Date()), pointX, pointY])
+}
+init_angle = (num) => {
+    let minutes = new Date().getMinutes()
+    if (num >= 0) minutes += num
+    let time = minutes + new Date().getSeconds() / 60;
+    angle = (time % 60) / 60 * _2PI;
+}
+change_angle = (num) => {
+    angle_diff += num
+    if (angle_diff > 60) angle_diff = 1
+    if (angle_diff < 0) angle_diff = 59
+    init_angle(angle_diff)
+}
+canvas.addEventListener('mousemove', (e) => {
+    if (isMouseInMoon(e)) {
+        canvas.style.cursor = 'pointer';
     } else {
-        drawCircle()
+        sendWinform('blur');
+        canvas.style.cursor = 'default';
     }
+    // if (!in_moon && _in_moon) {
+    //     canvas.style.cursor = 'pointer';
+    // } else if (in_moon && !_in_moon) {
+    //     sendWinform('blur');
+    //     canvas.style.cursor = 'default';
+    // }
+});
+putFile = (e, a, s, d, f, g) => {
+    debugger
 }
-function handleMousemove(event) {
-    if (flag) return
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    gudi()
-    ctx.beginPath();
-    ctx.fillStyle = 'black';
-    ctx.arc(event.clientX, event.clientY, RRR, 0, 2 * Math.PI);
-    ctx.fill();
+document.ondragover = () => false
+document.ondrop = putFile
+
+document.addEventListener('keydown', (e) => {
+    if (e.key == 'ArrowDown') msg3.value = Number(msg3.value) - 1
+    if (e.key == 'ArrowUp') msg3.value = Number(msg3.value) + 1
+    if (e.key == 'ArrowRight') change_angle(1)
+    if (e.key == 'ArrowLeft') change_angle(-1)
+    if (e.key == 'Enter') init_angle()
+    if (e.key == 'f') sendWinform('blur')
+    if (e.key == 'Escape') {
+        show_other = !show_other;
+        ctx.globalCompositeOperation = show_other ? 'destination-over' : 'source-out'
+    }
+    if (e.key == 'a') document.body.style.backgroundColor = document.body.style.backgroundColor == 'black' ? 'white' : 'black'
+    if (e.key == 's') saveLocation()
+    if (e.key == 'd') {
+        show_time = !show_time
+        if (!show_time)
+            ctx3.clearRect(0, 0, canvas.width, canvas.height);
+    }
+    msg3.onchange = () => {
+        if (msg3.value < 0) msg3.value = 23;
+        if (msg3.value > 24) msg3.value = 1
+        drawCanvas2_refresh()
+    }
+    msg3.onchange()
+});
+if (window.outerWidth < 800) {
+    document.querySelector('.info-container').style.display = 'none'
+    record = () => { }
 }
+else {
+    msg3.value = 14
+}
+// msg3.focus()
+// scroll(180, 180)
+init_angle()
+drawCanvas2_refresh()
 
-
-document.getElementById('HHH').value = new Date().getHours()
-document.getElementById('MMM').value = new Date().getMinutes()
-drawCircle();
+move_circle()

@@ -1,0 +1,383 @@
+const canvas = document.getElementById('myCanvas');
+const ctx = canvas.getContext('2d');
+
+var asd = () => {
+    ctx.fillStyle = 'red';
+    ctx.beginPath();
+    ctx.arc(500, 500, radius, 0, Math.PI * 2);
+    ctx.fill();
+}
+const radius = 207;
+let x = radius;
+let y = radius;
+let dx = 1;
+let dy = 1;
+ctx.fillStyle = 'red';
+function drawCircle() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    asd()
+    ctx.beginPath();
+    ctx.fillStyle = 'white';
+    ctx.arc(x, y, radius, 0, 2 * Math.PI);
+    ctx.fill();
+    x += dx;
+    y += dy;
+
+    // 如果圆超出画布边界，则重置位置  
+    if (x + radius > canvas.width || x - radius < 0) {
+        dx = -dx;
+    }
+    if (y + radius > canvas.height || y - radius < 0) {
+        dy = -dy;
+    }
+
+    requestAnimationFrame(drawCircle);
+}
+
+drawCircle();  
+
+
+
+const canvas = document.getElementById('myCanvas');
+const ctx = canvas.getContext('2d');
+
+var asd = () => {
+    ctx.fillStyle = 'black';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);  
+    ctx.fillStyle = 'white';
+    ctx.beginPath();
+    ctx.arc(500, 500, radius, 0, Math.PI * 2);
+    ctx.fill();
+}
+const radius = 207;
+let x = radius;
+let y = radius;
+let dx = 1;
+let dy = 1;
+
+// document.addEventListener("mousedown", handleMousedown, false)
+document.addEventListener("mousemove", handleMousemove, false)
+
+function handleMousemove(event) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    asd()
+    ctx.beginPath();
+    ctx.fillStyle = 'black';
+    ctx.arc(event.clientX, event.clientY, radius, 0, 2 * Math.PI);
+    ctx.fill();
+   
+    // requestAnimationFrame(drawCircle);
+}
+
+// drawCircle();  
+
+const canvas = document.getElementById('myCanvas');
+const ctx = canvas.getContext('2d');
+
+const radius = 207;
+let diff = 150
+let bigX = 500
+let bigX2 = 600
+let x = radius;
+let y = radius;
+let dx = 1;
+let dy = 1;
+let angle = 0; // 初始角度
+const speed = 0.02; // 控制运动速度  
+
+var asd = () => {
+    ctx.fillStyle = 'black';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = 'white';
+    ctx.beginPath();
+    ctx.arc(bigX, bigX, radius, 0, Math.PI * 2);
+    ctx.fill();
+}
+function drawCircle() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    asd()
+
+    x = bigX2 + radius * Math.cos(angle);
+    y = bigX2 + radius * Math.sin(angle);
+
+    ctx.beginPath();
+    ctx.fillStyle = 'black';
+    ctx.arc(x, y, radius, 0, 2 * Math.PI);
+    ctx.fill();
+    angle += speed;
+    if (angle > 2 * Math.PI) {
+        angle = 0;
+    }
+    requestAnimationFrame(drawCircle);
+}
+
+drawCircle();  
+
+const canvas = document.getElementById('myCanvas');
+const ctx = canvas.getContext('2d');
+
+const radius = 207;
+let diff = 150
+let bigX = 500
+let bigX2 = 600
+let x = radius;
+let y = radius;
+let dx = 1;
+let dy = 1;
+let angle = 0;
+const speed = 0.01;
+let flag = true
+let animationId
+
+var asd = () => {
+    ctx.fillStyle = 'black';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = 'white';
+    ctx.beginPath();
+    ctx.arc(bigX, bigX, radius, 0, Math.PI * 2);
+    ctx.fill();
+}
+function drawCircle() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    asd()
+
+    x = bigX + radius * Math.cos(angle);
+    y = bigX + radius * Math.sin(angle);
+
+    ctx.beginPath();
+    ctx.fillStyle = 'black';
+    ctx.arc(x, y, radius + 70, 0, 2 * Math.PI);
+    ctx.fill();
+    angle += speed;
+    if (angle > 2 * Math.PI) {
+        angle = 0;
+    }
+    animationId = requestAnimationFrame(drawCircle);
+}
+
+drawCircle();
+
+document.addEventListener("mousedown", handleMousedown, false)
+document.addEventListener("mousemove", handleMousemove, false)
+function handleMousedown(event) {
+    flag = !flag
+    canvas.style.cursor = canvas.style.cursor === 'none' ? 'auto' : 'none';
+    if (!flag) {
+        cancelAnimationFrame(animationId)
+    } else {
+        drawCircle()
+    }
+}
+function handleMousemove(event) {
+    if (flag) return
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    asd()
+    ctx.beginPath();
+    ctx.fillStyle = 'black';
+    ctx.arc(event.clientX, event.clientY, radius, 0, 2 * Math.PI);
+    ctx.fill();
+}<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>虚拟键盘 - 75%</title>
+    <style>
+        html,
+        body {
+            background: #fff !important;
+        }
+
+        .keyboard {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            background: #fff;
+        }
+
+        .row {
+            display: flex;
+            gap: 6px;
+        }
+
+        .key {
+            width: 44px;
+            height: 44px;
+            border: 1px solid #000  ;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            font-size: 16px;
+            transition: border-color 0.2s, color 0.2s;
+        }
+
+        .key.wide {
+            width: 70px;
+        }
+
+        .key.wider {
+            width: 100px;
+        }
+        .key.widerr {
+            width: 125px;
+        }
+        .key.ctrl {
+            width: 62px;
+        }
+
+        .key.space {
+            width: 320px;
+        }
+
+        .key.active {
+            background: #4caf50;
+            color: #fff;
+            opacity: 1;
+            pointer-events: auto;
+            border-color: #4caf50;
+        }
+
+        .spacer {
+            width: 8px;
+        }
+
+        .spacerr {
+            width: 16px;
+        }
+
+        .key.enter-narrow {
+            width: 94px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="keyboard">
+        <div class="row">
+            <div class="key" id="ESC">Esc</div>
+            <div class="spacer"></div>
+            <div class="key" id="F1">F1</div>
+            <div class="key" id="F2">F2</div>
+            <div class="key" id="F3">F3</div>
+            <div class="key" id="F4">F4</div>
+            <div class="spacer"></div>
+            <div class="key" id="F5">F5</div>
+            <div class="key" id="F6">F6</div>
+            <div class="key" id="F7">F7</div>
+            <div class="key" id="F8">F8</div>
+            <div class="spacer"></div>
+            <div class="key" id="F9">F9</div>
+            <div class="key" id="F10">F10</div>
+            <div class="key" id="F11">F11</div>
+            <div class="key" id="F12">F12</div>
+            <div class="spacer"></div>
+            <div class="key" id="DEL">Del</div>
+            <div class="spacer"></div>
+            <div class="key" id="Vol">Vol</div>
+        </div>
+        <div class="row">
+            <div class="key" id="BACKQUOTE">~</div>
+            <div class="key" id="1">1</div>
+            <div class="key" id="2">2</div>
+            <div class="key" id="3">3</div>
+            <div class="key" id="4">4</div>
+            <div class="key" id="5">5</div>
+            <div class="key" id="6">6</div>
+            <div class="key" id="7">7</div>
+            <div class="key" id="8">8</div>
+            <div class="key" id="9">9</div>
+            <div class="key" id="0">0</div>
+            <div class="key" id="MINUS">-</div>
+            <div class="key" id="EQUAL">=</div>
+            <div class="key wider" id="BACK">Back</div>
+            <div class="spacer"></div>
+            <div class="key" id="HOME">Home</div>
+        </div>
+        <div class="row">
+            <div class="key wide" id="TAB">Tab</div>
+            <div class="key" id="Q">Q</div>
+            <div class="key" id="W">W</div>
+            <div class="key" id="E">E</div>
+            <div class="key" id="R">R</div>
+            <div class="key" id="T">T</div>
+            <div class="key" id="Y">Y</div>
+            <div class="key" id="U">U</div>
+            <div class="key" id="I">I</div>
+            <div class="key" id="O">O</div>
+            <div class="key" id="P">P</div>
+            <div class="key" id="LBRACKET">[</div>
+            <div class="key" id="RBRACKET">]</div>
+            <div class="key wide" id="BACKSLASH">\</div>
+            <div class="spacer"></div>
+            <div class="key" id="PGUP">PgUp</div>
+        </div>
+        <div class="row">
+            <div class="key wider" id="CAPS">Caps</div>
+            <div class="key" id="A">A</div>
+            <div class="key" id="S">S</div>
+            <div class="key" id="D">D</div>
+            <div class="key" id="F">F</div>
+            <div class="key" id="G">G</div>
+            <div class="key" id="H">H</div>
+            <div class="key" id="J">J</div>
+            <div class="key" id="K">K</div>
+            <div class="key" id="L">L</div>
+            <div class="key" id="SEMICOLON">;</div>
+            <div class="key" id="QUOTE">'</div>
+            <div class="key enter-narrow" id="ENTER">Enter</div>
+            <div class="spacer"></div>
+            <div class="key" id="PGDN">PgDn</div>
+        </div>
+        <div class="row">
+            <div class="key widerr" id="LSHIFT">Shift</div>
+            <div class="key" id="Z">Z</div>
+            <div class="key" id="X">X</div>
+            <div class="key" id="C">C</div>
+            <div class="key" id="V">V</div>
+            <div class="key" id="B">B</div>
+            <div class="key" id="N">N</div>
+            <div class="key" id="M">M</div>
+            <div class="key" id="COMMA">,</div>
+            <div class="key" id="PERIOD">.</div>
+            <div class="key" id="SLASH">/</div>
+            <div class="key wide" id="RSHIFT">Shift</div>
+            <div class="key" id="UP">↑</div>
+            <div class="spacer"></div>
+            <div class="key" id="END">End</div>
+        </div>
+        <div class="row">
+            <div class="key ctrl" id="LCTRL">Ctrl</div>
+            <div class="key ctrl" id="LWIN">Win</div>
+            <div class="key ctrl" id="LALT">Alt</div>
+            <div class="key space" id="SPACE">Space</div>
+            <div class="key" id="RALT">Alt</div>
+            <div class="key" id="FN">Fn</div>
+            <div class="key" id="RCTRL">Ctrl</div>
+            <div class="key" id="LEFT">←</div>
+            <div class="key" id="DOWN">↓</div>
+            <div class="key" id="RIGHT">→</div>
+        </div>
+    </div>
+    <script>
+        window.addEventListener('keydown', function (e) {
+            window.chrome.webview && window.chrome.webview.postMessage({ type: 'keydown', key: e.key.toUpperCase() });
+            highlightKey(e.key);
+        });
+        window.addEventListener('keyup', function (e) {
+            window.chrome.webview && window.chrome.webview.postMessage({ type: 'keyup', key: e.key.toUpperCase() });
+            unhighlightKey(e.key);
+        });
+        window.highlightKey = function (key) {
+            var el = document.getElementById(key.toUpperCase());
+            if (el) el.classList.add('active');
+        };
+        window.unhighlightKey = function (key) {
+            var el = document.getElementById(key.toUpperCase());
+            if (el) el.classList.remove('active');
+        };
+    </script>
+</body>
+
+</html>

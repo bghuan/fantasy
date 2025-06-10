@@ -6,32 +6,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>月亮表</title>
     <style>
-        ::-webkit-scrollbar {
-            width: 12px;
-        }
-        ::-webkit-scrollbar-thumb {
-            background-color: black;
-            border-radius: 6px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background-color: #555;
-        }
-        ::-webkit-scrollbar-track {
-            background: black;
-            border-radius: 6px;
-        }
         body {
-            background-color: black
+            overflow: hidden;
+            margin: 0;
+        }
+
+        .divCanvas {
+            position: relative;
+        }
+
+
+        #myCanvas {
+            border-right: 1px solid #ccc;
+            border-bottom: 1px solid #ccc;
+            position: absolute;
+            z-index: 1;
+        }
+
+        #myCanvas2 {
+            position: absolute;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .info-container {
+            display: none;
+            margin-left: '360px';
         }
     </style>
 </head>
 
 <body>
-    <input type="number" value="0" name="" id="HHH" style="float: left;">
-    <input type="number" value="0" name="" id="MMM" style="float: left;">
-    <input type="number" value="1000" name="" id="III" style="float: left;">
-    <canvas id="myCanvas" width="1000" height="1000"></canvas>
-    <script type="text/javascript" src="index.js"></script>
+    <div class="container">
+        <div class="divCanvas">
+            <canvas id="myCanvas" width="360" height="360"></canvas>
+            <canvas id="myCanvas2" width="360" height="360"></canvas>
+        </div>
+        <div class="info-container">
+            <div id="msg"></div>
+            <div id="msg2"></div>
+            <input type="number" name="" id="msg3" value="2">
+        </div>
+    </div>
 </body>
+<script type="text/javascript" src="common.js"></script>
+<script type="text/javascript" src="index.js"></script>
+<script type="text/javascript" src="indexwin.js"></script>
 
 </html>
