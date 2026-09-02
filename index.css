@@ -6,7 +6,9 @@ body {
 .form-control:focus {
     box-shadow: none;
 }
-
+/*#content img {*/
+/*    filter: grayscale(100%);*/
+/*}*/
 #footer {
     height: 32px;
     /* margin-top: -3px; */

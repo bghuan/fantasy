@@ -1,0 +1,14 @@
+{
+    "request_id": "df5a2cbf-71ac-94da-aa6c-3037dcf1b2a8",
+    "output": {
+        "task_id": "220b687b-1469-4afc-9679-8c6137964ee9",
+        "task_status": "SUCCEEDED",
+        "submit_time": "2025-07-06 23:11:02.359",
+        "scheduled_time": "2025-07-06 23:11:02.385",
+        "end_time": "2025-07-06 23:11:15.000",
+        "output_image_url": "https://vigen-invi.oss-cn-shanghai.aliyuncs.com/service_dashscope/ImageOutPainting/2025-07-06/public/519d23cd-91b8-4429-95b4-34133f74def1/result-7585f6f0-b126-40c6-a8fc-f043ae8138f8.jpg?OSSAccessKeyId=LTAI5t7aiMEUzu1F2xPMCdFj&Expires=1751901073&Signature=U%2B0UXrtZAH69NNzWkS6djkbeNYY%3D"
+    },
+    "usage": {
+        "image_count": 1
+    }
+}

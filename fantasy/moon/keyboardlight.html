@@ -13,47 +13,32 @@
         .keyboard {
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            background: 'transparent';
+            gap: 12px;
+            /* 原8px*2 */
+            background: transparent;
         }
 
         .row {
             display: flex;
-            gap: 6px;
+            gap: 8px;
+            /* 原6px*2 */
         }
 
         .key {
-            width: 44px;
-            height: 44px;
+            width: 112px;
+            /* 原44px*2 */
+            height: 98px;
+            /* 原44px*2 */
             border: 1px solid transparent;
             border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
             background: 'transparent';
-            font-size: 16px;
-            transition: background 0.1s, color 0.3s, border-color 0.5s;
+            font-size: 36px;
+            transition: background 0.5s cubic-bezier(0, 1, .88, 1),
+                color 0.9s cubic-bezier(0, 1, .88, 1);
             color: transparent;
-        }
-
-        .key.wide {
-            width: 70px;
-        }
-
-        .key.wider {
-            width: 100px;
-        }
-
-        .key.widerr {
-            width: 125px;
-        }
-
-        .key.ctrl {
-            width: 62px;
-        }
-
-        .key.space {
-            width: 320px;
         }
 
         .key.active {
@@ -65,20 +50,57 @@
 
         .key.neighbor {
             background: rgba(34, 34, 34, 0.1);
-            color: #fff;
+            color: #ddd;
+            transition: background 0.9s cubic-bezier(.25, .1, .25, .6),
+                color 1.5s cubic-bezier(.25, .1, .25, .6);
+        }
+
+        .key.fading {
+            opacity: 0;
+        }
+
+        .key.wide {
+            width: 220px;
+            /* 原94px*2 */
+        }
+
+        .key.wider {
+            width: 280px;
+            /* 原120px*2 */
+        }
+
+        .key.widerr {
+            width: 340px;
+            /* 原120px*2 */
         }
 
         .spacer {
-            width: 8px;
+            width: 10px;
+            /* 原44px*2 */
         }
 
-        .spacerr {
-            width: 16px;
+        .space {
+            width: 700px;
+            /* 原44px*2 */
         }
 
-        .key.enter-narrow {
-            width: 94px;
+        .ctrl {
+            width: 140px;
+            /* 原44px*2 */
         }
+        .ctrlr {
+            width: 300px;
+            /* 原44px*2 */
+        }
+        .node {
+            width: 80px;
+            /* 原44px*2 */
+        }
+        .noder {
+            width: 100px;
+            /* 原44px*2 */
+        }
+
     </style>
 </head>
 
@@ -103,11 +125,11 @@
             <div class="key" id="F12">F12</div>
             <div class="spacer"></div>
             <div class="key" id="DEL">Del</div>
-            <div class="spacer"></div>
-            <div class="key" id="Vol">Vol</div>
+            <!-- <div class="spacer"></div>
+            <div class="key" id="Vol">Vol</div> -->
         </div>
         <div class="row">
-            <div class="key" id="BACKQUOTE">~</div>
+            <div class="key ctrl" id="BACKQUOTE">~</div>
             <div class="key" id="1">1</div>
             <div class="key" id="2">2</div>
             <div class="key" id="3">3</div>
@@ -118,11 +140,12 @@
             <div class="key" id="8">8</div>
             <div class="key" id="9">9</div>
             <div class="key" id="0">0</div>
-            <div class="key" id="MINUS">-</div>
-            <div class="key" id="EQUAL">=</div>
-            <div class="key wider" id="BACK">Back</div>
+            <div class="key noder" id="MINUS">-</div>
+            <div class="key noder" id="EQUAL">=</div>
             <div class="spacer"></div>
-            <div class="key" id="HOME">Home</div>
+            <div class="key" id="BACK">Back</div>
+            <!-- <div class="spacer"></div>
+            <div class="key" id="HOME">Home</div> -->
         </div>
         <div class="row">
             <div class="key wide" id="TAB">Tab</div>
@@ -136,11 +159,11 @@
             <div class="key" id="I">I</div>
             <div class="key" id="O">O</div>
             <div class="key" id="P">P</div>
-            <div class="key" id="LBRACKET">[</div>
-            <div class="key" id="RBRACKET">]</div>
-            <div class="key wide" id="BACKSLASH">\</div>
-            <div class="spacer"></div>
-            <div class="key" id="END">End</div>
+            <div class="key node" id="LBRACKET">[</div>
+            <div class="key node" id="RBRACKET">]</div>
+            <div class="key node" id="BACKSLASH">\</div>
+            <!-- <div class="spacer"></div>
+            <div class="key" id="END">End</div> -->
         </div>
         <div class="row">
             <div class="key wider" id="CAPS">Caps</div>
@@ -153,11 +176,11 @@
             <div class="key" id="J">J</div>
             <div class="key" id="K">K</div>
             <div class="key" id="L">L</div>
-            <div class="key" id="SEMICOLON">;</div>
-            <div class="key" id="QUOTE">'</div>
-            <div class="key enter-narrow" id="ENTER">Enter</div>
-            <div class="spacer"></div>
-            <div class="key" id="PGUP">PgUp</div>
+            <div class="key node" id="SEMICOLON">;</div>
+            <div class="key node" id="QUOTE">'</div>
+            <div class="key ctrl" id="ENTER">Enter</div>
+            <!-- <div class="spacer"></div>
+            <div class="key" id="PGUP">PgUp</div> -->
         </div>
         <div class="row">
             <div class="key widerr" id="LSHIFT">Shift</div>
@@ -168,25 +191,25 @@
             <div class="key" id="B">B</div>
             <div class="key" id="N">N</div>
             <div class="key" id="M">M</div>
-            <div class="key" id="COMMA">,</div>
-            <div class="key" id="PERIOD">.</div>
-            <div class="key" id="SLASH">/</div>
+            <div class="key node" id="COMMA">,</div>
+            <div class="key node" id="PERIOD">.</div>
+            <div class="key node" id="SLASH">/</div>
             <div class="key wide" id="RSHIFT">Shift</div>
-            <div class="key" id="UP">↑</div>
-            <div class="spacer"></div>
-            <div class="key" id="PGDN">PgDn</div>
+            <!-- <div class="key" id="UP">↑</div> -->
+            <!-- <div class="spacer"></div>
+            <div class="key" id="PGDN">PgDn</div> -->
         </div>
         <div class="row">
-            <div class="key ctrl" id="LCTRL">Ctrl</div>
-            <div class="key ctrl" id="LWIN">Win</div>
-            <div class="key ctrl" id="LALT">Alt</div>
+            <div class="key ctrlr" id="LCTRL">Ctrl</div>
+            <div class="key ctrlr" id="LWIN">Win</div>
+            <div class="key ctrlr" id="LALT">Alt</div>
             <div class="key space" id="SPACE">Space</div>
-            <div class="key" id="RALT">Alt</div>
-            <div class="key" id="FN">Fn</div>
-            <div class="key" id="RCTRL">Ctrl</div>
-            <div class="key" id="LEFT">←</div>
-            <div class="key" id="DOWN">↓</div>
-            <div class="key" id="RIGHT">→</div>
+            <div class="key ctrlr" id="RALT">Alt</div>
+            <div class="key ctrlr" id="FN">Fn</div>
+            <div class="key ctrlr" id="RCTRL">Ctrl</div>
+            <!-- <div class="key" id="LEFT">←</div>
+            <div class="key" id="DOWN">↓</div> -->
+            <!-- <div class="key" id="RIGHT">→</div> -->
         </div>
     </div>
     <script>
@@ -196,7 +219,7 @@
 
         function toggleBackground() {
             const keys = document.querySelectorAll('.key');
-                isBackgroundTransparent = !isBackgroundTransparent;
+            isBackgroundTransparent = !isBackgroundTransparent;
             if (isBackgroundTransparent) {
                 keys.forEach(k => {
                     k.style.borderColor = 'transparent';
@@ -216,7 +239,7 @@
             pressedKeys.clear();
         }
 
-        keydown = function (e) {
+        window.addEventListener('keydown', function (e) {
             const key = e.key;
             const code = e.code;
             const id = keyToId(key, code);
@@ -228,17 +251,15 @@
                 highlightKey(id);
                 highlightNeighbors(id);
             }
-        }
-        window.addEventListener('keydown', keydown);
-        keyup = function (e) {
+        });
+        window.addEventListener('keyup', function (e) {
             const key = e.key;
             const code = e.code;
             const id = keyToId(key, code);
             pressedKeys.delete(id);
             unhighlightKey(id);
             unhighlightNeighbors(id);
-        }
-        window.addEventListener('keyup', keyup);
+        });
 
         window.highlightKey = function (id) {
             var el = document.getElementById(id);
@@ -260,16 +281,61 @@
             }
         };
 
+
+        let clean = () => {
+            console.log('清理所有高亮和微亮' + new Date().toLocaleTimeString());
+            keyDownTime = {};
+            const keys = document.querySelectorAll('.key');
+            keys.forEach(k => {
+                k.classList.remove('active', 'neighbor');
+            });
+            // 清空按下的键集合
+            pressedKeys.clear();
+        }
+
+        let keyDownTime = {}; // 记录每个key的按下时间
+        const delayTime = 100;
+
         window.highlightKeyAndNeighbors = function (id) {
             pressedKeys.add(id);
+            if (!keyDownTime[id]) {
+                keyDownTime[id] = Date.now();
+                // console.log('down set', id, keyDownTime[id]);
+            }
             highlightKey(id);
             highlightNeighbors(id);
         };
+
         window.unhighlightKeyAndNeighbors = function (id) {
             pressedKeys.delete(id);
-            unhighlightKey(id);
-            unhighlightNeighbors(id);
+
+            // 延迟取消微亮
+            const now = Date.now();
+            const down = keyDownTime[id] || now;
+            const wait = delayTime - (now - down);
+            const doRemove = () => {
+                unhighlightKey(id);
+                const stillNeeded = new Set();
+                pressedKeys.forEach(k => {
+                    getNeighborIds(k).forEach(nid => stillNeeded.add(nid));
+                });
+                getNeighborIds(id).forEach(function (nid) {
+                    if (!stillNeeded.has(nid)) {
+                        var el = document.getElementById(nid);
+                        if (el) el.classList.remove('neighbor');
+                    }
+                });
+                delete keyDownTime[id];
+            };
+            if (wait > 0) {
+                // console.log('延迟移除', id, wait);
+                setTimeout(doRemove, wait);
+            } else {
+                // console.log('立即移除', id);
+                doRemove();
+            }
         };
+
 
         // 获取某个键的 neighbor id 列表
         function getNeighborIds(key) {
@@ -339,9 +405,9 @@
                 }
             });
         };
-        if (window.outerWidth > 1500) {
-            toggleBackground();
-        }
+        // if(window.outerHeight > 800) {
+        //     toggleBackground();
+        // }
 
         function keyToId(key, code) {
             const map = {
@@ -385,7 +451,7 @@
             if (code === 'AltLeft') return 'LALT';
             if (code === 'AltRight') return 'RALT';
             if (code === 'MetaLeft') return 'LWIN';
-            if (code === 'MetaRight') return 'FN'; // 你可以根据实际id调整
+            //if (code === 'MetaRight') return 'FN'; // 你可以根据实际id调整
             return map[key] || key.toUpperCase();
         }
     </script>

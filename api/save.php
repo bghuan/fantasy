@@ -31,7 +31,7 @@ if (!empty($key)) {
             $value = ($value == false && !$redis->exists($my_key)) ? null : $value;
         } else {
             $redis->set($my_key, $value);
-            if (!empty($savelalala) && $namespace != $key && $savelalala != $key)
+            if (!empty($savelalala)&&$namespace!=$key&&$savelalala!=$key)
                 $redis->set($my_key. '.' .date('YmdHis', time()), $value);
         }
         $array[$key] = $value;
@@ -43,6 +43,11 @@ if($format=="string") {
     echo gzencode($value);}
 else 
 echo gzencode($prix . $result);
+
+
+if (!empty($prix)) {
+     exit;
+}
 
 try {
     $timestamp = time();

@@ -42,6 +42,17 @@ function formatDateToHM(date) {
     let ms = pad(date.getMilliseconds());
     return `${hours}:${minutes}`;
 }
+function formatDateToDay(date) {
+    let pad = (num) => (`0${num}`).slice(-2); // 用于补零的函数  
+    let year = date.getFullYear();
+    let month = pad(date.getMonth() + 1); // 月份是从0开始的，所以需要加1  
+    let day = pad(date.getDate());
+    // let hours = pad(date.getHours());
+    // let minutes = pad(date.getMinutes());
+    // let seconds = pad(date.getSeconds());
+    // let ms = pad(date.getMilliseconds());
+    return `${year}${month}${day}`;
+}
 var timemap = {
     "0": -3,
     "1": -2,
@@ -68,10 +79,6 @@ var timemap = {
     "22": -1,
     "23": -2,
     "24": -3,
-}
-msg3.onchange = () => {
-    if (msg3.value < 0) msg3.value = 23;
-    if (msg3.value > 24) msg3.value = 1
 }
 function shizi() {
     if (!show_other) return

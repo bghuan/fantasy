@@ -10,15 +10,21 @@ use OSS\Core\OssException;
 
 $prompt = querystring('prompt');
 $hash = querystring('hash');
-
 $fileName = '../static/image/ali/' . $hash . '.png';
 $apiKey = $imagealiApiKey; 
+
 $model = 'wanx2.1-t2i-turbo'; // 模型名称
+$model = 'flux-dev'; // 模型名称
+// $model = 'flux-merged'; // 模型名称
+// $model = 'wanx2.1-t2i-plus'; // 模型名称
+$model = 'wanx2.0-t2i-turbo'; // 模型名称
+
 $size = '1024*1024'; // 图像尺寸
 $n = 1; // 生成数量
 $taskId = ''; // 任务 ID（初始化）
 $maxRetries = 20; // 最大轮询次数
-$retryInterval = 3; // 轮询间隔（秒）
+$retryInterval = 10; // 轮询间隔（秒）
+$retryInterval2 = 5; // 轮询间隔（秒）
 
 $apiEndpoint = 'https://dashscope.aliyuncs.com/api/v1/services/aigc/text2image/image-synthesis';
 $requestData = [
@@ -62,8 +68,9 @@ $responseData = json_decode($response, true);
 $taskId = $responseData['output']['task_id'];
 echo "任务已提交，ID: {$taskId}\n";
 
+sleep($retryInterval); // 等待后重试
 for ($i = 1; $i < $maxRetries + 1; $i++) {
-    echo '第'.$i.'次查询';
+    echo '第'.$i.'次';
     $apiUrl = "https://dashscope.aliyuncs.com/api/v1/tasks/{$taskId}";
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $apiUrl);
@@ -92,7 +99,14 @@ for ($i = 1; $i < $maxRetries + 1; $i++) {
 
             $imageContent = file_get_contents($imageUrl);
             if ($imageContent) {
-                file_put_contents($fileName, $imageContent);
+                
+               // file_put_contents($fileName, $imageContent);
+                
+// 旧文件备份目录（需确保有写入权限）
+$backupDirectory = './backups/images/';
+// 执行保存（带备份逻辑）
+$result = saveFileWithBackup($fileName, $imageContent, $backupDirectory);
+
                 echo "图像已保存至: {$fileName}\n";
 
                  $objectName = $hash . '.png';
@@ -116,7 +130,7 @@ for ($i = 1; $i < $maxRetries + 1; $i++) {
             echo "任务处理中，当前状态: {$responseData['output']['task_status']}\n";
             echo "请稍后重试查询\n";
                 echo "第 {$i} 次查询，状态: {$taskStatus}，等待 {$retryInterval} 秒重试...\n";
-                sleep($retryInterval); // 等待后重试
+                sleep($retryInterval2); // 等待后重试
                 break;
     }
 }
